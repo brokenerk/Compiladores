@@ -24,6 +24,17 @@ class State:
 	def setVisited(self, visited):
 		self.visited = visited
 
+	#IMPORTANT: Hash and equals to compare objects of the state class
+	def hash(self):
+		return hash(self.id)
+
+	def equals(self, other):
+ 		return (self.__class__ == other.__class__ and self.id == other.id)
+
+	#Operations
+	def addTransition(self, t):
+		self.transitions.add(t)
+
 
 
 
