@@ -1,6 +1,7 @@
 #!python3
 from State import State
 from Transition import Transition
+from copy import deepcopy
 class AFN:
 	#Constructor
 	def __init__(self, states, start, accept):
@@ -29,24 +30,25 @@ class AFN:
 	#Operations
 	#Display states with transitions
 	def display(self):
+		print("Estado inicial: " + str(self.start.getId()))
+		print("Estado aceptado: " + str(self.accept.getId()))
+		
 		for s in self.getStates():
 			for t in s.getTransitions():
 				print(str(s.getId()) + " -- " + t.getCharacter() + " ---> " + str(t.getNext().getId()))
-
-		print("Estado inicial: " + str(self.start.getId()))
-		print("Estado aceptado: " + str(self.accept.getId()))
+		print("")
+		
 
 	#Union of 2 afns
 	def join(self, afnB):
-		#Get state sets
-		statesA = self.getStates().copy()
-		statesB = afnB.getStates().copy()
-		#Get start states from both afns
-		startA = self.getStart()
-		startB = afnB.getStart()
-		#Get accept states
-		acceptA = State(self.getAccept().getId()) #Create new state object, 
-		acceptB = State(afnB.getAccept().getId()) #to avoid modifications on original afns
+		#Create a deepcopy of start states from both afns
+		startA = deepcopy(self.getStart())
+		startB = deepcopy(afnB.getStart())
+		#Crate a deepcopy of accept states
+		acceptA = deepcopy(self.getAccept()) 
+		acceptB = deepcopy(afnB.getAccept()) 
+		#Deepcopy is to avoid modifying the original start and accept state object
+
 		#Create new start, accept state and new states set
 		newStart = State(-1)
 		newAccept = State(0)
@@ -61,12 +63,13 @@ class AFN:
 		acceptB.addTransition(Transition('E', newAccept))
 
 		#Add all states to new set, except original accept states
-		for s1, s2 in zip(statesA, statesB):
-			if(s1.equals(acceptA) == False):
-				newStates.add(s1)
+		for s in self.getStates():
+			if(s.equals(self.getAccept()) == False):
+				newStates.add(s)
 
-			if(s2.equals(acceptB) == False):
-				newStates.add(s2)
+		for s in afnB.getStates():
+			if(s.equals(afnB.getAccept()) == False):
+				newStates.add(s)
 		
 		#Add updated accept states, new start and new accept
 		newStates.add(acceptA)
