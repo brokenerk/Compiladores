@@ -48,7 +48,7 @@ class AFN:
 		print("Estado Final: {}".format(self.getAccept().getId()))
 		for e in self.states:
 			e.displayTransitions()
-		
+	
 	#Parameters: AFN
 	#Return: AFN
 	def join(self, afnB):
@@ -73,18 +73,45 @@ class AFN:
 		acceptB.addTransition(Transition(epsilon, newAccept))
 
 		#Add all states to new set, except original accept states
-		for s in self.getStates():
-			if(s.equals(self.getAccept()) == False):
-				newStates.add(s)
-
-		for s in afnB.getStates():
-			if(s.equals(afnB.getAccept()) == False):
-				newStates.add(s)
+		for s1, s2 in zip(self.getStates(), afnB.getStates()):
+			if(s1.equals(self.getAccept()) == False):
+				newStates.add(s1)
+			if(s2.equals(afnB.getAccept()) == False):
+				newStates.add(s2)
 		
-		#Add updated accept states, new start and new accept
+		#Add updated "accept" states (no longer accepted), new start and new accept
 		newStates.add(acceptA)
 		newStates.add(acceptB)	
 		newStates.add(newStart)
 		newStates.add(newAccept)
 
 		return AFN(newStates, newStart, newAccept)
+
+	#Parameters: AFN
+	#Return: AFN
+	def concat(self, afnB):
+		#Create a deepcopy of start states from both afns
+		startA = deepcopy(self.getStart())
+		startB = deepcopy(afnB.getStart())
+		#Create a deepcopy of accept states
+		acceptA = deepcopy(self.getAccept()) 
+		acceptB = deepcopy(afnB.getAccept())
+		newStates = set([])
+
+		#Add AFNB start state's transitions to AFNA accept state
+		#Merge states
+		for t in startB.getTransitions():
+			acceptA.addTransition(t)
+
+		#Add all states to new set, 
+		#except original AFNA accept state and AFNB start state
+		for s1, s2 in zip(self.getStates(), afnB.getStates()):
+			if (s1.equals(self.getAccept()) == False):
+				newStates.add(s1)
+			if (s2.equals(afnB.getStart()) == False):
+				newStates.add(s2)
+
+		#Add updated AFNA "accept" state (no longer an accepted state)
+		newStates.add(acceptA)
+
+		return AFN(newStates, startA, acceptB)
