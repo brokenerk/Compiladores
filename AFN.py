@@ -2,65 +2,75 @@
 from State import State
 from Transition import Transition
 from copy import deepcopy
+epsilon = '\u03B5'
+
 class AFN:
 	#Constructor
 	def __init__(self, states, start, accept):
-		self.states = states 		#States set
-		self.start = start 			#Start state
-		self.accept = accept 		#Accepted state
+		self.states = states 		#Set<State>
+		self.start = start 			#State
+		self.accept = accept 		#State
 
+	#Parameters: Nothing
+	#Return: Set<States>
 	def getStates(self):
 		return self.states 
 
+	#Parameters: Set<States>
+	#Return: Nothing
 	def setStates(self, states):
 		self.states = states
 
+	#Parameters: Nothing
+	#Return: State
 	def getStart(self):
 		return self.start
 
+	#Parameters: State
+	#Return: Nothing
 	def setStart(self, start):
 		self.start = start
 
+	#Parameters: Nothing
+	#Return: State
 	def getAccept(self):
 		return self.accept
 
+	#Parameters: States
+	#Return: Nothing
 	def setAccept(self, accept):
 		self.accept = accept
 
-	#Operations
-	#Display states with transitions
+	#Parameters: Nothing
+	#Return: Nothing
 	def display(self):
-		print("Estado inicial: " + str(self.start.getId()))
-		print("Estado aceptado: " + str(self.accept.getId()))
+		print("Estado inicial: {}".format(self.getStart().getId()))
+		print("Estado Final: {}".format(self.getAccept().getId()))
+		for e in self.states:
+			e.displayTransitions()
 		
-		for s in self.getStates():
-			for t in s.getTransitions():
-				print(str(s.getId()) + " -- " + t.getCharacter() + " ---> " + str(t.getNext().getId()))
-		print("")
-		
-
-	#Union of 2 afns
+	#Parameters: AFN
+	#Return: AFN
 	def join(self, afnB):
 		#Create a deepcopy of start states from both afns
 		startA = deepcopy(self.getStart())
 		startB = deepcopy(afnB.getStart())
-		#Crate a deepcopy of accept states
+		#Create a deepcopy of accept states
 		acceptA = deepcopy(self.getAccept()) 
 		acceptB = deepcopy(afnB.getAccept()) 
-		#Deepcopy is to avoid modifying the original start and accept state object
 
 		#Create new start, accept state and new states set
-		newStart = State(-1)
-		newAccept = State(0)
+		newStart = State(0)
+		newAccept = State(len(self.getStates()) + len(afnB.getStates()) + 1)
 		newStates = set([])
 
 		#Add epsilon transitions to new start state
-		newStart.addTransition(Transition('E', startA))
-		newStart.addTransition(Transition('E', startB))
+		newStart.addTransition(Transition(epsilon, startA))
+		newStart.addTransition(Transition(epsilon, startB))
 
 		#Add epsilon transition to new accept state
-		acceptA.addTransition(Transition('E', newAccept))
-		acceptB.addTransition(Transition('E', newAccept))
+		acceptA.addTransition(Transition(epsilon, newAccept))
+		acceptB.addTransition(Transition(epsilon, newAccept))
 
 		#Add all states to new set, except original accept states
 		for s in self.getStates():
