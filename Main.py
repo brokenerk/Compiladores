@@ -30,21 +30,31 @@ if __name__ == "__main__":
     statesA = set([e1, e2, e3])
     statesB = set([e4, e5, e6, e7])
 
-    afnA = AFN(statesA, e1, e3)
+    afnA = AFN(1, statesA, e1, e3)
     print("AFN A:")
     afnA.display()
 
     print("")
-    afnB = AFN(statesB, e4, e7)
+    afnB = AFN(2, statesB, e4, e7)
     print("AFN B:")
     afnB.display()
 
     print("")
-    join = afnA.join(afnB)
+    join = afnA.join(afnB, 3)
     print("Join AFN A and AFN B:")
     join.display()
 
     print("")
-    concat = afnA.concat(afnB)
+    concat = afnA.concat(afnB, 4)
     print("Concat AFN A and AFN B:")
     concat.display()
+
+    print("")
+    posClosureA = afnA.positiveClosure(5)
+    print("Cerradura + AFN A:")
+    posClosureA.display()
+
+    print("")
+    kleeneA = afnA.kleeneClosure(6)
+    print("Cerradura Kleene * AFN A:")
+    kleeneA.display()
