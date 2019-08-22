@@ -4,57 +4,39 @@ from State import State
 from Transition import Transition
 
 if __name__ == "__main__":
-    e1 = State(1)
-    e2 = State(2)
-    e3 = State(3)
+    
+    afn1 = AFN.createBasic(1,'a')
+    afn1.display()
+    print('')
 
-    t1 = Transition ('a', e2)
-    t2 = Transition ('b', e3)
+    afn2=AFN.createBasic(3,'b')
+    afn2.display()
+    print('')
 
-    e1.addTransition(t1)
-    e2.addTransition(t2)
+    afn3=AFN.createBasic(5,'c')
+    afn3.display()
+    print('')
 
-    e4 = State(4)
-    e5 = State(5)
-    e6 = State(6)
-    e7 = State(7)
-
-    t4 = Transition ('x', e5)
-    t5 = Transition ('y', e6)
-    t6 = Transition ('z', e7)
-
-    e4.addTransition(t4)
-    e5.addTransition(t5)
-    e6.addTransition(t6)
-
-    statesA = set([e1, e2, e3])
-    statesB = set([e4, e5, e6, e7])
-
-    afnA = AFN(1, statesA, e1, e3)
-    print("AFN A:")
-    afnA.display()
+    afn4=AFN.createBasic(7,'d')
+    afn4.display()
+    print('')
 
     print("")
-    afnB = AFN(2, statesB, e4, e7)
-    print("AFN B:")
-    afnB.display()
-
-    print("")
-    join = afnA.join(afnB, 3)
-    print("Join AFN A and AFN B:")
+    join = afn1.join(afn2, 3)
+    print("Join AFN 1 and AFN 2:")
     join.display()
 
     print("")
-    concat = afnA.concat(afnB, 4)
-    print("Concat AFN A and AFN B:")
+    concat = afn1.concat(afn3, 4)
+    print("Concat AFN 1 and AFN 3:")
     concat.display()
 
     print("")
-    posClosureA = afnA.positiveClosure(5)
+    posClosureA = afn1.positiveClosure(5)
     print("Cerradura + AFN A:")
     posClosureA.display()
 
     print("")
-    kleeneA = afnA.kleeneClosure(6)
+    kleeneA = afn1.kleeneClosure(6)
     print("Cerradura Kleene * AFN A:")
     kleeneA.display()
