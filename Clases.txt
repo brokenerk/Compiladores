@@ -1,0 +1,21 @@
+Estado:
+	- int idEdoActual
+	- int idEdo
+	- boolean edoAcept
+	- set transiciones
+
+	- agregarTransicion()
+	- mover()
+
+Transicion
+	- char simbolo (min - max)
+	- Estado estado
+
+AFN
+	- edoInicial
+	- set alfabeto
+	- set estados
+	- set edosAccept
+
+	- cerraduraEpsilon()
+
