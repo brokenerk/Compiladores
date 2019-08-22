@@ -1,0 +1,34 @@
+current_state = 0;
+previously_seen_accepting_state = none_seen;
+
+if(lookahead character is end-of-input)
+	return 0;
+
+while(lookahead character is not end-of-input)
+{
+	if(there is a transition from the current state on the current lookahead character)
+	{
+		current_state = that state;
+		advance the input;
+
+		if(the current state is an accepting state)
+		{
+			remember the current position in the input
+			and the action associated with the current state;
+		}
+	}
+	else
+	{
+		if(no accepting state has been set)
+		{
+			There's an error:
+				Discard the current lexeme and the input character;
+				current_state = 0;
+		}
+		else
+		{
+			back up the input in the position it was in when it saw the last accepting
+			state perform the action associated with the accepting state;
+		}
+	}
+}
