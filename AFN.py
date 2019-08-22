@@ -60,6 +60,16 @@ class AFN:
 		print("Estado Final: {}".format(self.getAccept().getId()))
 		for e in self.states:
 			e.displayTransitions()
+		
+	#Parameters: Id, Symbol
+    #Return AFN
+    def createBasic(id,symbol):
+        e1 = State(id)
+        e2 = State(id+1)
+        t1 = Transition(symbol,e2)
+        e1.addTransition(t1)
+        states = set([e1,e2])
+        return AFN(id,states,e1,e2)
 	
 	#Parameters: AFN, Integer
 	#Return: AFN
