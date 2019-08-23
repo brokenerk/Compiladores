@@ -2,6 +2,7 @@
 from AFN import AFN
 from State import State
 from Transition import Transition
+epsilon = '\u03B5'
 
 if __name__ == "__main__":
     
