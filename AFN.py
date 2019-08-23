@@ -1,6 +1,7 @@
 #!python3
 from State import State
 from Transition import Transition
+from Stack import Stack
 from copy import deepcopy
 epsilon = '\u03B5'
 
@@ -134,27 +135,67 @@ class AFN:
     	for s in self.getStates():
     		if(s.equals(start) == False and s.equals(accept) == False):
     			newStates.add(s)    
-    	return AFN(id, newStates, newStart, newAccept)    
+    	return AFN(id, newStates, newStart, newAccept)
+
     #Parameters: Integer
     #Return: AFN
     def kleeneClosure(self, id):
-    	#Get positive closure
-    	posClosure = self.positiveClosure(id);    
-    	#Just add epsilon transition from start to accept state
-    	for s in posClosure.getStates():
-    		if(s.equals(posClosure.getStart()) == True):
-    			s.addTransition(Transition(epsilon, posClosure.getAccept()))    
-    	return posClosure    
+		#Get positive closure
+	    posClosure = self.positiveClosure(id);    
+		#Just add epsilon transition from start to accept state
+	    for s in posClosure.getStates():
+		    if(s.equals(posClosure.getStart()) == True):
+			    s.addTransition(Transition(epsilon, posClosure.getAccept()))    
+	    return posClosure
+
     def optional(self,id):
-    	newStart = State(0)
-    	newAccept = State(len(self.getStates()) + 1)
-    	start = deepcopy(self.getStart())
-    	accept = deepcopy(self.getAccept()) 
-    	newStart.addTransition(Transition(epsilon, start))
-    	newStart.addTransition(Transition(epsilon, newAccept))
-    	accept.addTransition(Transition(epsilon, newAccept)) 
-    	newStates = set([newStart, start, accept, newAccept])    
-    	for s in self.getStates():
-    		if(s.equals(start) == False and s.equals(accept) == False):
-    			newStates.add(s)    
-    	return AFN(id, newStates, newStart, newAccept)  
+        newStart = State(0)
+        newAccept = State(len(self.getStates()) + 1)
+        start = deepcopy(self.getStart())
+        accept = deepcopy(self.getAccept()) 
+        newStart.addTransition(Transition(epsilon, start))
+        newStart.addTransition(Transition(epsilon, newAccept))
+        accept.addTransition(Transition(epsilon, newAccept)) 
+        newStates = set([newStart, start, accept, newAccept])    
+        for s in self.getStates():
+            if(s.equals(start) == False and s.equals(accept) == False):
+                newStates.add(s)    
+        return AFN(id, newStates, newStart, newAccept)
+
+    def epsilonClosure(self,state):
+        S = []
+        P = Stack()
+        P.push(state)				
+        while P.isEmpty() == False:
+            e = P.pop()
+            if e in(S):
+                continue
+            S.append(e)
+            for t in e.getTransitions():
+                if  t.getSymbol() == epsilon:
+                    P.push(t.getNext())
+        return S
+
+    def epsilonClosureS(self,statesE):
+        S = []
+        P = Stack()
+        for e in statesE:
+            P.push(e)				
+        while P.isEmpty() == False:
+            e = P.pop()
+            if e in(S):
+                continue
+            S.append(e)
+            for t in e.getTransitions():
+                if  t.getSymbol() == epsilon:
+                    P.push(t.getNext())
+        return S
+    
+    def move (states,symbol):
+        R = set([])
+        for e in states:
+            R.add(State.move(e,symbol))
+        return R 
+
+    def goTo (states,symbol):
+        return AFN.epsilonClosureS(AFN.move(states,symbol))

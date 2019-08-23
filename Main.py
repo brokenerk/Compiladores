@@ -28,6 +28,15 @@ if __name__ == "__main__":
     join.display()
 
     print("")
+    e = join.getStart()
+    statesEpsilon = join.epsilonClosure(e)
+    print("Cerradura {}".format(epsilon))
+    for e in statesEpsilon:
+        print("E:{}".format( e.getId() ))
+
+    statesGo = AFN.goTo(statesEpsilon,'a')
+
+    print("")
     concat = afn1.concat(afn3, 4)
     print("Concat AFN 1 and AFN 3:")
     concat.display()
