@@ -2,6 +2,7 @@
 from AFN import AFN
 from State import State
 from Transition import Transition
+epsilon = '\u03B5'
 
 if __name__ == "__main__":
     
@@ -25,6 +26,13 @@ if __name__ == "__main__":
     join = afn1.join(afn2, 3)
     print("Join AFN 1 and AFN 2:")
     join.display()
+
+    print("")
+    e = join.getStart()
+    statesEpsilon = join.epsilonClosure(e)
+    print("Cerradura {}".format(epsilon))
+    for e in statesEpsilon:
+        print("E:{}".format( e.getId() ))
 
     print("")
     concat = afn1.concat(afn3, 4)
