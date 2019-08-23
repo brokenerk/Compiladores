@@ -32,6 +32,11 @@ if __name__ == "__main__":
     concat.display()
 
     print("")
+    Optional = afn1.optional(4)
+    print("Opcional ? AFN A:")
+    Optional.display()
+
+    print("")
     posClosureA = afn1.positiveClosure(5)
     print("Cerradura + AFN A:")
     posClosureA.display()

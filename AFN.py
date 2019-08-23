@@ -144,9 +144,17 @@ class AFN:
     	for s in posClosure.getStates():
     		if(s.equals(posClosure.getStart()) == True):
     			s.addTransition(Transition(epsilon, posClosure.getAccept()))    
-    	return posClosure
-
-
-
-
-
+    	return posClosure    
+    def optional(self,id):
+    	newStart = State(0)
+    	newAccept = State(len(self.getStates()) + 1)
+    	start = deepcopy(self.getStart())
+    	accept = deepcopy(self.getAccept()) 
+    	newStart.addTransition(Transition(epsilon, start))
+    	newStart.addTransition(Transition(epsilon, newAccept))
+    	accept.addTransition(Transition(epsilon, newAccept)) 
+    	newStates = set([newStart, start, accept, newAccept])    
+    	for s in self.getStates():
+    		if(s.equals(start) == False and s.equals(accept) == False):
+    			newStates.add(s)    
+    	return AFN(id, newStates, newStart, newAccept)  
