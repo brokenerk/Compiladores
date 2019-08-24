@@ -34,7 +34,7 @@ if __name__ == "__main__":
     for e in statesEpsilon:
         print("E:{}".format( e.getId() ))
 
-    statesGo = AFN.goTo(statesEpsilon,'a')
+    #statesGo = AFN.goTo(statesEpsilon,'a')
 
     print("")
     concat = afn1.concat(afn3, 4)
