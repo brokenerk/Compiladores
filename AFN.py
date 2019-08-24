@@ -1,7 +1,6 @@
 #!python3
 from State import State
 from Transition import Transition
-from Stack import Stack
 from copy import deepcopy
 epsilon = '\u03B5'
 
@@ -164,37 +163,37 @@ class AFN:
 
     def epsilonClosure(self,state):
         S = []
-        P = Stack()
-        P.push(state)				
-        while P.isEmpty() == False:
+        P = []
+        P.append(state)				
+        while P != []:
             e = P.pop()
             if e in(S):
                 continue
             S.append(e)
             for t in e.getTransitions():
                 if  t.getSymbol() == epsilon:
-                    P.push(t.getNext())
+                    P.append(t.getNext())
         return S
 
-    def epsilonClosureS(self,statesE):
+    def epsilonClosureS(statesE):
         S = []
-        P = Stack()
+        P = []
         for e in statesE:
-            P.push(e)				
-        while P.isEmpty() == False:
+            P.append(e)				
+        while P != []:
             e = P.pop()
             if e in(S):
                 continue
             S.append(e)
             for t in e.getTransitions():
                 if  t.getSymbol() == epsilon:
-                    P.push(t.getNext())
+                    P.append(t.getNext())
         return S
     
     def move (states,symbol):
-        R = set([])
+        R = []
         for e in states:
-            R.add(State.move(e,symbol))
+            R.append(State.move(e,symbol))
         return R 
 
     def goTo (states,symbol):
