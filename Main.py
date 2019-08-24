@@ -5,53 +5,47 @@ from Transition import Transition
 epsilon = '\u03B5'
 
 if __name__ == "__main__":
-    
-    afn1 = AFN.createBasic(1,'a')
+    print("")
+    afn1 = AFN.createBasic('a')
+    print("AFN 1:")
     afn1.display()
-    print('')
-
-    afn2=AFN.createBasic(3,'b')
-    afn2.display()
-    print('')
-
-    afn3=AFN.createBasic(5,'c')
-    afn3.display()
-    print('')
-
-    afn4=AFN.createBasic(7,'d')
-    afn4.display()
-    print('')
 
     print("")
-    join = afn1.join(afn2, 3)
+    afn2 = AFN.createBasic('b')
+    print("AFN 2:")
+    afn2.display()
+    
+    print("")
+    join = afn1.join(afn2)
     print("Join AFN 1 and AFN 2:")
     join.display()
 
     print("")
     e = join.getStart()
-    statesEpsilon = join.epsilonClosure(e)
-    print("Cerradura {}".format(epsilon))
+    #If there's only 1 state, here just send set([e]), and with that we just implement 1 method CE
+    statesEpsilon = AFN.epsilonClosure(set([e])) 
+    print("Cerradura {} AFN1|AFN2 estado inicial".format(epsilon))
     for e in statesEpsilon:
-        print("E:{}".format( e.getId() ))
+        print("E: {}".format(e.getId()))
 
     #statesGo = AFN.goTo(statesEpsilon,'a')
 
     print("")
-    concat = afn1.concat(afn3, 4)
-    print("Concat AFN 1 and AFN 3:")
+    concat = afn1.concat(afn2)
+    print("Concat AFN 1 and AFN 2:")
     concat.display()
 
     print("")
-    Optional = afn1.optional(4)
-    print("Opcional ? AFN A:")
-    Optional.display()
-
-    print("")
-    posClosureA = afn1.positiveClosure(5)
-    print("Cerradura + AFN A:")
+    posClosureA = afn1.positiveClosure()
+    print("Cerradura + AFN 1:")
     posClosureA.display()
 
     print("")
-    kleeneA = afn1.kleeneClosure(6)
-    print("Cerradura Kleene * AFN A:")
+    kleeneA = afn1.kleeneClosure()
+    print("Cerradura Kleene * AFN 1:")
     kleeneA.display()
+
+    print("")
+    optional = afn1.optional()
+    print("Opcional ? AFN 1:")
+    optional.display()

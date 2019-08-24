@@ -14,7 +14,6 @@ class Transition:
 	#Return: State
 	def getNext(self):
 		return self.next
-
 	#Parameters: State
 	#Return: Nothing
 	def setNext(self, next):
