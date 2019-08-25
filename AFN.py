@@ -264,4 +264,6 @@ class AFN:
 		return R 
 
 	def goTo(states, symbol):
-		return AFN.epsilonClosure(AFN.move(states, symbol))
+		moveStates = AFN.move(states, symbol)
+		returnStates = AFN.epsilonClosure(moveStates)
+		return returnStates

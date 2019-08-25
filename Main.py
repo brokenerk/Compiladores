@@ -28,7 +28,10 @@ if __name__ == "__main__":
     for e in statesEpsilon:
         print("E: {}".format(e.getId()))
 
-    #statesGo = AFN.goTo(statesEpsilon,'a')
+    print("IR_A 'a' en AFN1|AFN2")
+    statesGo = AFN.goTo(statesEpsilon,'a')
+    for e in statesGo:
+        print("E: {}".format(e.getId()))
 
     print("")
     concat = afn1.concat(afn2)
