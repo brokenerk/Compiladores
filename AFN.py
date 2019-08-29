@@ -96,19 +96,6 @@ class AFN:
 					newAlphabet.add(symbol)
 		return newAlphabet
 
-	#Parameters: Set<States>, Set<States>, State, State
-	#Return: Set<States>
-	def createNewStates(statesA, statesB, sA, sB):
-		newStates = set([])
-
-		for s1, s2 in zip(statesA, statesB):
-			if (s1.equals(sA) == False):
-				newStates.add(s1)
-			if (s2.equals(sB) == False):
-				newStates.add(s2)
-
-		return newStates 
-
 	#Parameters: AFN, Integer
 	#Return: AFN
 	def join(self, afnB):
@@ -132,8 +119,13 @@ class AFN:
 		newStates = set([newStart, acceptA, acceptB, newAccept])  
 
 		#Add all states to new set, except original accept states
-		newStates = newStates.union(AFN.createNewStates(self.getStates(), afnB.getStates(), 
-			self.getAccept(), afnB.getAccept()))
+		for s1 in self.getStates():
+			if (s1.equals(self.getAccept()) == False):
+				newStates.add(s1)
+
+		for s2 in afnB.getStates():
+			if (s2.equals(afnB.getAccept()) == False):
+				newStates.add(s2)
 
 		#Free memory
 		del startA
@@ -163,8 +155,13 @@ class AFN:
 
 		#Add all states to new set, 
 		#except original AFNA accept state and AFNB start state
-		newStates = newStates.union(AFN.createNewStates(self.getStates(), afnB.getStates(), 
-			self.getAccept(), afnB.getStart()))
+		for s1 in self.getStates():
+			if (s1.equals(self.getAccept()) == False):
+				newStates.add(s1)
+
+		for s2 in afnB.getStates():
+			if (s2.equals(afnB.getStart()) == False):
+				newStates.add(s2)
 
 		#Free memory
 		del startB
