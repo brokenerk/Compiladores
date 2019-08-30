@@ -5,11 +5,12 @@ Id = 0
 
 class State:
     #Constructor
-    def __init__(self):
+    def __init__(self,token):
         global Id
         Id += 1
         self.id = Id 					#Integer
         self.transitions = set([]) 		#Set<Transition> 
+        self.token=token
 
     #Parameters: Nothing
     #Return: Integer
@@ -19,6 +20,15 @@ class State:
     #Return: Nothing
     def setId(self, id):
     	self.id = id   
+
+    #Parameters: Nothing
+    #Return: Integer
+    def getToken(self):
+    	return self.token
+    #Parameters: Integer
+    #Return: Nothing
+    def setToken(self, token):
+    	self.token = token  
 
     #Parameters: Nothing
     #Return: Set<Transition>
