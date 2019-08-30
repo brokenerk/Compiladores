@@ -1,6 +1,7 @@
 #!python3
 from State import State
 from Transition import Transition
+#from AFD import AFD
 from copy import deepcopy
 from collections import deque
 epsilon = '\u03B5'
@@ -237,30 +238,79 @@ class AFN:
 
 	#Parameters: Set<State>
 	#Return: Set<States>
-	def epsilonClosure(statesE):
-		s = set([]) #Set
+	def epsilonClosure(self,edo):
+		s = [] #Set
 		p = deque() #Stack
-
-		for edo in statesE:
-			p.append(edo)
-
+		p.append(edo)
 		while p:
 			e = p.pop()
 			if (e in(s)):
 				continue
-			s.add(e)
+			s.append(e)
 			for t in e.getTransitions():
 				if (t.getSymbol() == epsilon):
 					p.append(t.getNext())
 		return s
 
-	def move(states, symbol):
+	def move(self,states, symbol):
 		R = set([])
 		for e in states:
 			R = R.union(e.move(symbol)) 
 		return R 
 
-	def goTo(states, symbol):
-		moveStates = AFN.move(states, symbol)
-		returnStates = AFN.epsilonClosure(moveStates)
-		return returnStates
+	def goTo(self,states, symbol):
+		returnStates = []
+		returnAux=[]
+		#print(states)
+		moveStates = self.move(states,symbol)
+		if moveStates != set():
+			for e in moveStates:
+				returnStates.append(self.epsilonClosure(e))
+			return returnStates
+		return set()
+
+	def afd(self):
+		S = []
+		newStates = []
+		aux = []
+		table = []
+		start = self.getStart()
+		S0 = self.epsilonClosure( start )
+		S.append(S0)
+		for symbol in self.getAlphabet(): 
+				aux = self.goTo(S0,symbol)
+				if aux in(S) or aux == set():
+					continue
+				S.append(aux[0])
+		
+		aux = [" "]
+		for l in self.getAlphabet():
+			aux.append(l)
+		table.append(aux)
+		for Si in S:
+			row=[]
+			origin=S.index(Si)
+			row.append(origin)
+			for symbol in self.getAlphabet():
+				aux = self.goTo(S0,symbol)
+				for e in aux:
+					for el in e:
+						print("aux: {}".format(el.getId()))
+				if aux == set():
+					row.append('-1')
+					continue
+				elif (aux in S):
+					target=S.index(aux)
+					row.append(target)
+				else:
+					print("Not Found")
+			if (self.getAccept in Si):
+				row.append('25')
+			table.append(row)
+
+		print(table)
+		
+		for Si in S:
+			for e in Si:
+				print("Es: {}".format(e.getId()))
+		#return AFD (S,self.getAlphabet)
