@@ -2,6 +2,7 @@
 from AFN import AFN
 from State import State
 from Transition import Transition
+from AFD import AFD
 epsilon = '\u03B5'
 
 if __name__ == "__main__":
@@ -61,4 +62,5 @@ if __name__ == "__main__":
     con = kleenA.concat(afn3)
     con.display()
     print("")
-    con.afd()
+    afd1 = con.afd()
+    afd1.display()

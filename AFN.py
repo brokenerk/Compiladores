@@ -1,7 +1,7 @@
 #!python3
 from State import State
 from Transition import Transition
-#from AFD import AFD
+from AFD import AFD
 from copy import deepcopy
 from collections import deque
 epsilon = '\u03B5'
@@ -278,10 +278,10 @@ class AFN:
 		S0 = self.epsilonClosure( start )
 		S.append(S0)
 		for symbol in self.getAlphabet(): 
-				aux = self.goTo(S0,symbol)
-				if aux in(S) or aux == set():
-					continue
-				S.append(aux[0])
+			aux = self.goTo(S0,symbol)
+			if aux in(S) or aux == set():
+				continue
+			S.append(aux[0])
 		
 		aux = [" "]
 		for l in self.getAlphabet():
@@ -292,27 +292,30 @@ class AFN:
 			origin=S.index(Si)
 			row.append(origin)
 			for symbol in self.getAlphabet():
-				aux = self.goTo(S0,symbol)
-				for e in aux:
+				print(Si)
+				auxStates = self.goTo(Si,symbol)
+				print(auxStates)
+				for e in auxStates:
 					for el in e:
-						print("aux: {}".format(el.getId()))
-				if aux == set():
+						print("auxS: {}".format(el.getId()))
+				if auxStates == set():
 					row.append('-1')
 					continue
-				elif (aux in S):
-					target=S.index(aux)
+				if (auxStates in S):
+					target=S.index(auxStates)
 					row.append(target)
 				else:
+					row.append('N')
 					print("Not Found")
-			if (self.getAccept() in Si):
+			if ([self.getAccept()] in Si):
 				row.append(self.getAccept().getToken())
 			else:
 				row.append('-2')
 			table.append(row)
-
-		print(table)
 		
 		for Si in S:
 			for e in Si:
 				print("Es: {}".format(e.getId()))
-		#return AFD (S,self.getAlphabet)
+
+		print(S)
+		return AFD (table,self.getAlphabet)
