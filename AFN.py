@@ -76,8 +76,8 @@ class AFN:
 	#Parameters: Character
 	#Return: AFN
 	def createBasic(symbol):
-		e1 = State()
-		e2 = State()
+		e1 = State(-1)
+		e2 = State(5)
 		t1 = Transition(symbol, e2)
 		e1.addTransition(t1)
 		states = set([e1, e2])
@@ -107,8 +107,8 @@ class AFN:
 		acceptA = deepcopy(self.getAccept()) 
 		acceptB = deepcopy(afnB.getAccept())     
 		#Create new start, accept state and new states set
-		newStart = State()
-		newAccept = State()
+		newStart = State(-1)
+		newAccept = State(5)
 		
 		#Add epsilon transitions to new start state
 		newStart.addTransition(Transition(epsilon, startA))
@@ -174,9 +174,9 @@ class AFN:
 	#Return: AFN
 	def positiveClosure(self):
 		#Create new start state
-		newStart = State()
+		newStart = State(-1)
 		#Create new accept state
-		newAccept = State()
+		newAccept = State(5)
 
 		#Create a deepcopy of actual start and accept state
 		start = deepcopy(self.getStart())
@@ -216,8 +216,8 @@ class AFN:
 	#Parameters: Integer
 	#Return: AFN
 	def optional(self):
-		newStart = State()
-		newAccept = State()
+		newStart = State(-1)
+		newAccept = State(5)
 		start = deepcopy(self.getStart())
 		accept = deepcopy(self.getAccept()) 
 
@@ -304,8 +304,10 @@ class AFN:
 					row.append(target)
 				else:
 					print("Not Found")
-			if (self.getAccept in Si):
-				row.append('25')
+			if (self.getAccept() in Si):
+				row.append(self.getAccept().getToken())
+			else:
+				row.append('-2')
 			table.append(row)
 
 		print(table)
