@@ -2,8 +2,8 @@
 from State import State
 from Transition import Transition
 from AFD import AFD
+from Sets import Sets
 from copy import deepcopy
-from collections import deque
 epsilon = '\u03B5'
 Id = 0
 
@@ -285,44 +285,12 @@ class AFN:
 
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))
 
-	#Parameters: State
-	#Return: Set<States>
-	def epsilonClosure(edo):
-		s = set([]) #Set
-		p = deque() #Stack
-		p.append(edo)
-
-		while p:
-			e = p.pop()
-
-			if(e in(s)):
-				continue
-			s.add(e)
-
-			for t in e.getTransitions():
-				if (t.getSymbol() == epsilon):
-					p.append(t.getNext())
-		return s
-
-	def move(states, symbol):
-		R = set([])
-		for e in states:
-			R = R.union(e.move(symbol)) 
-		return R 
-
-	def goTo(states, symbol):
-		moveStates = AFN.move(states, symbol);
-		returnStates = set([])
-		for e in moveStates:
-			aux = AFN.epsilonClosure(e)
-		return returnStates
-
-	def convertToAFD(self):
-		S0 = AFN.epsilonClosure(self.getStart())
+	def convertToAFD(self, setsUtil):
+		S0 = setsUtil.epsilonClosure(self.getStart())
 		sets = [S0]
 
 		for symbol in self.getAlphabet():
-
-			aux = AFN.goTo(S0, symbol)
-			sets.append(aux)
+			aux = setsUtil.goTo(S0, symbol)
+			if(aux != set() or aux in(sets) == False):
+				sets.append(aux)
 		return sets;

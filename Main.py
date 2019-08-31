@@ -3,7 +3,7 @@ from AFN import AFN
 from State import State
 from Transition import Transition
 from AFD import AFD
-from copy import deepcopy
+from Sets import Sets
 epsilon = '\u03B5'
 
 if __name__ == "__main__":
@@ -37,15 +37,16 @@ if __name__ == "__main__":
     concat.display()
 
     print("")
+    setsUtil = Sets(concat.getStates())
     e = concat.getStart()
-    statesEpsilon = AFN.epsilonClosure(e)
+    statesEpsilon = setsUtil.epsilonClosure(e)
     print("Cerradura {} (a|b)+ c* estado inicial".format(epsilon))
-    ne = None
     for e in statesEpsilon:
        print("E: {}".format(e.getId()))
 
-    s = concat.convertToAFD()
+    s = concat.convertToAFD(setsUtil)
     for i in range(0,len(s)):
+        print("")
         for e in s[i]:
             print("S" + str(i) + " " +str(e.getId()))
 
