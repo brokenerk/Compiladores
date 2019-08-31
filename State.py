@@ -5,12 +5,12 @@ Id = 0
 
 class State:
     #Constructor
-    def __init__(self,token):
+    def __init__(self, token):
         global Id
         Id += 1
         self.id = Id 					#Integer
         self.transitions = set([]) 		#Set<Transition> 
-        self.token=token
+        self.token = token 				#Integer
 
     #Parameters: Nothing
     #Return: Integer
@@ -60,5 +60,5 @@ class State:
         R = set([])    #new Set<States>
         for t in self.getTransitions():
             if (t.getSymbol() == symbol):
-                R.add(deepcopy(t.getNext()))   
+                R.add(deepcopy(t.getNext())) 
         return R
