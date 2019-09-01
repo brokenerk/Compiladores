@@ -327,6 +327,8 @@ class AFN:
 				for e2 in aux:
 					if(e1.equals(e2) == True):
 						isAccepted = 1
+						break
+
 			#Add the result to the row
 			row.append(isAccepted)
 			#Finally, add the row w data to the table
