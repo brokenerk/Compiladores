@@ -2,9 +2,11 @@
 Id = 0
 
 class AFD:
-    def __init__(self,table,alphabet):
+    #Constructor
+    def __init__(self, table, alphabet):
         global Id
         Id += 1
+        self.id = Id;
         self.table = table
         self.alphabet = alphabet
 
@@ -16,15 +18,26 @@ class AFD:
     #Return: Nothing
     def setId(self, id):
         self.id = id   
+
     #Parameters: Nothing
-    #Return: Integer
-    def getToken(self):
-        return self.token
-    #Parameters: Integer
+    #Return: List<List>
+    def getTable(self):
+        return self.table  
+    #Parameters: List<List>
     #Return: Nothing
-    def setToken(self, token):
-        self.token = token  
-    def display(self):
+    def setTable(self, table):
+        self.table = table   
+
+    #Parameters: Nothing
+    #Return: Set<Char>
+    def getAlphabet(self):
+        return sorted(self.alphabet)   
+    #Parameters: Set<Char>
+    #Return: Nothing
+    def setAlphabet(self, alphabet):
+        self.alphabet = alphabet
+
+    def displayTable(self):
         for r in self.table:
             print(r)
         

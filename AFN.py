@@ -2,8 +2,9 @@
 from State import State
 from Transition import Transition
 from AFD import AFD
-from Sets import Sets
+from CustomSet import CustomSet
 from copy import deepcopy
+from collections import deque
 epsilon = '\u03B5'
 Id = 0
 
@@ -30,7 +31,7 @@ class AFN:
 	#Parameters: Nothing
 	#Return: Set<States>
 	def getStates(self):
-		return self.states   
+		return self.states  
 	#Parameters: Set<States>
 	#Return: Nothing
 	def setStates(self, states):
@@ -39,7 +40,7 @@ class AFN:
 	#Parameters: Nothing
 	#Return: Set<Char>
 	def getAlphabet(self):
-		return self.alphabet   
+		return sorted(self.alphabet)   
 	#Parameters: Set<Char>
 	#Return: Nothing
 	def setAlphabet(self, alphabet):
@@ -97,7 +98,7 @@ class AFN:
 				#Avoid epsilon
 				if(symbol != epsilon):
 					newAlphabet.add(symbol)
-		return newAlphabet
+		return sorted(newAlphabet)
 
 	#Parameters: Set<AFN>
 	#Return: AFN
@@ -165,7 +166,6 @@ class AFN:
 		del startB
 		del acceptsA
 		del acceptsB
-
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))   
 
 	#Parameters: AFN, Integer
@@ -204,7 +204,6 @@ class AFN:
 		#Free memory
 		del startB
 		del acceptsA
-
 		return AFN(newStates, AFN.addNewAlphabet(newStates), startA, acceptsB)    
 
 	#Parameters: Integer
@@ -240,7 +239,6 @@ class AFN:
 		#Free memory
 		del start
 		del accepts 
-
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))
 
 	#Parameters: Integer
@@ -254,7 +252,6 @@ class AFN:
 		    if(s.equals(posClosure.getStart()) == True):
 		    	for a in posClosure.getAccepts():
 			    	s.addTransition(Transition(epsilon, a)) 
-
 	    return posClosure
 
 	#Parameters: Integer
@@ -282,15 +279,23 @@ class AFN:
 		#Free memory
 		del start
 		del accepts
-
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))
 
+	#Parameters: CustomSet
+	#Return: List<Set>
 	def convertToAFD(self, setsUtil):
 		S0 = setsUtil.epsilonClosure(self.getStart())
-		sets = [S0]
+		stack = deque() #Stack
+		stack.append(S0)
+		S = [S0] #List<Set>
 
-		for symbol in self.getAlphabet():
-			aux = setsUtil.goTo(S0, symbol)
-			if(aux != set() or aux in(sets) == False):
-				sets.append(aux)
-		return sets;
+		while stack:
+			Si = stack.pop()
+			for symbol in self.getAlphabet():
+				aux = setsUtil.goTo(Si, symbol)
+				if(aux == set()):
+					continue
+				if(setsUtil.exists(S, aux) == False):
+					stack.append(aux)
+					S.append(aux)
+		return S;
