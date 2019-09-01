@@ -38,6 +38,8 @@ class AFD:
         self.alphabet = alphabet
 
     def displayTable(self):
-        for r in self.table:
-            print(r)
+        print("Id: {}".format(self.getId()))
+        print("   {}[Accept]".format(self.getAlphabet()))
+        for i in range(0, len(self.getTable())):
+            print("{}: {}".format(i, self.getTable()[i]))
         

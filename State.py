@@ -1,6 +1,5 @@
 #!python3
 from Transition import Transition
-from copy import deepcopy
 Id = 0
 
 class State:
@@ -10,7 +9,7 @@ class State:
         Id += 1
         self.id = Id 					#Integer
         self.transitions = set([]) 		#Set<Transition> 
-        self.token = token 				#Integer
+        #self.token = token 			#Integer
 
     #Parameters: Nothing
     #Return: Integer
@@ -19,8 +18,9 @@ class State:
     #Parameters: Integer
     #Return: Nothing
     def setId(self, id):
-    	self.id = id   
+    	self.id = id  
 
+    '''
     #Parameters: Nothing
     #Return: Integer
     def getToken(self):
@@ -29,6 +29,7 @@ class State:
     #Return: Nothing
     def setToken(self, token):
     	self.token = token  
+    '''
 
     #Parameters: Nothing
     #Return: Set<Transition>
