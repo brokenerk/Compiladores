@@ -1,7 +1,5 @@
 #!python3
 from AFN import AFN
-from State import State
-from Transition import Transition
 from AFD import AFD
 from CustomSet import CustomSet
 epsilon = '\u03B5'
@@ -46,14 +44,10 @@ if __name__ == "__main__":
        print("E: {}".format(e.getId()))
 
     print("")
-    print("Convertir (a|b)+ c* a AFD")
-    s = concat.convertToAFD(csConcat)
-
-    cont = 0
-    for i in range(0, len(s)):
-        print("")
-        for e in s[i]:
-            print("S" + str(i) + ": " + str(e.getId()))
+    print("AFD de la ER (a|b)+ c*")
+    afd1 = concat.convertToAFD(csConcat)
+    afd1.displayTable()
+    
 
 '''
     print("")

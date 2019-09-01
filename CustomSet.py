@@ -2,8 +2,9 @@ from collections import deque
 epsilon = '\u03B5'
 
 class CustomSet:
+	#Constructor
 	def __init__(self, afnStates):
-		self.afnStates = afnStates
+		self.afnStates = afnStates		#Set<States>
 
 	#Parameters: Integer
 	#Return: State
@@ -13,12 +14,16 @@ class CustomSet:
 				return e
 
 	#Parameters: List<Set>, Set
-	#Return: Boolean
+	#Return: Integer
 	def exists(self, list, s):
-		for i in list:
-			if(i == s):
-				return True
-		return False
+		list.sort() 	#Sort sets list first
+		#Iterate the list
+		for i in range(0, len(list)):
+			#If the set exists in list, we return the set Id
+			if(list[i] == s):
+				return i
+		#If not, there's a new set
+		return -1
 
 	#Parameters: State
 	#Return: Set<State>
@@ -36,7 +41,7 @@ class CustomSet:
 
 			for t in e.getTransitions():
 				if (t.getSymbol() == epsilon):
-					id = t.getNext().getId()
+					id = t.getNext().getId()	#Search by Id
 					p.append(self.searchState(id))
 		return s
 
@@ -47,7 +52,7 @@ class CustomSet:
 		for e in states:
 			for t in e.getTransitions():
 				if(t.getSymbol() == symbol):
-					id = t.getNext().getId()
+					id = t.getNext().getId()	#Search by Id
 					R.add(self.searchState(id))
 		return R
 

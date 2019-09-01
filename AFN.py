@@ -4,7 +4,6 @@ from Transition import Transition
 from AFD import AFD
 from CustomSet import CustomSet
 from copy import deepcopy
-from collections import deque
 epsilon = '\u03B5'
 Id = 0
 
@@ -17,7 +16,8 @@ class AFN:
 		self.states = states 				#Set<State>
 		self.alphabet = alphabet			#Set<Char>
 		self.start = start 					#State
-		self.accepts = accepts 			#Set<State>
+		self.accepts = accepts 				#Set<State>
+		#self.tokens = tokens 				#Set<Integer
 
 	#Parameters: Nothing
 	#Return: Integer
@@ -118,7 +118,7 @@ class AFN:
 		newStates.add(newStart)
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, accepts)
 
-	#Parameters: AFN, Integer
+	#Parameters: AFN
 	#Return: AFN
 	def join(self, afnB):
 		#Create a deepcopy of start states from both afns
@@ -168,7 +168,7 @@ class AFN:
 		del acceptsB
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))   
 
-	#Parameters: AFN, Integer
+	#Parameters: AFN
 	#Return: AFN
 	def concat(self, afnB):
 		#Create a deepcopy of start states from both afns
@@ -206,7 +206,7 @@ class AFN:
 		del acceptsA
 		return AFN(newStates, AFN.addNewAlphabet(newStates), startA, acceptsB)    
 
-	#Parameters: Integer
+	#Parameters: Nothing
 	#Return: AFN
 	def positiveClosure(self):
 		#Create new start state
@@ -241,7 +241,7 @@ class AFN:
 		del accepts 
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))
 
-	#Parameters: Integer
+	#Parameters: Nothing
 	#Return: AFN
 	def kleeneClosure(self):
 		#Get positive closure
@@ -254,7 +254,7 @@ class AFN:
 			    	s.addTransition(Transition(epsilon, a)) 
 	    return posClosure
 
-	#Parameters: Integer
+	#Parameters: Nothing
 	#Return: AFN
 	def optional(self):
 		newStart = State(-1)
@@ -282,20 +282,63 @@ class AFN:
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))
 
 	#Parameters: CustomSet
-	#Return: List<Set>
+	#Return: AFD
 	def convertToAFD(self, setsUtil):
 		S0 = setsUtil.epsilonClosure(self.getStart())
-		stack = deque() #Stack
-		stack.append(S0)
-		S = [S0] #List<Set>
+		queue = [S0] 		#Queue<Set>
+		list = [S0] 		#List<Set>
+		table = []			#List<List>
+		cont = 0
 
-		while stack:
-			Si = stack.pop()
+		while queue:
+			Si = queue.pop(0)					#Get first enter
+			row = []							#Row - List
+
+			#Iterate over the alphabet
 			for symbol in self.getAlphabet():
+				#Apply goTo function to the popped set
 				aux = setsUtil.goTo(Si, symbol)
+
+				#Set is empty, we append -1 to the row
 				if(aux == set()):
+					row.append(-1)
 					continue
-				if(setsUtil.exists(S, aux) == False):
-					stack.append(aux)
-					S.append(aux)
-		return S;
+
+				#Verify is set already exists in list
+				nSet = setsUtil.exists(list, aux)
+				#If it exists, we need to add their Id on the row
+				if(nSet != -1):
+					row.append(nSet)
+					continue
+
+				#The set is new, so we incremente the Id and add it to the row
+				cont += 1
+				row.append(cont)
+				#Add new set to the end of the queue
+				queue.append(aux)
+				#Add the new set to the list
+				list.append(aux)
+
+			#---- AQUI IRIA LO DEL MANEJO DE TOKENS DEL AFN
+			#---- SUGERENCIA: MANEJAR UN SET DE TOKENS EN ESTA CLASE, NO EN LA DE STATES
+			#Check if there's an accept state in the new set
+			isAccepted = -1
+			for e1 in self.getAccepts():
+				for e2 in aux:
+					if(e1.equals(e2) == True):
+						isAccepted = 1
+						break
+			#Add the result to the row
+			row.append(isAccepted)
+			#Finally, add the row w data to the table
+			table.append(row)
+
+		#Free memory
+		del S0
+		del queue
+		del list
+		del cont
+		del row
+		del Si
+		del aux
+		return AFD(table, self.getAlphabet());
