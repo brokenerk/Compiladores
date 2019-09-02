@@ -4,12 +4,12 @@ Id = 0
 
 class State:
     #Constructor
-    def __init__(self, token):
+    def __init__(self):
         global Id
         Id += 1
-        self.id = Id 					#Integer
-        self.transitions = set([]) 		#Set<Transition> 
-        #self.token = token 			#Integer
+        self.id = Id                #Integer			
+        self.token = -1		        #Integer
+        self.transitions = set([]) 	#Set<Transition> 
 
     #Parameters: Nothing
     #Return: Integer
@@ -20,7 +20,7 @@ class State:
     def setId(self, id):
     	self.id = id  
 
-    '''
+    
     #Parameters: Nothing
     #Return: Integer
     def getToken(self):
@@ -29,7 +29,7 @@ class State:
     #Return: Nothing
     def setToken(self, token):
     	self.token = token  
-    '''
+    
 
     #Parameters: Nothing
     #Return: Set<Transition>
