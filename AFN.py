@@ -6,6 +6,7 @@ from CustomSet import CustomSet
 from copy import deepcopy
 epsilon = '\u03B5'
 Id = 0
+noAccepted = -1
 
 class AFN:
 	#Constructor
@@ -79,8 +80,8 @@ class AFN:
 	#Parameters: Character
 	#Return: AFN
 	def createBasic(symbol):
-		e1 = State(-1)
-		e2 = State(5)
+		e1 = State( )
+		e2 = State( )
 		t1 = Transition(symbol, e2)
 		e1.addTransition(t1)
 		states = set([e1, e2])
@@ -103,12 +104,12 @@ class AFN:
 	#Parameters: Set<AFN>
 	#Return: AFN
 	def addNewStart(afns):
-		newStart = State(-1)
+		newStart = State( )
 		newStates = set([])
 		accepts = set([])
 
 		for afn in afns:
-			start = deepcopy(afn.getStart());
+			start = deepcopy(afn.getStart())
 			newStart.addTransition(Transition(epsilon, start))
 			for e in afn.getAccepts():
 				accepts.add(e)
@@ -128,8 +129,8 @@ class AFN:
 		acceptsA = deepcopy(self.getAccepts()) 
 		acceptsB = deepcopy(afnB.getAccepts())     
 		#Create new start, accept state and new states set
-		newStart = State(-1)
-		newAccept = State(5)
+		newStart = State( )
+		newAccept = State( )
 		
 		#Add epsilon transitions to new start state
 		newStart.addTransition(Transition(epsilon, startA))
@@ -210,9 +211,9 @@ class AFN:
 	#Return: AFN
 	def positiveClosure(self):
 		#Create new start state
-		newStart = State(-1)
+		newStart = State( )
 		#Create new accept state
-		newAccept = State(5)
+		newAccept = State( )
 
 		#Create a deepcopy of actual start and accept state
 		start = deepcopy(self.getStart())
@@ -221,6 +222,7 @@ class AFN:
 		#Add epsilon transitions
 		newStart.addTransition(Transition(epsilon, start))
 		for a in accepts:
+			a.setToken ( noAccepted )
 			a.addTransition(Transition(epsilon, newAccept))
 			a.addTransition(Transition(epsilon, start))
 
@@ -257,14 +259,15 @@ class AFN:
 	#Parameters: Nothing
 	#Return: AFN
 	def optional(self):
-		newStart = State(-1)
-		newAccept = State(5)
+		newStart = State( )
+		newAccept = State( )
 		start = deepcopy(self.getStart())
 		accepts = deepcopy(self.getAccepts()) 
 
 		newStart.addTransition(Transition(epsilon, start))
 		newStart.addTransition(Transition(epsilon, newAccept))
 		for a in accepts:
+			a.setToken( noAccepted )
 			a.addTransition(Transition(epsilon, newAccept)) 
 		newStates = set([newStart, start, newAccept])
 		for a in accepts:
@@ -280,6 +283,13 @@ class AFN:
 		del start
 		del accepts
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))
+	
+	#Parameters: Token
+	#Return: Nothing
+	def setToken(self,token):
+		statesAceppted = self.getAccepts()
+		for e in statesAceppted:
+			e.setToken(token)
 
 	#Parameters: CustomSet
 	#Return: AFD
@@ -289,6 +299,7 @@ class AFN:
 		list = [S0] 		#List<Set>
 		table = []			#List<List>
 		cont = 0
+		tok = -1
 
 		while queue:
 			Si = queue.pop(0)					#Get first enter
@@ -319,18 +330,16 @@ class AFN:
 				#Add the new set to the list
 				list.append(aux)
 
-			#---- AQUI IRIA LO DEL MANEJO DE TOKENS DEL AFN
-			#---- SUGERENCIA: MANEJAR UN SET DE TOKENS EN ESTA CLASE, NO EN LA DE STATES
+			
 			#Check if there's an accept state in the new set
-			isAccepted = -1
 			for e1 in self.getAccepts():
 				for e2 in aux:
 					if(e1.equals(e2) == True):
-						isAccepted = 1
+						tok = e1.getToken()
 						break
 
 			#Add the result to the row
-			row.append(isAccepted)
+			row.append(tok)
 			#Finally, add the row w data to the table
 			table.append(row)
 
