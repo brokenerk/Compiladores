@@ -33,6 +33,7 @@ if __name__ == "__main__":
     concat = posClosure.concat(kleen)
     print("AFN para la ER (a|b)+ c*")
     concat.display()
+    concat.setToken("ER")
 
     print("")
     csConcat = CustomSet(concat.getStates())
