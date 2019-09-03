@@ -15,26 +15,26 @@
   <div class="container">
     <!-- Add -->
     <div id="Add">
-      <form class="col s12">
+      <div class="col s12">
         <div class="row">
-        	<form action="{{ url_for('convert') }}" method="POST">
-        	  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Add new </p>
-	          <div class="input-field col s9">
-	            <input id="char" name="char" type="text" class="validate">
-	            <label for="last_name">Name:</label>
-	          </div>
-	          <div class="input-field col s3">
-	              <a class="waves-effect waves-light #0288d1 light-blue darken-3 btn-large"><i class="material-icons right">add_circle</i>Add</a>
-	          </div>
-	        </form>
+          <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Add new </p>
+            {% from "_macroAdd.html" import render_field %}
+            <form name="sendName" id="addChar" method="POST">
+              <div class="input-field col s9">
+                {{ render_field(form.char) }}
+              </div>
+              <div class="input-field col s3">
+                <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-3 btn-large"><i class="material-icons right">add_circle</i>Add</button>
+              </div>
+            </form>
         </div>
-      </form>
+      </div>
     </div>
     <!-- Join -->
     <div id="Join" style="display: none;">
       <div class="col s12">
       	<div class="row">
-      		<form>
+      		<!-- <form>
       			<p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Join </p>
       			<div class="input-field col s5">
 				    <select>
@@ -53,7 +53,7 @@
 			    <div class="input-field col s2">
 			    	<a onclick="show(getElementById('Join'))" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">sync</i>Join</a>
 				</div>
-      		</form>
+      		</form> -->
       	</div>
       </div>
     </div>
