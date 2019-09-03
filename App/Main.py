@@ -4,80 +4,145 @@ from AFD import AFD
 from CustomSet import CustomSet
 epsilon = '\u03B5'
 
+def menu():
+    print('*********************************************************')
+    print('************* C O M P I L A D O R E S *******************')
+    print('1. Crear automata')
+    print('2. Unir')
+    print('3. Concatenar')
+    print('4. Cerradura Positiva')
+    print('5. Cerradura Epsilon')
+    print('6. Cerradura de kleen')
+    print('7. Opcional')
+    print('8. Afd')
+    print('9. Automatota')
+    print('10. Mostrar AFN')
+    print('11. Añadir token')
+    print('')
+
 if __name__ == "__main__":
-    print("")
-    afn1 = AFN.createBasic('a')
-    afn1.display()
+    afn = [] 
+    afd = []
+    idAfd=-1
+    while(1):
+        menu()
+        option = input('Ingresa una opción: ')
+        
+        if option == '1':
 
-    print("")
-    afn2 = AFN.createBasic('b')
-    afn2.display()
+            print(' ************* Crear automata ***************')
+            symbol = input('Ingresa una letra: ')
+            afn.append(AFN.createBasic(symbol))
+            input('Ingresa una tecla parca continuar')
 
-    print("")
-    afn3 = AFN.createBasic('c')
-    afn3.display()
+        elif option == '2':
 
-    print("")
-    join = afn1.join(afn2)
-    #join.display();
+            print('')
+            print('****************** Unir *********************')
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = int(input('Ingresa el id del primer automata: '))
+            afnb = int(input('Ingresa el id del segundo automata: '))
+            afn.append( afn[afna-1].join(afn[afnb-1]) )
+            input('Ingresa una tecla parca continuar')
 
-    print("")
-    posClosure = join.positiveClosure()
-    #posClosure.display();
+        elif option == '3':
 
-    print("")
-    kleen = afn3.kleeneClosure()
-    #kleen.display()
+            print('')
+            print('**************** Concatenar ******************')
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = int(input('Ingresa el id del primer automata: '))
+            afnb = int(input('Ingresa el id del segundo automata: '))
+            afn.append( afn[afna-1].join( afn[afnb-1]) )
+            input('Ingresa una tecla parca continuar')
+        
+        elif option == '4':
 
-    print("")
-    concat = posClosure.concat(kleen)
-    print("AFN para la ER (a|b)+ c*")
-    concat.display()
+            print('')
+            print('************* Cerradura Positiva **************')
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = int(input('Ingresa el id  automata: '))
+            afn.append( afn[afna-1].positiveClosure() )
+            input('Ingresa una tecla parca continuar')
 
-    print("")
-    csConcat = CustomSet(concat.getStates())
-    e = concat.getStart()
+        elif option == '5':
+            
+            print('')
+            print('************* Cerradura Epsilon ***************')
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = input('Ingresa el id  automata: ')
+            afn.append( afn[afna-1].positiveClosure() )
+            input('Ingresa una tecla parca continuar')
+            
+        elif option == '6':
+            
+            print('')
+            print('************* Cerradura de kleen ***************')
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = int(input('Ingresa el id  automata: '))
+            afn.append( afn[afna-1].kleeneClosure )
+            input('Ingresa una tecla parca continuar')
 
-    statesEpsilon = csConcat.epsilonClosure(e)
-    print("Cerradura {} (a|b)+ c* estado inicial".format(epsilon))
-    for e in statesEpsilon:
-       print("E: {}".format(e.getId()))
+        elif option == '7':
+            
+            print('')
+            print('***************** Opcional *********************')
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = int(input('Ingresa el id  automata: '))
+            afn.append( afn[afna-1].optional() )
+            input('Ingresa una tecla parca continuar')
 
-    print("")
-    print("AFD de la ER (a|b)+ c*")
-    afd1 = concat.convertToAFD(csConcat)
-    afd1.displayTable()
-    
+        elif option == '8':
+            
+            print('************** Convertir a Afd *****************')
+            idAfd+=1
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = int(input('Ingresa el id  automata: '))
+            csConcat = CustomSet(afn[afna-1].getStates())
+            e = afn[afna-1].getStart()
+            statesEpsilon = csConcat.epsilonClosure(e)
+            afd.append(afn[afna-1].convertToAFD(csConcat))
+            afd[idAfd].displayTable()
+            
+            input('Ingresa una tecla parca continuar')
 
-'''
-    print("")
-    concat = afn1.concat(afn2)
-    print("Concat AFN1 and AFN2:")
-    concat.display()
+        elif option == '9':
+            print('**************** Automatota ********************')
+            print('')
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = int(input('Ingresa el numero de  automatas que quieres agregar: '))
+            for a in afna:
+                print('Ingresa el Id del Automata {}: '.format(a))
+                id = int(input())
+                afns.append ( afn[id-1] )
+            afn.append(AFN.addNewStart(afns))
 
-    print("")
-    posClosureA = afn1.positiveClosure()
-    print("Cerradura + AFN 1:")
-    posClosureA.display()
+            input('Ingresa una tecla parca continuar')
+        
+        elif option == '10':
 
-    print("")
-    kleeneA = afn1.kleeneClosure()
-    print("Cerradura Kleene * AFN 1:")
-    kleeneA.display()
+            print('')
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = int(input('Ingresa el id  automata: '))
+            afn[afna-1].display()
+            input('Ingresa una tecla parca continuar')
+        
+        elif option == '11':
 
-    print("")
-    optional = afn1.optional()
-    print("Opcional ? AFN1:")
-    optional.display()
+            print('')
+            for a in afn:
+                print('Afn: {}'.format(a.getId()))
+            afna = int(input('Ingresa el id  automata: '))
+            token = input('Ingresa el token del automata: ')
+            afn[afna-1].setToken(token)
 
-    automatota = AFN.addNewStart(set([afn1, afn3, concat, optional]))
-    automatota.display()
-
-    print("")
-    e = automatota.getStart()
-    statesEpsilon = AFN.epsilonClosure(e)
-    print("Cerradura {} Automatota estado inicial".format(epsilon))
-    for e in statesEpsilon:
-       print("E: {}".format(e.getId()))
-
-'''
+        else:
+            input('Opcion incorrecta, ingresa una tecla parca continuar')

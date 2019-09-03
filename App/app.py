@@ -1,5 +1,8 @@
 from flask import Flask
 from flask import render_template
+from flask import request
+from flask import url_for
+
 from AFN import AFN
 from AFD import AFD
 from CustomSet import CustomSet
@@ -15,8 +18,12 @@ def index():
 def aboutUs():
 	return render_template('aboutus.html')
 
-@app.route("/convert")
+@app.route("/convert", methods = ['GET', 'POST'])
 def convert():
+	#if request.method == 'POST'
+	#	char = request.form['char']
+	#	print("CHAR: ") 
+	#	print(char)
 	return render_template('convert.html')
 
 if __name__ == '__main__':

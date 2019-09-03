@@ -17,10 +17,10 @@
     <div id="Add">
       <form class="col s12">
         <div class="row">
-        	<form>
+        	<form action="{{ url_for('convert') }}" method="POST">
         	  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Add new </p>
 	          <div class="input-field col s9">
-	            <input id="last_name" type="text" class="validate">
+	            <input id="char" name="char" type="text" class="validate">
 	            <label for="last_name">Name:</label>
 	          </div>
 	          <div class="input-field col s3">
