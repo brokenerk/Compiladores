@@ -1,174 +1,227 @@
 {% extends 'base/dashboard.html'%}
 {% block content %}
-
-<div class="row">
+   <div class="row">
       <br>
-      <div class="container">
+      <div class="row" style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
          <a onclick="show(getElementById('Add'))" class="waves-effect waves-light #0288d1 light-blue darken-3 btn-large"><i class="material-icons right">add_circle</i>Add</a>
          <a onclick="show(getElementById('Join'))" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">sync</i>Join</a>
          <a onclick="show(getElementById('Concat'))" class="waves-effect waves-light #039be5 light-blue darken-1 btn-large"><i class="material-icons right">redo</i>Concat</a>
          <a onclick="show(getElementById('+Closure'))" class="waves-effect waves-light #03a9f4 light-blue btn-large"><i class="material-icons left">add</i>Closure</a>
          <a onclick="show(getElementById('*Closure'))" class="waves-effect waves-light #29b6f6 light-blue lighten-1 btn-large"><i class="material-icons left">stars</i>Closure</a>
          <a onclick="show(getElementById('?Optional'))" class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>? Optional</a>
+         <a onclick="show(getElementById('convertToAFD'))" class="waves-effect waves-light #81d4fa light-blue lighten-3 btn-large"></i>To AFD</a>
       </div>
-  </div>
-  <div class="container">
-    <!-- Add -->
-    <div id="Add">
-      <div class="col s12">
-        <div class="row">
-          <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Add new </p>
-            {% from "_macroAdd.html" import render_field %}
-            <form name="sendName" id="addChar" method="POST">
-              <div class="input-field col s9">
-                {{ render_field(form.char) }}
-              </div>
-              <div class="input-field col s3">
-                <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-3 btn-large"><i class="material-icons right">add_circle</i>Add</button>
-              </div>
-            </form>
-        </div>
+   </div>
+   <div class="container">
+      <!-- Add -->
+      <div id="Add">
+         <div class="col s12">
+            <div class="row">
+               <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Add new </p>
+               {% from "_macroAdd.html" import render_field %}
+               <form name="sendName" id="addChar" method="POST">
+                  <div class="input-field col s9">
+                     {{ render_field(add.char) }}
+                  </div>
+                  <input type="hidden" id="optAdd" name="option">
+                  <div class="input-field col s3">
+                     <button type="submit" onclick="document.getElementById('optAdd').value = 0" class="waves-effect waves-light #0288d1 light-blue darken-3 btn-large"><i class="material-icons right">add_circle</i>Add</button>
+                  </div>
+                  
+               </form>
+            </div>
+         </div>
       </div>
-    </div>
-    <!-- Join -->
-    <div id="Join" style="display: none;">
-      <div class="col s12">
-      	<div class="row">
-      		<!-- <form>
-      			<p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Join </p>
-      			<div class="input-field col s5">
-				    <select>
-				      <option value="" disabled selected>Choose 1st</option>
-				      <option value="1">Option 1</option>
-				      <option value="2">Option 2</option>
-				    </select>
-			    </div>
-			    <div class="input-field col s5">
-				    <select>
-				      <option value="" disabled selected>Choose 2nd</option>
-				      <option value="1">Option 1</option>
-				      <option value="2">Option 2</option>
-				    </select>
-			    </div>
-			    <div class="input-field col s2">
-			    	<a onclick="show(getElementById('Join'))" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">sync</i>Join</a>
-				</div>
-      		</form> -->
-      	</div>
+      <!-- Join -->
+      <div id="Join" style="display: none;">
+         <div class="col s12">
+            <div class="row">
+               <form method="POST">
+                  <input type="hidden" id="optJoin" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Join </p>
+                  <div class="input-field col s5">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              <option value="{{ afn }}"> {{ afn }} </option>
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s5">
+                     <select name="afn2">
+                        <option value="11" disabled selected>Choose 2nd</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              <option value="{{ afn }}"> {{ afn }} </option>
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s2">
+                     <button onclick="document.getElementById('optJoin').value = 1" type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">sync</i>Join</a>
+                  </div>
+               </form>
+            </div>
+         </div>
       </div>
-    </div>
-    <div id="Concat" class="col s12" style="display: none;">
-      <div class="col s12">
-      	<div class="row">
-      		<form>
-      			<p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Concat </p>
-      			<div class="input-field col s5">
-				    <select>
-				      <option value="" disabled selected>Choose 1st</option>
-				      <option value="1">Option 1</option>
-				      <option value="2">Option 2</option>
-				    </select>
-			    </div>
-			    <div class="input-field col s4">
-				    <select>
-				      <option value="" disabled selected>Choose 2nd</option>
-				      <option value="1">Option 1</option>
-				      <option value="2">Option 2</option>
-				    </select>
-			    </div>
-			    <div class="input-field col s3">
-			    	<a onclick="show(getElementById('Concat'))" class="waves-effect waves-light #039be5 light-blue darken-1 btn-large"><i class="material-icons right">redo</i>Concat</a>
-				</div>
-      		</form>
-      	</div>
+      <div id="Concat" class="col s12" style="display: none;">
+         <div class="col s12">
+            <div class="row">
+               <form method="POST">
+                  <input type="hidden" id="optConcat" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Concat </p>
+                  <div class="input-field col s5">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              <option value="{{ afn }}"> {{ afn }} </option>
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s4">
+                     <select name="afn2">
+                        <option value="11" disabled selected>Choose 2nd</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              <option value="{{ afn }}"> {{ afn }} </option>
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button onclick="document.getElementById('optConcat').value = 2" class="waves-effect waves-light #039be5 light-blue darken-1 btn-large"><i class="material-icons right">redo</i>Concat</a>
+                  </div>
+               </form>
+            </div>
+         </div>
       </div>
-    </div>
-    <div id="+Closure" class="col s12" style="display: none;">
-      <div class="col s12">
-      	<div class="row">
-      		<form>
-      			<p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> + Closure </p>
-      			<div class="input-field col s9">
-				    <select>
-				      <option value="" disabled selected>Choose 1st</option>
-				      <option value="1">Option 1</option>
-				      <option value="2">Option 2</option>
-				    </select>
-			    </div>
-			    <div class="input-field col s3">
-			    	<a onclick="show(getElementById('+Closure'))" class="waves-effect waves-light #03a9f4 light-blue btn-large"><i class="material-icons left">add</i>Closure</a>
-				</div>
-      		</form>
-      	</div>
+      <div id="+Closure" class="col s12" style="display: none;">
+         <div class="col s12">
+            <div class="row">
+               <form method="POST">
+                  <input type="hidden" id="opt+" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> + Closure </p>
+                  <div class="input-field col s9">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              <option value="{{ afn }}"> {{ afn }} </option>
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button onclick="document.getElementById('opt+').value = 3" class="waves-effect waves-light #03a9f4 light-blue btn-large"><i class="material-icons left">add</i>Closure</a>
+                  </div>
+               </form>
+            </div>
+         </div>
       </div>
-    </div>
-    <div id="*Closure" class="col s12" style="display: none;">
-      <div class="col s12">
-      	<div class="row">
-      		<form>
-      			<p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> * Closure </p>
-      			<div class="input-field col s9">
-				    <select>
-				      <option value="" disabled selected>Choose 1st</option>
-				      <option value="1">Option 1</option>
-				      <option value="2">Option 2</option>
-				    </select>
-			    </div>
-			    <div class="input-field col s3">
-			    	<a onclick="show(getElementById('*Closure'))" class="waves-effect waves-light #29b6f6 light-blue lighten-1 btn-large"><i class="material-icons left">stars</i>Closure</a>
-				</div>
-      		</form>
-      	</div>
+      <div id="*Closure" class="col s12" style="display: none;">
+         <div class="col s12">
+            <div class="row">
+               <form method="POST">
+                  <input type="hidden" id="opt*" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> * Closure </p>
+                  <div class="input-field col s9">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              <option value="{{ afn }}"> {{ afn }} </option>
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button onclick="document.getElementById('opt*').value = 4" class="waves-effect waves-light #29b6f6 light-blue lighten-1 btn-large"><i class="material-icons left">stars</i>Closure</a>
+                  </div>
+               </form>
+            </div>
+         </div>
       </div>
-    </div>
-    <div id="?Optional" class="col s12" style="display: none;">
-      <div class="col s12">
-      	<div class="row">
-      		<form>
-      			<p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> ? Optional </p>
-      			<div class="input-field col s9">
-				    <select>
-				      <option value="" disabled selected>Choose 1st</option>
-				      <option value="1">Option 1</option>
-				      <option value="2">Option 2</option>
-				    </select>
-			    </div>
-			    <div class="input-field col s3">
-			    	<a onclick="show(getElementById('?Optional'))" class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>? Optional</a>
-				</div>
-      		</form>
-      	</div>
+      <div id="?Optional" class="col s12" style="display: none;">
+         <div class="col s12">
+            <div class="row">
+               <form method="POST">
+                  <input type="hidden" id="opt?" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> ? Optional </p>
+                  <div class="input-field col s9">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              <option value="{{ afn }}"> {{ afn }} </option>
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button onclick="document.getElementById('opt?').value = 5" class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>? Optional</a>
+                  </div>
+               </form>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
-  <div class="container">
-    <br>
-    Aquí va la tabla:
-    <br> <br>
-    <div id="forms" class="col s12">
-      
-    </div>
-  </div>
-  <div class="row">
-    <div class="container">
-      Aquí van los dibujos:
-      <div class="col s12">
-        <div class="row">
-          <div id="mynetwork" class="input-field col s6">
-            SOY AFN
-          </div>
-          <div id="mynetwork2" class="input-field col s6">
-            SOY AFD
-          </div>
-        </div>
+      <div id="convertToAFD" class="col s12" style="display: none;">
+         <div class="col s12">
+            <div class="row">
+               <form method="POST">
+                  <input type="hidden" id="optToAFD" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Convert to AFD </p>
+                  <div class="input-field col s9">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              <option value="{{ afn }}"> {{ afn }} </option>
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button onclick="document.getElementById('optToAFD').value = 6;" class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>To AFD</a>
+                  </div>
+               </form>
+            </div>
+         </div>
       </div>
-    </div>
-  </div>
+   </div>
+   <div class="container" id="showTable" style="display: none;">
+      <br>
+      Aquí va la tabla:
+      <br> <br>
+      <div id="forms" class="col s12">
+         
+      </div>
+   </div>
+   <div class="row">
+      <div class="container">
+         Aquí van los dibujos:
+         <div class="col s12">
+            <div class="row">
+               <div id="mynetwork" class="input-field col s6">
+                  SOY AFN
+               </div>
+               <div id="mynetwork2" class="input-field col s6">
+                  SOY AFD
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 
-  <script type = "text/javascript" src = "../static/js/show.js"></script>
-  <script>
-  	$(document).ready(function() {
-            $('select').material_select();
-         });
-  </script>
+   <script type = "text/javascript" src = "../static/js/show.js"></script>
+   <script type = "text/javascript" src = "../static/js/sendOption.js"></script>
+   <script>
+      $(document).ready(function() {
+      $('select').material_select();
+      });
+
+   </script>
 {% endblock %}

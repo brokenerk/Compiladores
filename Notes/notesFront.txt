@@ -1,0 +1,12 @@
+--- Add new char 
+	Just one, length == 1
+--- Join
+	Can join the same
+--- Concat
+	Can concat the same
+
+
+--- Can remove any AFN
+--- 
+
+	Each operation save the original AFN and create a new with a new ID.
