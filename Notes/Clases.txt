@@ -19,3 +19,18 @@ AFN
 
 	- cerraduraEpsilon()
 
+Token
+	- Clave - valor
+
+Lexic
+	- Tabla AFD
+	- Metodo yylex
+	- getLexema()
+	- getToken()
+	
+
+DescRecursivo
+	- Lexic
+	- result
+
+
