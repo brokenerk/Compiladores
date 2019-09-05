@@ -35,6 +35,9 @@ def convert():
 	afn2 = request.form.get('afn2')
 	opt = request.form.get('option')
 	afdNew = 0
+	lenAFD = 0
+	sizeAfd = 0
+	table = [[]]
 	print("-------------------------------------------------- OPTION:", opt)
 
 	# Option: ADD 
@@ -103,9 +106,11 @@ def convert():
 			aux = CustomSet(afnAvailable[int(afn1)].getStates())
 			e = afnAvailable[int(afn1)].getStart()
 			afdNew = afnAvailable[int(afn1)].convertToAFD(aux)
+			sizeAfd = len(afdNew.getTable())
+			table = afdNew.getTable()
 			afdNew.displayTable()
 
-	return render_template('convert.html', add=addForm, addT=addToken, idAfn=idAfnAvailable, showBool=flag, afd=afdNew)
+	return render_template('convert.html', add=addForm, addT=addToken, idAfn=idAfnAvailable, showBool=flag, afd=afdNew, lenAFD=sizeAfd, afdTable=table)
 
 
 if __name__ == '__main__':

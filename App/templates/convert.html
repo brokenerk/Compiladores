@@ -221,7 +221,7 @@
          </div>
       </div>
    </div>
-   <div class="container" id="showTable">
+   <div class="container" id="showTable" >
       {% if afd %}
          <br>
          <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Table of the AFD</p>
@@ -229,39 +229,27 @@
          <table>
             <thead>
                <tr>
-                  <th>Titulo 1</th>
-                  <th>Titulo 2</th>
+                  <th>Id</th>
+                  {% for a in afd.getAlphabet() %}
+                     <th>{{ a }}</th>
+                  {% endfor %}
+                  <th> Token </th> 
                </tr>
             </thead>
             <tbody>
-               <tr>
-                  <td>Alvin</td>
-                  <td>Eclair</td>
-               </tr>
-               <tr>
-                  <td>Alan</td>
-                  <td>Jellybean</td>
-               </tr>
+               <!-- TO SHOW ID -->
+               {% for i in afdTable %}
+                  <tr>
+                     <td> {{ i }} </td>
+                     {% for j in i %}
+                        <td>{{ j }}</td>
+                     {% endfor %}
+                  </tr>
+               {% endfor %}
             </tbody>
          </table>
       {% endif %}
    </div>
-   <!-- <div class="row">
-      <div class="container">
-         Aquí van los dibujos:
-         <div class="col s12">
-            <div class="row">
-               <div id="mynetwork" class="input-field col s6">
-                  SOY AFN
-               </div>
-               <div id="mynetwork2" class="input-field col s6">
-                  SOY AFD
-               </div>
-            </div>
-         </div>
-      </div>
-   </div> -->
-
    <script type = "text/javascript" src = "../static/js/show.js"></script>
    <script type = "text/javascript" src = "../static/js/sendOption.js"></script>
    <script>
