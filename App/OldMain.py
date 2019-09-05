@@ -36,6 +36,7 @@ if __name__ == "__main__":
     concat.setToken("ER")
 
     print("")
+
     csConcat = CustomSet(concat.getStates())
     e = concat.getStart()
 

@@ -28,12 +28,16 @@ def aboutUs():
 
 @app.route("/convert", methods = ['GET', 'POST'])
 def convert():
+	flag = 0
 	addForm = forms.AddForm(request.form)
+	addToken = forms.AddToken(request.form)
 	afn1 = request.form.get('afn1')
 	afn2 = request.form.get('afn2')
 	opt = request.form.get('option')
+	afdNew = 0
 	print("-------------------------------------------------- OPTION:", opt)
 
+	# Option: ADD 
 	if request.method == 'POST' and opt == "0":
 			c = addForm.char.data
 			if c not in alphabet:
@@ -42,7 +46,8 @@ def convert():
 				alphabet[c] = afn.getId()
 				idAfnAvailable[afn.getId()] = afn.getId()
 				print("SIZE:", len(afnAvailable))
-				
+	
+	# Option: JOIN	
 	elif request.method == 'POST' and opt == "1":
 		if len(afn1) > 0 and len(afn2) > 0:
 			newAfn = afnAvailable[int(afn1)].join(afnAvailable[int(afn2)])
@@ -50,6 +55,7 @@ def convert():
 			idAfnAvailable[newAfn.getId()] = newAfn.getId()
 			print("SIZE:", len(afnAvailable))
 
+	# Option: CONCAT 
 	elif request.method == 'POST' and opt == "2":
 		if len(afn1) > 0 and len(afn2) > 0:
 			newAfn = afnAvailable[int(afn1)].concat(afnAvailable[int(afn2)])
@@ -57,6 +63,7 @@ def convert():
 			idAfnAvailable[newAfn.getId()] = newAfn.getId()
 			print("SIZE:", len(afnAvailable))
 
+	# Option: +CLOSURE
 	elif request.method == 'POST' and opt == "3":
 		if len(afn1) > 0:
 			newAfn = afnAvailable[int(afn1)].positiveClosure()
@@ -64,6 +71,7 @@ def convert():
 			idAfnAvailable[newAfn.getId()] = newAfn.getId()
 			print("SIZE:", len(afnAvailable))
 
+	# Option: *CLOSURE
 	elif request.method == 'POST' and opt == "4":
 		if len(afn1) > 0:
 			newAfn = afnAvailable[int(afn1)].kleeneClosure()
@@ -71,18 +79,33 @@ def convert():
 			idAfnAvailable[newAfn.getId()] = newAfn.getId()
 			print("SIZE:", len(afnAvailable))
 
+	# Option: ?Optional
 	elif request.method == 'POST' and opt == "5":
 		if len(afn1) > 0:
-			newAfn = afnAvailable[int(afn1)].epsilonClosure()
-			afnAvailable[newAfn.getId()] = newAfn
-			idAfnAvailable[newAfn.getId()] = newAfn.getId()
+			aux = CustomSet(afnAvailable[int(afn1)].getStates())
+			e = afnAvailable[int(afn1)].getStart()
+			statesEpsilon = aux.epsilonClosure(e)
+			#for e in statesEpsilon:
+			#	print("E: {}".format(e.getId()))
 			print("SIZE:", len(afnAvailable))
 
+	# Option: SET TOKEN
 	elif request.method == 'POST' and opt == "6":
 		if len(afn1) > 0:
-		    print("Other option")
+			number = addToken.token.data
+			#print("Add toke to:", afn1)
+			#print("Token:", number)
+			afnAvailable[int(afn1)].setToken(number)
 
-	return render_template('convert.html', add=addForm, idAfn=idAfnAvailable)
+	# Option: TO AFD
+	elif request.method == 'POST' and opt == "7":
+		if len(afn1) > 0:
+			aux = CustomSet(afnAvailable[int(afn1)].getStates())
+			e = afnAvailable[int(afn1)].getStart()
+			afdNew = afnAvailable[int(afn1)].convertToAFD(aux)
+			afdNew.displayTable()
+
+	return render_template('convert.html', add=addForm, addT=addToken, idAfn=idAfnAvailable, showBool=flag, afd=afdNew)
 
 
 if __name__ == '__main__':

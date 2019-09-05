@@ -9,7 +9,8 @@
          <a onclick="show(getElementById('+Closure'))" class="waves-effect waves-light #03a9f4 light-blue btn-large"><i class="material-icons left">add</i>Closure</a>
          <a onclick="show(getElementById('*Closure'))" class="waves-effect waves-light #29b6f6 light-blue lighten-1 btn-large"><i class="material-icons left">stars</i>Closure</a>
          <a onclick="show(getElementById('?Optional'))" class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>? Optional</a>
-         <a onclick="show(getElementById('convertToAFD'))" class="waves-effect waves-light #81d4fa light-blue lighten-3 btn-large"></i>To AFD</a>
+         <a onclick="show(getElementById('setToken'))" class="waves-effect waves-light #81d4fa light-blue lighten-3 btn-large"></i>Set Token</a>
+         <a onclick="show(getElementById('convertToAFD'))" class="waves-effect waves-light #b3e5fc light-blue lighten-4 btn-large"></i>To AFD</a>
       </div>
    </div>
    <div class="container">
@@ -168,6 +169,34 @@
             </div>
          </div>
       </div>
+      <div id="setToken" class="col s12" style="display: none;">
+         <div class="col s12">
+            <div class="row">
+               {% from "_macroToken.html" import render_field %}
+               <form  name="sendToken" id="addToken" method="POST">
+                  <input type="hidden" id="optSetToken" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Set Token </p>
+                  <div class="input-field col s4">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              <option value="{{ afn }}"> {{ afn }} </option>
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s4">
+                     {{ render_field(addT.token) }}
+                  </div>
+                  
+                  <div class="input-field col s4">
+                     <button onclick="document.getElementById('optSetToken').value = 6;" class="waves-effect waves-light #81d4fa light-blue lighten-3 btn-large"></i>Set Token</a>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
       <div id="convertToAFD" class="col s12" style="display: none;">
          <div class="col s12">
             <div class="row">
@@ -185,22 +214,39 @@
                      </select>
                   </div>
                   <div class="input-field col s3">
-                     <button onclick="document.getElementById('optToAFD').value = 6;" class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>To AFD</a>
+                     <button onclick="document.getElementById('optToAFD').value = 7;" class="waves-effect waves-light #b3e5fc light-blue lighten-4 btn-large"></i>To AFD</a>
                   </div>
                </form>
             </div>
          </div>
       </div>
    </div>
-   <div class="container" id="showTable" style="display: none;">
-      <br>
-      Aquí va la tabla:
-      <br> <br>
-      <div id="forms" class="col s12">
-         
-      </div>
+   <div class="container" id="showTable">
+      {% if afd %}
+         <br>
+         <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Table of the AFD</p>
+         <br> <br>
+         <table>
+            <thead>
+               <tr>
+                  <th>Titulo 1</th>
+                  <th>Titulo 2</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td>Alvin</td>
+                  <td>Eclair</td>
+               </tr>
+               <tr>
+                  <td>Alan</td>
+                  <td>Jellybean</td>
+               </tr>
+            </tbody>
+         </table>
+      {% endif %}
    </div>
-   <div class="row">
+   <!-- <div class="row">
       <div class="container">
          Aquí van los dibujos:
          <div class="col s12">
@@ -214,7 +260,7 @@
             </div>
          </div>
       </div>
-   </div>
+   </div> -->
 
    <script type = "text/javascript" src = "../static/js/show.js"></script>
    <script type = "text/javascript" src = "../static/js/sendOption.js"></script>
