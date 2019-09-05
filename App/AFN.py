@@ -299,11 +299,13 @@ class AFN:
 		list = [S0] 		#List<Set>
 		table = []			#List<List>
 		cont = 0
-		tok = -1
+		i = 0
 
 		while queue:
 			Si = queue.pop(0)					#Get first enter
 			row = []							#Row - List
+			#Add state counter
+			row.append(i)
 
 			#Iterate over the alphabet
 			for symbol in self.getAlphabet():
@@ -330,18 +332,20 @@ class AFN:
 				#Add the new set to the list
 				list.append(aux)
 
-			
-			#Check if there's an accept state in the new set
-			for e1 in self.getAccepts():
-				for e2 in aux:
+			#Check tokens in accepted states
+			tok = -1
+			for e1 in Si:
+				for e2 in self.getAccepts():
 					if(e1.equals(e2) == True):
-						tok = e1.getToken()
+						tok = e2.getToken()
 						break
-
-			#Add the result to the row
+	
+			#Add the token to the row
 			row.append(tok)
+
 			#Finally, add the row w data to the table
 			table.append(row)
+			i += 1
 
 		#Free memory
 		del S0

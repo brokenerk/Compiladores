@@ -14,10 +14,11 @@ def menu():
     print('5. Cerradura Epsilon')
     print('6. Cerradura de kleen')
     print('7. Opcional')
-    print('8. Afd')
+    print('8. Convertir a Afd')
     print('9. Automatota')
     print('10. Mostrar AFN')
-    print('11. Añadir token')
+    print('11. Mostrar AFD')
+    print('12. Añadir token')
     print('')
 
 if __name__ == "__main__":
@@ -54,7 +55,7 @@ if __name__ == "__main__":
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id del primer automata: '))
             afnb = int(input('Ingresa el id del segundo automata: '))
-            afn.append( afn[afna-1].join( afn[afnb-1]) )
+            afn.append( afn[afna-1].concat(afn[afnb-1]))
             input('Ingresa una tecla parca continuar')
         
         elif option == '4':
@@ -70,11 +71,19 @@ if __name__ == "__main__":
         elif option == '5':
             
             print('')
-            print('************* Cerradura Epsilon ***************')
+            print('************* Cerradura Epsilon Edo Inicial ***************')
+            
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = input('Ingresa el id  automata: ')
-            afn.append( afn[afna-1].positiveClosure() )
+            cs = CustomSet(afn[afna-1].getStates())
+            e = afn.append(afn[afna-1].getStart())
+
+            statesEpsilon = cs.positiveClosure(e)
+            print("Cerradura {} estado inicial".format(epsilon))
+            for edo in statesEpsilon:
+            	print("E: {}".format(edo.getId()))
+
             input('Ingresa una tecla parca continuar')
             
         elif option == '6':
@@ -84,7 +93,7 @@ if __name__ == "__main__":
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id  automata: '))
-            afn.append( afn[afna-1].kleeneClosure )
+            afn.append(afn[afna-1].kleeneClosure)
             input('Ingresa una tecla parca continuar')
 
         elif option == '7':
@@ -94,7 +103,7 @@ if __name__ == "__main__":
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id  automata: '))
-            afn.append( afn[afna-1].optional() )
+            afn.append(afn[afna-1].optional())
             input('Ingresa una tecla parca continuar')
 
         elif option == '8':
@@ -104,10 +113,8 @@ if __name__ == "__main__":
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id  automata: '))
-            csConcat = CustomSet(afn[afna-1].getStates())
-            e = afn[afna-1].getStart()
-            statesEpsilon = csConcat.epsilonClosure(e)
-            afd.append(afn[afna-1].convertToAFD(csConcat))
+            csAux = CustomSet(afn[afna-1].getStates())
+            afd.append(afn[afna-1].convertToAFD(csAux))
             afd[idAfd].displayTable()
             
             input('Ingresa una tecla parca continuar')
@@ -115,13 +122,14 @@ if __name__ == "__main__":
         elif option == '9':
             print('**************** Automatota ********************')
             print('')
+            afns = set([])
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
-            afna = int(input('Ingresa el numero de  automatas que quieres agregar: '))
-            for a in afna:
-                print('Ingresa el Id del Automata {}: '.format(a))
+            num = int(input('Ingresa el numero de  automatas que quieres agregar: '))
+            for i in range(0, num):
+                print('Ingresa el Id del Automata: ')
                 id = int(input())
-                afns.append ( afn[id-1] )
+                afns.add(afn[id-1])
             afn.append(AFN.addNewStart(afns))
 
             input('Ingresa una tecla parca continuar')
@@ -136,6 +144,15 @@ if __name__ == "__main__":
             input('Ingresa una tecla parca continuar')
         
         elif option == '11':
+
+            print('')
+            for a in afd:
+                print('Afn: {}'.format(a.getId()))
+            afda = int(input('Ingresa el id del AFD: '))
+            afd[afda-1].displayTable()
+            input('Ingresa una tecla parca continuar')
+
+        elif option == '12':
 
             print('')
             for a in afn:
