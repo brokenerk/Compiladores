@@ -39,7 +39,6 @@ class AFD:
 
     def displayTable(self):
         print("Id: {}".format(self.getId()))
-        print("   {}[Token]".format(self.getAlphabet()))
+        print("  {}[Token]".format(self.getAlphabet()))
         for i in range(0, len(self.getTable())):
-            print("{}: {}".format(i, self.getTable()[i]))
-        
+            print("{}".format(self.getTable()[i]))

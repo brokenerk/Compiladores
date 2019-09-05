@@ -130,7 +130,7 @@ if __name__ == "__main__":
                 print('Ingresa el Id del Automata: ')
                 id = int(input())
                 afns.add(afn[id-1])
-            afn.append(AFN.addNewStart(afns))
+            afn.append(AFN.specialJoin(afns))
 
             input('Ingresa una tecla parca continuar')
         

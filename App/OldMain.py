@@ -33,21 +33,21 @@ if __name__ == "__main__":
     concat = posClosure.concat(kleen)
     print("AFN para la ER (a|b)+ c*")
     concat.display()
-    concat.setToken("ER")
+    concat.setToken(10)
 
     print("")
 
-    csConcat = CustomSet(concat.getStates())
+    cs = CustomSet(concat.getStates())
     e = concat.getStart()
 
-    statesEpsilon = csConcat.epsilonClosure(e)
+    statesEpsilon = cs.epsilonClosure(e)
     print("Cerradura {} (a|b)+ c* estado inicial".format(epsilon))
     for e in statesEpsilon:
        print("E: {}".format(e.getId()))
 
     print("")
     print("AFD de la ER (a|b)+ c*")
-    afd1 = concat.convertToAFD(csConcat)
+    afd1 = concat.convertToAFD(cs)
     afd1.displayTable()
     
 

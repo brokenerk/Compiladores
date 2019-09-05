@@ -103,7 +103,7 @@ class AFN:
 
 	#Parameters: Set<AFN>
 	#Return: AFN
-	def addNewStart(afns):
+	def specialJoin(afns):
 		newStart = State( )
 		newStates = set([])
 		accepts = set([])
@@ -284,12 +284,12 @@ class AFN:
 		del accepts
 		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))
 	
-	#Parameters: Token
+	#Parameters: Integer
 	#Return: Nothing
-	def setToken(self,token):
+	def setToken(self, token):
 		statesAceppted = self.getAccepts()
 		for e in statesAceppted:
-			e.setToken(token)
+			e.setToken(int(token))
 
 	#Parameters: CustomSet
 	#Return: AFD
@@ -342,7 +342,6 @@ class AFN:
 	
 			#Add the token to the row
 			row.append(tok)
-
 			#Finally, add the row w data to the table
 			table.append(row)
 			i += 1

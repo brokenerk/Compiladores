@@ -20,7 +20,6 @@ class State:
     def setId(self, id):
     	self.id = id  
 
-    
     #Parameters: Nothing
     #Return: Integer
     def getToken(self):
@@ -30,7 +29,6 @@ class State:
     def setToken(self, token):
     	self.token = token  
     
-
     #Parameters: Nothing
     #Return: Set<Transition>
     def getTransitions(self):
