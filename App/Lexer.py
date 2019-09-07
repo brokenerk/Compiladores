@@ -2,22 +2,22 @@
 from AFD import AFD
 from Token import Token
 from collections import deque
-end = '\0'
+endString = '\0'
 
 class Lexer:
     #Constructor
     def __init__(self, afd, string):
-        self.afd = afd                  #AFD
-        self.string = string + end      #String
-        self.reachedAccept = False      #Boolean
-        self.actualState = 0            #Integer
-        self.actualSymbolPos = 0        #Integer
-        self.beginLexPos = -1           #Integer
-        self.endLexPos = -1             #Integer
-        self.stack = deque()            #Stack<Integer>
+        self.afd = afd                          #AFD
+        self.string = string + endString        #String
+        self.actualSymbolPos = 0                #Integer
+        self.reachedAccept = False                   #Boolean
+        self.actualState = 0                         #Integer
+        self.beginLexPos = -1                   #Integer
+        self.endLexPos = -1                     #Integer
+        self.stack = deque()                    #Stack<Integer>
         self.status = -1                
-        self.token = -1                 #Integer
-        self.lex = ""                   #String
+        self.token = -1                         #Integer
+        self.lex = ""                           #String
 
     def getToken(self):
         return self.token   
@@ -31,17 +31,21 @@ class Lexer:
     def setStatus(self):
         return
 
+    #Parameters: Nothing
+    #Return: Integer
     def yylex(self):
+        self.reachedAccept = False
+        self.actualState = 0
         alphabet = self.afd.getAlphabet()
         table = self.afd.getTable()
 
-        if(self.string[self.actualSymbolPos] == end):
+        if(self.string[self.actualSymbolPos] == endString):
             return Token.END
 
         self.stack.append(self.actualSymbolPos)
         self.beginLexPos = self.actualSymbolPos
 
-        while(self.string[self.actualSymbolPos] != end):
+        while(self.string[self.actualSymbolPos] != endString):
             self.alphabetIndex = -1
 
             for i in range(0, len(alphabet)):
@@ -62,7 +66,6 @@ class Lexer:
             self.actualState = table[self.actualState][self.alphabetIndex]
 
             if(self.actualState != -1):
-
                 if(table[self.actualState][len(alphabet)] != 1):
                     self.token = table[self.actualState][len(alphabet)]
                     self.reachedAccept = True
@@ -75,18 +78,17 @@ class Lexer:
                     return Token.ERROR
 
                 self.lex = self.string[self.beginLexPos:self.endLexPos]
-                print(self.lex)
                 self.actualSymbolPos += self.endLexPos
                 return self.token
 
 
 
+                                
+
                 
 
-        
 
-
-            
+                        
 
 
 

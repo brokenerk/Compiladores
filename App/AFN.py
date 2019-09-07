@@ -80,8 +80,8 @@ class AFN:
 	#Parameters: Character
 	#Return: AFN
 	def createBasic(symbol):
-		e1 = State( )
-		e2 = State( )
+		e1 = State()
+		e2 = State()
 		t1 = Transition(symbol, e2)
 		e1.addTransition(t1)
 		states = set([e1, e2])
@@ -104,7 +104,7 @@ class AFN:
 	#Parameters: Set<AFN>
 	#Return: AFN
 	def specialJoin(afns):
-		newStart = State( )
+		newStart = State()
 		newStates = set([])
 		accepts = set([])
 
@@ -129,8 +129,8 @@ class AFN:
 		acceptsA = deepcopy(self.getAccepts()) 
 		acceptsB = deepcopy(afnB.getAccepts())     
 		#Create new start, accept state and new states set
-		newStart = State( )
-		newAccept = State( )
+		newStart = State()
+		newAccept = State()
 		
 		#Add epsilon transitions to new start state
 		newStart.addTransition(Transition(epsilon, startA))
@@ -211,9 +211,9 @@ class AFN:
 	#Return: AFN
 	def positiveClosure(self):
 		#Create new start state
-		newStart = State( )
+		newStart = State()
 		#Create new accept state
-		newAccept = State( )
+		newAccept = State()
 
 		#Create a deepcopy of actual start and accept state
 		start = deepcopy(self.getStart())
@@ -259,8 +259,8 @@ class AFN:
 	#Parameters: Nothing
 	#Return: AFN
 	def optional(self):
-		newStart = State( )
-		newAccept = State( )
+		newStart = State()
+		newAccept = State()
 		start = deepcopy(self.getStart())
 		accepts = deepcopy(self.getAccepts()) 
 

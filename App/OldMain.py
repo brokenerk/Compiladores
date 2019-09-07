@@ -6,89 +6,59 @@ from CustomSet import CustomSet
 epsilon = '\u03B5'
 
 if __name__ == "__main__":
-    print("")
-    afn1 = AFN.createBasic('a')
-    afn1.display()
 
-    print("")
-    afn2 = AFN.createBasic('b')
-    afn2.display()
-
-    print("")
-    afn3 = AFN.createBasic('c')
-    afn3.display()
-
-    print("")
-    join = afn1.join(afn2)
-    #join.display();
-
-    print("")
-    posClosure = join.positiveClosure()
-    #posClosure.display();
-
-    print("")
-    kleen = afn3.kleeneClosure()
-    #kleen.display()
-
-    print("")
-    concat = posClosure.concat(kleen)
-    print("AFN para la ER (a|b)+ c*")
-    concat.display()
-    concat.setToken(10)
-
-    print("")
-    cs = CustomSet(concat.getStates())
-    e = concat.getStart()
-
-    statesEpsilon = cs.epsilonClosure(e)
-    print("Cerradura {} (a|b)+ c* estado inicial".format(epsilon))
-    for e in statesEpsilon:
-       print("E: {}".format(e.getId()))
-
-    print("")
-    print("AFD de la ER (a|b)+ c*")
-    afd1 = concat.convertToAFD(cs)
-    afd1.displayTable()
-
-    print("")
-    print("Lexer")
-    lex = Lexer(afd1, "abc")
-    res = lex.yylex()
-
-    if(res != None):
-        print(str(res))
-    print(str(lex.getToken()))
     
 
-'''
     print("")
-    concat = afn1.concat(afn2)
-    print("Concat AFN1 and AFN2:")
-    concat.display()
+    afn1 = AFN.createBasic('S')
+    afn2 = AFN.createBasic('D')
+    afnA = afn1.optional().concat(afn2.positiveClosure())
+    afnA.display()
+    afnA.setToken(1500)
 
     print("")
-    posClosureA = afn1.positiveClosure()
-    print("Cerradura + AFN 1:")
-    posClosureA.display()
+    afn3 = AFN.createBasic('S')
+    afn4 = AFN.createBasic('D')
+    afn5 = AFN.createBasic('D')
+    afn6 = AFN.createBasic('.')
+    afnB = afn3.optional().concat(afn4.positiveClosure()).concat(afn6).concat(afn5.positiveClosure())
+    afnB.display()
+    afnB.setToken(2000)
 
     print("")
-    kleeneA = afn1.kleeneClosure()
-    print("Cerradura Kleene * AFN 1:")
-    kleeneA.display()
+    afn7 = AFN.createBasic('L')
+    afn8 = AFN.createBasic('L')
+    afn9 = AFN.createBasic('D')
+    afnC = afn7.concat(afn8.join(afn9).kleeneClosure())
+    afnC.display()
+    afnC.setToken(2500)
 
     print("")
-    optional = afn1.optional()
-    print("Opcional ? AFN1:")
-    optional.display()
+    afn10 = AFN.createBasic('=')
+    afn11 = AFN.createBasic('=')
+    afnD = afn10.concat(afn11)
+    afnD.display()
+    afnD.setToken(3000)
 
-    automatota = AFN.addNewStart(set([afn1, afn3, concat, optional]))
+    print("")
+    afnE = AFN.createBasic('+')
+    afnE.setToken(3500)
+    afnE.display()
+
+    print("")
+    automatota = AFN.specialJoin(set([afnA, afnB, afnC, afnD, afnE]))
     automatota.display()
 
     print("")
-    e = automatota.getStart()
-    statesEpsilon = AFN.epsilonClosure(e)
-    print("Cerradura {} Automatota estado inicial".format(epsilon))
-    for e in statesEpsilon:
-       print("E: {}".format(e.getId()))
+    print("AFD: ")
+    cs = CustomSet(automatota.getStates())
+    afd = automatota.convertToAFD(cs)
+    afd.displayTable()
 
-'''
+    print("")
+    print("Lexer: ")
+    lex = Lexer(afd, "SDD.D+DD==SDD.D++LDL+LDD")
+    res = lex.yylex()
+    if(res != -1):
+        print(str(res))
+    print(str(lex.getToken()))
