@@ -299,13 +299,10 @@ class AFN:
 		list = [S0] 		#List<Set>
 		table = []			#List<List>
 		cont = 0
-		i = 0
 
 		while queue:
 			Si = queue.pop(0)					#Get first enter
 			row = []							#Row - List
-			#Add state counter
-			row.append(i)
 
 			#Iterate over the alphabet
 			for symbol in self.getAlphabet():
@@ -344,7 +341,6 @@ class AFN:
 			row.append(tok)
 			#Finally, add the row w data to the table
 			table.append(row)
-			i += 1
 
 		#Free memory
 		del S0

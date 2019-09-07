@@ -1,6 +1,7 @@
 #!python3
 from AFN import AFN
 from AFD import AFD
+from Lexer import Lexer
 from CustomSet import CustomSet
 epsilon = '\u03B5'
 
@@ -36,7 +37,6 @@ if __name__ == "__main__":
     concat.setToken(10)
 
     print("")
-
     cs = CustomSet(concat.getStates())
     e = concat.getStart()
 
@@ -49,6 +49,15 @@ if __name__ == "__main__":
     print("AFD de la ER (a|b)+ c*")
     afd1 = concat.convertToAFD(cs)
     afd1.displayTable()
+
+    print("")
+    print("Lexer")
+    lex = Lexer(afd1, "abc")
+    res = lex.yylex()
+
+    if(res != None):
+        print(str(res))
+    print(str(lex.getToken()))
     
 
 '''
