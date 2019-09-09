@@ -286,6 +286,7 @@ if __name__ == "__main__":
         
         elif option == '10':
             indexAfnA = 0
+            idx = 0
 
             print('')
             print('**************** Mostrar AFN ****************')
@@ -294,11 +295,11 @@ if __name__ == "__main__":
             afna = int(input('Ingresa el id AFN: '))
 
             while idx < len (afn):
-                    if id == afn[idx].getId():
-                        indexAfnA = idx
-                        break
-                    else:
-                        idx+=1
+                if afna == afn[idx].getId():
+                    indexAfnA = idx
+                    break
+                else:
+                    idx+=1
 
             afn[indexAfnA].display()
             input('Ingresa una tecla para continuar')
@@ -333,11 +334,11 @@ if __name__ == "__main__":
 
             idx = 0
             while idx < len (afn):
-                    if id == afn[idx].getId():
-                        indexAfnA = idx
-                        break
-                    else:
-                        idx+=1
+                if afna == afn[idx].getId():
+                    indexAfnA = idx
+                    break
+                else:
+                    idx+=1
 
             token = input('Ingresa el token del automata: ')
 
