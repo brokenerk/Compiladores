@@ -46,6 +46,14 @@ if __name__ == "__main__":
     afd = automatota.convertToAFD(cs)
     afd.displayTable()
 
+    print("")
+    print("Lexer: ")
+    lex = Lexer(afd, "D+D.Dx")
+
+    while (lex.yylex() != -1):
+        print(str(lex.getToken()))
+
+
 
 
 

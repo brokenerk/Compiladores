@@ -10,12 +10,11 @@ class Lexer:
         self.afd = afd                          #AFD
         self.string = string + endString        #String
         self.actualSymbolPos = 0                #Integer
-        self.reachedAccept = False                   #Boolean
-        self.actualState = 0                         #Integer
+        self.reachedAccept = False              #Boolean
+        self.actualState = 0                    #Integer
         self.beginLexPos = -1                   #Integer
         self.endLexPos = -1                     #Integer
         self.stack = deque()                    #Stack<Integer>
-        self.status = -1                
         self.token = -1                         #Integer
         self.lex = ""                           #String
 
@@ -80,18 +79,3 @@ class Lexer:
                 self.lex = self.string[self.beginLexPos:self.endLexPos]
                 self.actualSymbolPos += self.endLexPos
                 return self.token
-
-
-
-                                
-
-                
-
-
-                        
-
-
-
-
-
-
