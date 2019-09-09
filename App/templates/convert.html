@@ -3,19 +3,23 @@
    <div class="row">
       <br>
       <div class="row" style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
-         <a onclick="show(getElementById('Add'))" class="waves-effect waves-light #0288d1 light-blue darken-3 btn-large"><i class="material-icons right">add_circle</i>Add</a>
-         <a onclick="show(getElementById('Join'))" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">sync</i>Join</a>
-         <a onclick="show(getElementById('Concat'))" class="waves-effect waves-light #039be5 light-blue darken-1 btn-large"><i class="material-icons right">redo</i>Concat</a>
-         <a onclick="show(getElementById('+Closure'))" class="waves-effect waves-light #03a9f4 light-blue btn-large"><i class="material-icons left">add</i>Closure</a>
-         <a onclick="show(getElementById('*Closure'))" class="waves-effect waves-light #29b6f6 light-blue lighten-1 btn-large"><i class="material-icons left">stars</i>Closure</a>
-         <a onclick="show(getElementById('?Optional'))" class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>? Optional</a>
-         <a onclick="show(getElementById('setToken'))" class="waves-effect waves-light #81d4fa light-blue lighten-3 btn-large"></i>Set Token</a>
-         <a onclick="show(getElementById('convertToAFD'))" class="waves-effect waves-light #b3e5fc light-blue lighten-4 btn-large"></i>To AFD</a>
+         <a onclick="show(getElementById('Add'))" class="waves-effect waves-light #0288d1 light-blue darken-3 btn-large">Add</a>
+         <a onclick="show(getElementById('Join'))" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large">Join</a>
+         <a onclick="show(getElementById('SpecialJoin'))" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large">Special Join</a>
+         <a onclick="show(getElementById('Concat'))" class="waves-effect waves-light #039be5 light-blue darken-1 btn-large">Concat</a>
+         <a onclick="show(getElementById('+Closure'))" class="waves-effect waves-light #03a9f4 light-blue btn-large">+Closure</a>
+         <a onclick="show(getElementById('*Closure'))" class="waves-effect waves-light #29b6f6 light-blue lighten-1 btn-large">*Closure</a>
+         <a onclick="show(getElementById('?Optional'))" class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large">? Optional</a>
+         <a onclick="show(getElementById('setToken'))" class="waves-effect waves-light #81d4fa light-blue lighten-3 btn-large">Set Token</a>
+         <a onclick="show(getElementById('convertToAFD'))" class="waves-effect waves-light #b3e5fc light-blue lighten-4 btn-large">To AFD</a>
       </div>
    </div>
    <div class="container">
       <!-- Add -->
       <div id="Add">
+         <script type="text/javascript">
+            document.getElementById('showTable').style.display = "none";
+         </script>
          <div class="col s12">
             <div class="row">
                <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Add new </p>
@@ -45,7 +49,9 @@
                         <option value="12" disabled selected>Choose 1st</option>
                         {% if idAfn %}
                            {% for afn in idAfn.values() %}
-                              <option value="{{ afn }}"> {{ afn }} </option>
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
                            {% endfor %}
                         {% endif %}
                      </select>
@@ -55,7 +61,9 @@
                         <option value="11" disabled selected>Choose 2nd</option>
                         {% if idAfn %}
                            {% for afn in idAfn.values() %}
-                              <option value="{{ afn }}"> {{ afn }} </option>
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
                            {% endfor %}
                         {% endif %}
                      </select>
@@ -78,7 +86,9 @@
                         <option value="12" disabled selected>Choose 1st</option>
                         {% if idAfn %}
                            {% for afn in idAfn.values() %}
-                              <option value="{{ afn }}"> {{ afn }} </option>
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
                            {% endfor %}
                         {% endif %}
                      </select>
@@ -88,7 +98,9 @@
                         <option value="11" disabled selected>Choose 2nd</option>
                         {% if idAfn %}
                            {% for afn in idAfn.values() %}
-                              <option value="{{ afn }}"> {{ afn }} </option>
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
                            {% endfor %}
                         {% endif %}
                      </select>
@@ -111,7 +123,9 @@
                         <option value="12" disabled selected>Choose 1st</option>
                         {% if idAfn %}
                            {% for afn in idAfn.values() %}
-                              <option value="{{ afn }}"> {{ afn }} </option>
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
                            {% endfor %}
                         {% endif %}
                      </select>
@@ -134,7 +148,9 @@
                         <option value="12" disabled selected>Choose 1st</option>
                         {% if idAfn %}
                            {% for afn in idAfn.values() %}
-                              <option value="{{ afn }}"> {{ afn }} </option>
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
                            {% endfor %}
                         {% endif %}
                      </select>
@@ -157,7 +173,9 @@
                         <option value="12" disabled selected>Choose 1st</option>
                         {% if idAfn %}
                            {% for afn in idAfn.values() %}
-                              <option value="{{ afn }}"> {{ afn }} </option>
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
                            {% endfor %}
                         {% endif %}
                      </select>
@@ -181,7 +199,9 @@
                         <option value="12" disabled selected>Choose 1st</option>
                         {% if idAfn %}
                            {% for afn in idAfn.values() %}
-                              <option value="{{ afn }}"> {{ afn }} </option>
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
                            {% endfor %}
                         {% endif %}
                      </select>
@@ -208,7 +228,9 @@
                         <option value="12" disabled selected>Choose 1st</option>
                         {% if idAfn %}
                            {% for afn in idAfn.values() %}
-                              <option value="{{ afn }}"> {{ afn }} </option>
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
                            {% endfor %}
                         {% endif %}
                      </select>
@@ -220,36 +242,84 @@
             </div>
          </div>
       </div>
+      <div id="SpecialJoin" class="col s12" style="display: none;">
+         <div class="row">
+            <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Special Join </p>
+            {% from "_macroAdd.html" import render_field %}
+            <form method="POST">
+               <div class="input-field col s9">
+                  {{ render_field(addSJ.number) }}
+               </div>
+               <input type="hidden" id="optSpecialJoin" name="option">
+               <div class="input-field col s3">
+                  <button onclick="document.getElementById('optSpecialJoin').value = 8;" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large">Add to SJ</button>
+               </div>
+            </form>
+         </div>
+      </div>
    </div>
-   <div class="container" id="showTable" >
-      {% if afd %}
-         <br>
-         <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Table of the AFD</p>
-         <br> <br>
-         <table>
-            <thead>
-               <tr>
-                  <th>Id</th>
-                  {% for a in afd.getAlphabet() %}
-                     <th>{{ a }}</th>
-                  {% endfor %}
-                  <th> Token </th> 
-               </tr>
-            </thead>
-            <tbody>
-               <!-- TO SHOW ID -->
-               {% for i in afdTable %}
-                  <tr>
-                     <td> {{ i }} </td>
-                     {% for j in i %}
-                        <td>{{ j }}</td>
+   
+   <div id="principal" class="container">
+         <script type="text/javascript">
+            document.getElementById('Add').style.display = "none";
+         </script>
+         <div id="showTable">
+            {% if afd %}
+               <br>
+               <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Table of the AFD</p>
+               <br> <br>
+               <table>
+                  <thead>
+                     <tr>
+                        <th>Id</th>
+                        {% for a in afd.getAlphabet() %}
+                           <th>{{ a }}</th>
+                        {% endfor %}
+                        <th> Token </th> 
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <!-- TO SHOW ID -->
+                     {% for i in afdTable %}
+                        <tr>
+                           <td> {{ loop.index }} </td>
+                           {% for j in i %}
+                              <td>{{ j }}</td>
+                           {% endfor %}
+                        </tr>
                      {% endfor %}
-                  </tr>
-               {% endfor %}
-            </tbody>
-         </table>
-      {% endif %}
+                  </tbody>
+               </table>
+            {% endif %}
+         </div>
+         <div id="showSelect">
+            <div class="col s12">
+               {% if nSelect %}
+                  <form method="POST">
+                     <input type="hidden" id="optSpecialJoinOk" name="option">
+                     {% for i in range(0, nSelect): %}
+                        <div class="row">
+                           <select name="sjArray[]">
+                              <option value="12" disabled selected>Choose {{ loop.index }} AFN</option>
+                              {% if idAfn %}
+                                 {% for afn in idAfn.values() %}
+                                    {% if afn > 0 %}
+                                       <option value="{{ afn }}"> {{ afn }} </option>
+                                    {% endif %}
+                                 {% endfor %}
+                              {% endif %}
+                           </select>
+                        </div>
+                     {% endfor %}
+                     <div class="col s4">
+                        <button onclick="document.getElementById('optSpecialJoinOk').value = 9;" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large">Special Join</button>   
+                     </div>
+                  </form>
+               {% endif %}
+            </div>
+         </div>
    </div>
+   
    <script type = "text/javascript" src = "../static/js/show.js"></script>
    <script type = "text/javascript" src = "../static/js/sendOption.js"></script>
    <script>

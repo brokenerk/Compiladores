@@ -14,3 +14,9 @@ class AddToken(Form):
 		[
 			validators.length(min=1, max=3)
 		])
+
+class CreateSpecialJoin(Form):
+	number = StringField('Number: ', 
+		[
+			validators.length(min=1, max=3)
+		])
