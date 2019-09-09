@@ -20,7 +20,7 @@ if __name__ == "__main__":
     afn7 = AFN.createBasic('-')
     afn8 = AFN.createBasic('D')
     afnB = afn6.join(afn7).optional().concat(afn8.positiveClosure())
-    afnA.setToken(20)
+    afnB.setToken(20)
 
     print("")
     afn9 = AFN.createBasic('l')
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     afn12 = AFN.createBasic('L')
     afn13 = AFN.createBasic('D')
     afnC = afn9.join(afn10).concat(afn11.join(afn12).join(afn13).kleeneClosure())
-    afnA.setToken(30)
+    afnC.setToken(30)
 
     afn14 = AFN.createBasic('+')
     afn15 = AFN.createBasic('+')
