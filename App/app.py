@@ -17,6 +17,47 @@ afnAvailable = {}
 alphabet = {}
 idAfnAvailable = {}
 cont = 0
+afn1 = AFN.createBasic('+')
+afn2 = AFN.createBasic('-')
+afn3 = AFN.createBasic('D')
+afn4 = AFN.createBasic('.')
+afn5 = AFN.createBasic('D')
+afnA = afn1.join(afn2).optional().concat(afn3.positiveClosure()).concat(afn4).concat(afn5.positiveClosure())
+afnA.setToken(10)
+afnA.display()
+
+print("")
+afn6 = AFN.createBasic('+')
+afn7 = AFN.createBasic('-')
+afn8 = AFN.createBasic('D')
+afnB = afn6.join(afn7).optional().concat(afn8.positiveClosure())
+afnB.setToken(20)
+
+print("")
+afn9 = AFN.createBasic('l')
+afn10 = AFN.createBasic('L')
+afn11 = AFN.createBasic('l')
+afn12 = AFN.createBasic('L')
+afn13 = AFN.createBasic('D')
+afnC = afn9.join(afn10).concat(afn11.join(afn12).join(afn13).kleeneClosure())
+afnC.setToken(30)
+
+afn14 = AFN.createBasic('+')
+afn15 = AFN.createBasic('+')
+afnD = afn14.concat(afn15)
+afnD.setToken(40)
+
+afn16 = AFN.createBasic('+')
+afn16.setToken(50)
+
+automatota = AFN.specialJoin(set([afnA, afnB, afnC, afnD, afn16]))
+automatota.display()
+afnAvailable[automatota.getId()] = automatota
+idAfnAvailable[automatota.getId()] = automatota.getId()
+# cs = CustomSet(automatota.getStates())
+# afd = automatota.convertToAFD(cs)
+# afd.displayTable()
+
 
 @app.route("/")
 def index():
