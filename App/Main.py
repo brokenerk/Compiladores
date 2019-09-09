@@ -24,7 +24,7 @@ def menu():
 if __name__ == "__main__":
     afn = [] 
     afd = []
-    idAfd=0
+    
     while(1):
         menu()
         option = input('Ingresa una opción: ')
@@ -37,17 +37,46 @@ if __name__ == "__main__":
             input('Ingresa una tecla para continuar')
 
         elif option == '2':
-
+            index = 0
+            indexAfnA = 0
+            indexAfnB = 0
             print('')
             print('****************** Unir *********************')
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id del primer automata: '))
             afnb = int(input('Ingresa el id del segundo automata: '))
-            afn.append(afn[afna-1].join(afn[afnb-1]))
+
+            idx = 0
+            while idx < len(afn):
+                if afna == afn[idx].getId():
+                    indexAfnA = idx
+                    break
+                else:
+                    idx+=1
+            
+            idx = 0
+            while idx < len (afn):
+                if afnb == afn[idx].getId():
+                    indexAfnB = idx
+                    break
+                else:
+                    idx+=1
+
+            afn.append(afn[indexAfnA].join(afn[indexAfnB]))
+            
+            while index < len (afn):
+                if afnb == afn[index].getId() or afna == afn[index].getId():
+                    afn.pop(index)
+                else:
+                    index+=1
+            
             input('Ingresa una tecla para continuar')
 
         elif option == '3':
+            index = 0
+            indexAfnA = 0
+            indexAfnB = 0
 
             print('')
             print('**************** Concatenar ******************')
@@ -55,30 +84,83 @@ if __name__ == "__main__":
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id del primer automata: '))
             afnb = int(input('Ingresa el id del segundo automata: '))
-            afn.append(afn[afna-1].concat(afn[afnb-1]))
+
+            idx = 0
+            while idx < len (afn):
+                if afna == afn[idx].getId():
+                    indexAfnA = idx
+                    break
+                else:
+                    idx+=1
+            
+            idx = 0
+            while idx < len (afn):
+                if afnb == afn[idx].getId():
+                    indexAfnB = idx
+                    break
+                else:
+                    idx+=1
+
+            afn.append(afn[indexAfnA].concat(afn[indexAfnB]))
+
+            while index < len (afn):
+                if afnb == afn[index].getId() or afna == afn[index].getId():
+                    afn.pop(index)
+                else:
+                    index+=1
+            
             input('Ingresa una tecla para continuar')
         
         elif option == '4':
+            index = 0
+            indexAfnA = 0
 
             print('')
             print('************* Cerradura Positiva **************')
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id  automata: '))
-            afn.append(afn[afna-1].positiveClosure())
+
+            idx = 0
+            while idx < len (afn):
+                if afna == afn[idx].getId():
+                    indexAfnA = idx
+                    break
+                else:
+                    idx+=1
+
+            afn.append(afn[indexAfnA].positiveClosure())
+
+            while index < len (afn):
+                if afna == afn[index].getId():
+                    afn.pop(index)
+                    break
+                else:
+                    index+=1
+
             input('Ingresa una tecla para continuar')
 
         elif option == '5':
-            
+            index = 0
+            indexAfnA = 0
+
             print('')
             print('************* Cerradura Epsilon Edo Inicial ***************')
             
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id  automata: '))
-            cs = CustomSet(afn[afna-1].getStates())
-            e = afn[afna-1].getStart()
 
+            idx = 0
+            while idx < len (afn):
+                if afna == afn[idx].getId():
+                    indexAfnA = idx
+                    break
+                else:
+                    idx+=1
+
+            cs = CustomSet(afn[indexAfnA].getStates())
+            e = afn[indexAfnA].getStart()
             statesEpsilon = cs.epsilonClosure(e)
             print("Cerradura {} estado inicial".format(epsilon))
             for edo in statesEpsilon:
@@ -87,79 +169,179 @@ if __name__ == "__main__":
             input('Ingresa una tecla para continuar')
             
         elif option == '6':
-            
+            index = 0
+            indexAfnA = 0
+
             print('')
             print('************* Cerradura de kleen ***************')
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id  automata: '))
-            afn.append(afn[afna-1].kleeneClosure())
+
+            idx = 0
+            while idx < len (afn):
+                if afna == afn[idx].getId():
+                    indexAfnA = idx
+                    break
+                else:
+                    idx+=1
+
+            afn.append(afn[indexAfnA].kleeneClosure())
+
+            while index < len (afn):
+                if afna == afn[index].getId():
+                    afn.pop(index)
+                    break
+                else:
+                    index+=1
+
             input('Ingresa una tecla para continuar')
 
         elif option == '7':
             
+            index = 0
+            indexAfnA = 0
+
             print('')
             print('***************** Opcional *********************')
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id  automata: '))
-            afn.append(afn[afna-1].optional())
+
+            idx = 0
+            while idx < len (afn):
+                if afna == afn[idx].getId():
+                    indexAfnA = idx
+                    break
+                else:
+                    idx+=1
+            
+            afn.append(afn[indexAfnA].optional())
+
+            while index < len (afn):
+                if afna == afn[index].getId():
+                    afn.pop(index)
+                    break
+                else:
+                    index+=1
+            
             input('Ingresa una tecla para continuar')
 
         elif option == '8':
             
+            indexAfnA = 0
+
             print('************** Convertir a Afd *****************')
-            idAfd+=1
+            
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id  automata: '))
-            csAux = CustomSet(afn[afna-1].getStates())
-            afd.append(afn[afna-1].convertToAFD(csAux))
-            afd[idAfd].displayTable()
+
+            idx = 0
+            while idx < len (afn):
+                if afna == afn[idx].getId():
+                    indexAfnA = idx
+                    break
+                else:
+                    idx+=1
+
+            csAux = CustomSet(afn[indexAfnA].getStates())
+            afd.append(afn[indexAfnA].convertToAFD(csAux))
             
             input('Ingresa una tecla para continuar')
 
         elif option == '9':
+            indexAfnA = 0
             print('**************** Automatota ********************')
             print('')
             afns = set([])
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             num = int(input('Ingresa el numero de  automatas que quieres agregar: '))
+
             for i in range(0, num):
                 print('Ingresa el Id del Automata: ')
                 id = int(input())
-                afns.add(afn[id-1])
+                idx = 0
+                while idx < len (afn):
+                    if id == afn[idx].getId():
+                        indexAfnA = idx
+                        break
+                    else:
+                        idx+=1
+
+                afns.add(afn[indexAfnA])
+
             afn.append(AFN.specialJoin(afns))
+
+            for a in afns:
+                index=0
+                while index < len (afn):
+                    if a.getId() == afn[index].getId():
+                        afn.pop(index)
+                    else:
+                        index+=1
 
             input('Ingresa una tecla para continuar')
         
         elif option == '10':
+            indexAfnA = 0
 
             print('')
+            print('**************** Mostrar AFN ****************')
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id AFN: '))
-            afn[afna-1].display()
+
+            while idx < len (afn):
+                    if id == afn[idx].getId():
+                        indexAfnA = idx
+                        break
+                    else:
+                        idx+=1
+
+            afn[indexAfnA].display()
             input('Ingresa una tecla para continuar')
         
         elif option == '11':
+            indexAfdA = 0
 
             print('')
+            print('**************** Mostrar AFD**************** ')
             for a in afd:
                 print('Afn: {}'.format(a.getId()))
             afda = int(input('Ingresa el id del AFD: '))
-            afd[afda-1].displayTable()
+
+            while idx < len (afd):
+                    if afda == afd[idx].getId():
+                        indexAfdA = idx
+                        break
+                    else:
+                        idx+=1
+
+            afd[indexAfdA].displayTable()
             input('Ingresa una tecla para continuar')
 
         elif option == '12':
+            indexAfnA = 0
 
             print('')
+            print('**************** Añadir token **************** ')
             for a in afn:
                 print('Afn: {}'.format(a.getId()))
             afna = int(input('Ingresa el id  automata: '))
+
+            idx = 0
+            while idx < len (afn):
+                    if id == afn[idx].getId():
+                        indexAfnA = idx
+                        break
+                    else:
+                        idx+=1
+
             token = input('Ingresa el token del automata: ')
-            afn[afna-1].setToken(token)
+
+            afn[indexAfnA].setToken(token)
 
         else:
             input('Opcion incorrecta, ingresa una tecla para continuar')
