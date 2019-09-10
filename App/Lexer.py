@@ -6,8 +6,9 @@ endString = '\0'
 
 class Lexer:
     #Constructor
-    def __init__(self, afd, string):
-        self.afd = afd                          #AFD
+    def __init__(self, alphabet, table, string):
+        self.alphabet = alphabet 				#List<String>
+        self.table = table 						#List<List<String>>
         self.string = string + endString        #String
         self.actualSymbolPos = 0                #Integer
         self.reachedAccept = False              #Boolean
@@ -18,25 +19,59 @@ class Lexer:
         self.token = -1                         #Integer
         self.lex = ""                           #String
 
+    #Parameters: Nothing
+    #Return: Integer
+    def getActualSymbolPos(self):
+        return self.actualSymbolPos
+    #Parameters: Integer
+    #Return: Nothing
+    def setActualSymbolPos(self, actualSymbolPos):
+        self.actualSymbolPos = actualSymbolPos
+
+    #Parameters: Nothing
+    #Return: Boolean
+    def getReachedAccept(self):
+        return self.reachedAccept
+    #Parameters: Boolean
+    #Return: Nothing
+    def setReachedAccept(self, reachedAccept):
+        self.reachedAccept = reachedAccept
+
+    #Parameters: Nothing
+    #Return: Integer
+    def getBeginLexPos(self):
+        return self.beginLexPos
+    #Parameters: Integer
+    #Return: Nothing
+    def setBeginLexPos(self, beginLexPos):
+        self.beginLexPos = beginLexPos
+
+    #Parameters: Nothing
+    #Return: Integer
+    def getEndLexPos(self):
+        return self.endLexPos
+    #Parameters: Integer
+    #Return: Nothing
+    def setEndLexPos(self, endLexPos):
+        self.endLexPos = endLexPos
+
+    #Parameters: Nothing
+    #Return: Integer
     def getToken(self):
-        return self.token   
+        return self.token  
+    #Parameters: Integer
+    #Return: Nothing
+    def setToken(self, token):
+        self.token = token 
 
     def returnToken(self):
-        return
-
-    def getStatus(self):
-        return
-
-    def setStatus(self):
         return
 
     #Parameters: Nothing
     #Return: Integer
     def yylex(self):
-        self.reachedAccept = False
         self.actualState = 0
-        alphabet = self.afd.getAlphabet()
-        table = self.afd.getTable()
+        self.reachedAccept = False
 
         if(self.string[self.actualSymbolPos] == endString):
             return Token.END
@@ -47,8 +82,8 @@ class Lexer:
         while(self.string[self.actualSymbolPos] != endString):
             self.alphabetIndex = -1
 
-            for i in range(0, len(alphabet)):
-                if(alphabet[i] == self.string[self.actualSymbolPos]):
+            for i in range(0, len(self.alphabet)):
+                if(self.alphabet[i] == self.string[self.actualSymbolPos]):
                     self.alphabetIndex = i
                     break
 
@@ -62,11 +97,11 @@ class Lexer:
                 self.actualSymbolPos += self.endLexPos
                 return self.token
 
-            self.actualState = table[self.actualState][self.alphabetIndex]
+            self.actualState = self.table[self.actualState][self.alphabetIndex]
 
             if(self.actualState != -1):
-                if(table[self.actualState][len(alphabet)] != 1):
-                    self.token = table[self.actualState][len(alphabet)]
+                if(self.table[self.actualState][len(self.alphabet)] != 1):
+                    self.token = self.table[self.actualState][len(self.alphabet)]
                     self.reachedAccept = True
                     self.endLexPos = self.actualSymbolPos
                 self.actualSymbolPos += 1

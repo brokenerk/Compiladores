@@ -48,18 +48,13 @@ if __name__ == "__main__":
 
     print("")
     print("Lexer: ")
-    lex = Lexer(afd, "D+D.Dx")
+    lex = Lexer(afd.getAlphabet(), afd.getTable(), "+D+Lll")
 
-    while (lex.yylex() != -1):
+    res = lex.yylex()
+    while (res != 1000 and res != 0):
         print(str(lex.getToken()))
-
-
-
-
-
-
-
-
+        #print(str(res))
+        res = lex.yylex()
     
 '''
     print("")
