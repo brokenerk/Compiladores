@@ -44,25 +44,28 @@ if __name__ == "__main__":
 
     cs = CustomSet(automatota.getStates())
     afd = automatota.convertToAFD(cs)
+    print("")
+    print("AFD: ")
     afd.displayTable()
 
     print("")
-    print("Lexer: ")
-    lex = Lexer(afd.getAlphabet(), afd.getTable(), "+D+Lll")
-
-    res = lex.yylex()
-    while (res != 1000 and res != 0):
-        print(str(lex.getToken()))
-        #print(str(res))
-        res = lex.yylex()
+    string = "+DD.D+DD++-DD.DLlDllL+++LllDDl"
+    print("Lexer: " + string)
     
+    lex = Lexer(afd, string)
+    res = lex.yylex()
+
+    while(res != 0):
+        print(lex.getLexem() + ": " + str(lex.getToken()))
+        res = lex.yylex()
+
 '''
     print("")
     afn1 = AFN.createBasic('S')
     afn2 = AFN.createBasic('D')
     afnA = afn1.optional().concat(afn2.positiveClosure())
     afnA.display()
-    afnA.setToken(1500)
+    afnA.setToken(15)
 
     print("")
     afn3 = AFN.createBasic('S')
@@ -71,7 +74,7 @@ if __name__ == "__main__":
     afn6 = AFN.createBasic('.')
     afnB = afn3.optional().concat(afn4.positiveClosure()).concat(afn6).concat(afn5.positiveClosure())
     afnB.display()
-    afnB.setToken(2000)
+    afnB.setToken(20)
 
     print("")
     afn7 = AFN.createBasic('L')
@@ -79,18 +82,18 @@ if __name__ == "__main__":
     afn9 = AFN.createBasic('D')
     afnC = afn7.concat(afn8.join(afn9).kleeneClosure())
     afnC.display()
-    afnC.setToken(2500)
+    afnC.setToken(25)
 
     print("")
     afn10 = AFN.createBasic('=')
     afn11 = AFN.createBasic('=')
     afnD = afn10.concat(afn11)
     afnD.display()
-    afnD.setToken(3000)
+    afnD.setToken(30)
 
     print("")
     afnE = AFN.createBasic('+')
-    afnE.setToken(3500)
+    afnE.setToken(35)
     afnE.display()
 
     print("")
@@ -104,10 +107,13 @@ if __name__ == "__main__":
     afd.displayTable()
 
     print("")
-    print("Lexer: ")
-    lex = Lexer(afd, "SDD.D+DD==SDD.D++LDL+LDD")
+    string = "SDD.D+DD==SDD.D++LDL+LDD"
+    print("Lexer: " + string)
+    
+    lex = Lexer(afd, string)
     res = lex.yylex()
-    if(res != -1):
-        print(str(res))
-    print(str(lex.getToken()))
+
+    while(res != 0):
+        print(lex.getLexem() + ": " + str(lex.getToken()))
+        res = lex.yylex()
     '''
