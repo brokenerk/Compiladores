@@ -53,13 +53,27 @@ if __name__ == "__main__":
     print("Lexer: " + string)
     
     lex = Lexer(afd, string)
-    res = lex.yylex()
+    lex.analize()
+    print("")
 
-    while(res != 0):
-        print(lex.getLexem() + ": " + str(lex.getToken()))
-        res = lex.yylex()
-
-'''
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    lex.returnToken()
+    lex.returnLexem()
+    print("Ctrl Z")
+    print("Repite: " + str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    lex.returnToken()
+    lex.returnLexem()
+    print("Ctrl Z")
+    print("Repite: " + str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    
+    '''
     print("")
     afn1 = AFN.createBasic('S')
     afn2 = AFN.createBasic('D')
@@ -111,9 +125,25 @@ if __name__ == "__main__":
     print("Lexer: " + string)
     
     lex = Lexer(afd, string)
-    res = lex.yylex()
+    lex.analize()
+    print("")
 
-    while(res != 0):
-        print(lex.getLexem() + ": " + str(lex.getToken()))
-        res = lex.yylex()
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    lex.returnToken()
+    lex.returnLexem()
+    print("Ctrl Z")
+    print("Repite: " + str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    lex.returnToken()
+    lex.returnLexem()
+    print("Ctrl Z")
+    print("Repite: " + str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
+    print(str(lex.getToken()) + ": " + lex.getLexem())
     '''

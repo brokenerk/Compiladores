@@ -15,62 +15,50 @@ class Lexer:
         self.actualState = 0                    #Integer
         self.beginLexPos = 0                    #Integer
         self.endLexPos = 0                      #Integer
-        self.stack = deque()                    #Stack<Integer>
+        self.stackTokens = deque()              #Stack<Integer>
+        self.stackLexems = deque()              #Stack<String>
         self.token = -1                         #Integer
-        self.lex = ""                           #String
-
-    #Parameters: Nothing
-    #Return: Integer
-    def getActualSymbolPos(self):
-        return self.actualSymbolPos
-    #Parameters: Integer
-    #Return: Nothing
-    def setActualSymbolPos(self, actualSymbolPos):
-        self.actualSymbolPos = actualSymbolPos
-
-    #Parameters: Nothing
-    #Return: Boolean
-    def getReachedAccept(self):
-        return self.reachedAccept
-    #Parameters: Boolean
-    #Return: Nothing
-    def setReachedAccept(self, reachedAccept):
-        self.reachedAccept = reachedAccept
-
-    #Parameters: Nothing
-    #Return: Integer
-    def getBeginLexPos(self):
-        return self.beginLexPos
-    #Parameters: Integer
-    #Return: Nothing
-    def setBeginLexPos(self, beginLexPos):
-        self.beginLexPos = beginLexPos
-
-    #Parameters: Nothing
-    #Return: Integer
-    def getEndLexPos(self):
-        return self.endLexPos
-    #Parameters: Integer
-    #Return: Nothing
-    def setEndLexPos(self, endLexPos):
-        self.endLexPos = endLexPos
+        self.lexem = ""                         #String
 
     #Parameters: Nothing
     #Return: Integer
     def getToken(self):
-        return self.token  
-    #Parameters: Integer
-    #Return: Nothing
-    def setToken(self, token):
-        self.token = token 
+        if (self.stackTokens):
+            self.token = self.stackTokens.pop()
+            return self.token
+        return Token.END
 
+    #Parameters: Nothing
+    #Return: Nothing
     def returnToken(self):
-        return
+        self.stackTokens.append(self.token)
 
     #Parameters: Nothing
     #Return: String
     def getLexem(self):
-        return self.lex 
+        if (self.stackLexems):
+            self.lexem = self.stackLexems.pop()
+            return self.lexem
+        return endString
+
+    #Parameters: Nothing
+    #Return: Nothing
+    def returnLexem(self):
+        self.stackLexems.append(self.lexem)
+
+    #Parameters: Nothing
+    #Return: Nothing
+    def analize(self):
+        res = self.yylex()
+        while(res != 0):
+            self.stackTokens.append(self.token)
+            self.stackLexems.append(self.lexem)
+            res = self.yylex()
+
+        self.stackTokens.reverse()
+        self.stackLexems.reverse()
+        self.token = -1
+        self.lexem = ""
 
     #Parameters: Nothing
     #Return: Integer
@@ -81,29 +69,27 @@ class Lexer:
         if(self.string[self.actualSymbolPos] == endString):
             return Token.END
 
-        #self.stack.append(self.actualSymbolPos)
         self.beginLexPos = self.actualSymbolPos
 
         while(self.string[self.actualSymbolPos] != endString):
-            self.alphabetIndex = -1
-
+            alphabetIndex = -1
             for i in range(0, len(self.alphabet)):
                 if(self.alphabet[i] == self.string[self.actualSymbolPos]):
-                    self.alphabetIndex = i
+                    alphabetIndex = i
                     break
 
-            if(self.alphabetIndex == -1):
+            if(alphabetIndex == -1):
                 if(self.reachedAccept == False):
-                    self.lex = self.string[self.actualSymbolPos:self.actualSymbolPos + 1] #substring
+                    self.lexem = self.string[self.actualSymbolPos:self.actualSymbolPos + 1] #substring
                     self.actualSymbolPos = self.beginLexPos + 1
                     self.token = Token.ERROR
                     return Token.ERROR
 
-                self.lex = self.string[self.beginLexPos:self.endLexPos + 1] #substring
+                self.lexem = self.string[self.beginLexPos:self.endLexPos + 1] #substring
                 self.actualSymbolPos = self.endLexPos + 1
                 return self.token
 
-            self.actualState = self.table[self.actualState][self.alphabetIndex]
+            self.actualState = self.table[self.actualState][alphabetIndex]
 
             if(self.actualState != -1):
                 if(self.table[self.actualState][len(self.alphabet)] != 1):
@@ -112,14 +98,14 @@ class Lexer:
                     self.endLexPos = self.actualSymbolPos
 
                 self.actualSymbolPos += 1
-                self.lex = self.string[self.beginLexPos:self.endLexPos + 1] #substring
+                self.lexem = self.string[self.beginLexPos:self.endLexPos + 1] #substring
             else:
                 if(self.reachedAccept == False):
-                    self.lex = self.string[self.actualSymbolPos:self.actualSymbolPos + 1] #substring
+                    self.lexem = self.string[self.actualSymbolPos:self.actualSymbolPos + 1] #substring
                     self.actualSymbolPos = self.beginLexPos + 1
                     self.token = Token.ERROR
                     return Token.ERROR
 
-                self.lex = self.string[self.beginLexPos:self.endLexPos + 1] #substring
+                self.lexem = self.string[self.beginLexPos:self.endLexPos + 1] #substring
                 self.actualSymbolPos = self.endLexPos + 1
                 return self.token
