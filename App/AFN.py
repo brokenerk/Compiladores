@@ -4,6 +4,8 @@ from Transition import Transition
 from AFD import AFD
 from CustomSet import CustomSet
 from copy import deepcopy
+from multipledispatch import dispatch
+
 epsilon = '\u03B5'
 Id = 0
 noAccepted = -1
@@ -79,6 +81,7 @@ class AFN:
 
 	#Parameters: Character
 	#Return: AFN
+	@dispatch(str)
 	def createBasic(symbol):
 		e1 = State()
 		e2 = State()
@@ -86,6 +89,18 @@ class AFN:
 		e1.addTransition(t1)
 		states = set([e1, e2])
 		alphabet = set([symbol])
+		return AFN(states, alphabet, e1, set([e2]))
+
+	#Parameters: Character, Character
+	#Return: AFN
+	@dispatch(str,str)
+	def createBasic(symbol,symbolEnd):
+		e1 = State()
+		e2 = State()
+		t1 = Transition(symbol, symbolEnd , e2)
+		e1.addTransition(t1)
+		states = set([e1, e2])
+		alphabet = set([ symbol + '-' + symbolEnd ])
 		return AFN(states, alphabet, e1, set([e2]))
 
 	#Parameters: Set<States>
@@ -96,9 +111,13 @@ class AFN:
 		for s in newStates:
 			for t in s.getTransitions():
 				symbol = t.getSymbol()
-				#Avoid epsilon
-				if(symbol != epsilon):
-					newAlphabet.add(symbol)
+				if t.getSymbolEnd() == -12 :
+					#Avoid epsilon
+					if(symbol != epsilon) :
+						newAlphabet.add( symbol )
+				else:
+					End = t.getSymbolEnd()
+					newAlphabet.add( symbol+ '-' + End )
 		return sorted(newAlphabet)
 
 	#Parameters: Set<AFN>

@@ -8,9 +8,9 @@ epsilon = '\u03B5'
 if __name__ == "__main__":
     afn1 = AFN.createBasic('+')
     afn2 = AFN.createBasic('-')
-    afn3 = AFN.createBasic('D')
+    afn3 = AFN.createBasic('0','9')
     afn4 = AFN.createBasic('.')
-    afn5 = AFN.createBasic('D')
+    afn5 = AFN.createBasic('0','9')
     afnA = afn1.join(afn2).optional().concat(afn3.positiveClosure()).concat(afn4).concat(afn5.positiveClosure())
     afnA.setToken(10)
     afnA.display()
@@ -18,16 +18,16 @@ if __name__ == "__main__":
     print("")
     afn6 = AFN.createBasic('+')
     afn7 = AFN.createBasic('-')
-    afn8 = AFN.createBasic('D')
+    afn8 = AFN.createBasic('0','9')
     afnB = afn6.join(afn7).optional().concat(afn8.positiveClosure())
     afnB.setToken(20)
 
     print("")
-    afn9 = AFN.createBasic('l')
-    afn10 = AFN.createBasic('L')
-    afn11 = AFN.createBasic('l')
-    afn12 = AFN.createBasic('L')
-    afn13 = AFN.createBasic('D')
+    afn9 = AFN.createBasic('a','z')
+    afn10 = AFN.createBasic('A','Z')
+    afn11 = AFN.createBasic('a','z')
+    afn12 = AFN.createBasic('A','Z')
+    afn13 = AFN.createBasic('0','9')
     afnC = afn9.join(afn10).concat(afn11.join(afn12).join(afn13).kleeneClosure())
     afnC.setToken(30)
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     afd.displayTable()
 
     print("")
-    string = "+DD.D+DD++-DD.DLlDllL+++LllDDl"
+    string = "+54.7+77++-81.4Ab0raN+++Dyv99i"
     print("Lexer: " + string)
     
     lex = Lexer(afd, string)
