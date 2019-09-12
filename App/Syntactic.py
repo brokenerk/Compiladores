@@ -46,3 +46,43 @@ class SyntacticAfn:
             return False
         Lexer.getToken()
         return True
+
+    def C (self , F) :
+        if ( F(F) ) :
+            if ( Cp (F) )
+                return True
+        return False
+
+    def Cp ( F ):
+        tok = Lexer.getToken()
+        if ( tok == 'PROD' ):
+            F.kleenClosure()
+            if ( Cp(F) ):
+                return True
+            return False
+        if ( tok == 'SUMA' ):
+            F.positiveClosure()
+            if ( Cp(F) ):
+                return True
+            return False
+        if (tok == 'OPC'):
+            F.opctional()
+            if ( Cp(F) ):
+                return True
+            return False
+        Lexer.returnToken()
+        return True
+
+    def F ( F ):
+        tok = Lexer.getToken()
+        if ( tok == 'PAR_I'):
+            if ( E(F) ):
+                tok = Lexer.getToken()
+                if (tok == 'PAR_D'):
+                    return True
+            return False
+        if (tok == 'SIMB'):
+            F.crateBasic(Lexic.Lexema[0])
+            return True
+            
+
