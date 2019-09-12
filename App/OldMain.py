@@ -13,7 +13,6 @@ if __name__ == "__main__":
     afn5 = AFN.createBasic('0','9')
     afnA = afn1.join(afn2).optional().concat(afn3.positiveClosure()).concat(afn4).concat(afn5.positiveClosure())
     afnA.setToken(10)
-    afnA.display()
 
     print("")
     afn6 = AFN.createBasic('+')
@@ -57,20 +56,12 @@ if __name__ == "__main__":
     print("")
 
     print(str(lex.getToken()) + ": " + lex.getLexem())
-    lex.returnToken()
-    lex.returnLexem()
-    print("Ctrl Z")
-    print("Repite: " + str(lex.getToken()) + ": " + lex.getLexem())
     print(str(lex.getToken()) + ": " + lex.getLexem())
     print(str(lex.getToken()) + ": " + lex.getLexem())
     print(str(lex.getToken()) + ": " + lex.getLexem())
     print(str(lex.getToken()) + ": " + lex.getLexem())
     print(str(lex.getToken()) + ": " + lex.getLexem())
     print(str(lex.getToken()) + ": " + lex.getLexem())
-    lex.returnToken()
-    lex.returnLexem()
-    print("Ctrl Z")
-    print("Repite: " + str(lex.getToken()) + ": " + lex.getLexem())
     print(str(lex.getToken()) + ": " + lex.getLexem())
     
     '''

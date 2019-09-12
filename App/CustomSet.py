@@ -48,7 +48,7 @@ class CustomSet:
 
 	#Parameters: Set<State>, Char
 	#Return: Set<State>
-	@dispatch(object,str)
+	@dispatch(object, str)
 	def move(self, states, symbol):
 		R = set([])
 		for e in states:
@@ -60,19 +60,19 @@ class CustomSet:
 
 	#Parameters: Set<State>, Char , Char
 	#Return: Set<State>
-	@dispatch(object,str,str)
-	def move(self, states, symbol,symbolEnd):
+	@dispatch(object, str, str)
+	def move(self, states, symbol, symbolEnd):
 		R = set([])
 		for e in states:
 			for t in e.getTransitions():
-				if(symbol >= t.getSymbol() <= symbolEnd):
+				if(symbol == t.getSymbol() and t.getSymbolEnd() == symbolEnd):
 					id = t.getNext().getId()	#Search by Id
 					R.add(self.searchState(id))
 		return R
 
 	#Parameters: Set<State>, Char
 	#Return: Set<State>
-	@dispatch(set,str)
+	@dispatch(set, str)
 	def goTo(self, states, symbol):
 		moveStates = self.move(states, symbol);
 		returnStates = set([])
@@ -82,9 +82,9 @@ class CustomSet:
 
 	#Parameters: Set<State>, Char , Char
 	#Return: Set<State>
-	@dispatch(set,str,str)
-	def goTo(self, states, symbol,symbolEnd):
-		moveStates = self.move(states, symbol,symbolEnd);
+	@dispatch(set, str, str)
+	def goTo(self, states, symbol, symbolEnd):
+		moveStates = self.move(states, symbol, symbolEnd);
 		returnStates = set([])
 		for e in moveStates:
 			returnStates = returnStates.union(self.epsilonClosure(e))

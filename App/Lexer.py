@@ -50,7 +50,7 @@ class Lexer:
     #Return: Nothing
     def analize(self):
         res = self.yylex()
-        while(res != 0):
+        while(res != Token.END):
             self.stackTokens.append(self.token)
             self.stackLexems.append(self.lexem)
             res = self.yylex()
@@ -74,9 +74,17 @@ class Lexer:
         while(self.string[self.actualSymbolPos] != endString):
             alphabetIndex = -1
             for i in range(0, len(self.alphabet)):
-                if(self.alphabet[i] == self.string[self.actualSymbolPos]):
-                    alphabetIndex = i
-                    break
+                if(len(self.alphabet[i]) > 1):
+                    inf = ord(self.alphabet[i][0])
+                    sup = ord(self.alphabet[i][2])
+                    actual = ord(self.string[self.actualSymbolPos])
+                    if(inf >= actual and actual <= sup):
+                        alphabetIndex = i
+                        break
+                else:
+                    if(self.string[self.actualSymbolPos] == self.alphabet[i]):
+                        alphabetIndex = i
+                        break
 
             if(alphabetIndex == -1):
                 if(self.reachedAccept == False):

@@ -51,7 +51,7 @@ class State:
     #Return: Nothing
     def displayTransitions(self):
     	for t in self.transitions:
-            if (t.getSymbolEnd() != -12):
-    	        print("{} -- {} -- {} -- > {}".format(self.id, t.getSymbol(), t.getSymbolEnd() ,t.getNext().getId()))
+            if (t.getSymbolEnd() != None):
+    	        print("{} -- {}-{} -- > {}".format(self.id, t.getSymbol(), t.getSymbolEnd() ,t.getNext().getId()))
             else:
                 print("{} -- {} --> {}".format(self.id, t.getSymbol(),t.getNext().getId()))

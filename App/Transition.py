@@ -3,24 +3,25 @@ from multipledispatch import dispatch
 
 class Transition:
 	#Constructor
-	@dispatch(str,object)
-	def __init__(self, symbol , next):
+	@dispatch(str, object)
+	def __init__(self, symbol, next):
 		self.symbol = symbol	#Char
 		self.next = next 		#State
-		self.symbolEnd = -12
+		self.symbolEnd = None 	#Char
 
-	@dispatch(str,str,object)
-	def __init__(self, symbol , symbolEnd , next ):
-		self.symbol = symbol	#Char
-		self.symbolEnd = symbolEnd
-		self.next = next		#State
-
+	@dispatch(str, str, object)
+	def __init__(self, symbol, symbolEnd, next):
+		self.symbol = symbol		#Char
+		self.symbolEnd = symbolEnd 	#Char
+		self.next = next			#State
 
 	#Parameters: Nothing
 	#Return: Char
 	def getSymbol(self):
 		return self.symbol
 
+	#Parameters: Nothing
+	#Return: Char
 	def getSymbolEnd(self):
 		return self.symbolEnd
 
