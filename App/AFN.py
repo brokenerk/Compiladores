@@ -4,6 +4,8 @@ from Transition import Transition
 from AFD import AFD
 from CustomSet import CustomSet
 from copy import deepcopy
+from multipledispatch import dispatch
+
 epsilon = '\u03B5'
 Id = 0
 noAccepted = -1
@@ -79,6 +81,7 @@ class AFN:
 
 	#Parameters: Character
 	#Return: AFN
+	@dispatch(str)
 	def createBasic(symbol):
 		e1 = State()
 		e2 = State()
@@ -86,6 +89,18 @@ class AFN:
 		e1.addTransition(t1)
 		states = set([e1, e2])
 		alphabet = set([symbol])
+		return AFN(states, alphabet, e1, set([e2]))
+
+	#Parameters: Character, Character
+	#Return: AFN
+	@dispatch(str, str)
+	def createBasic(symbol, symbolEnd):
+		e1 = State()
+		e2 = State()
+		t1 = Transition(symbol, symbolEnd, e2)
+		e1.addTransition(t1)
+		states = set([e1, e2])
+		alphabet = set([symbol + '-' + symbolEnd])
 		return AFN(states, alphabet, e1, set([e2]))
 
 	#Parameters: Set<States>
@@ -98,7 +113,11 @@ class AFN:
 				symbol = t.getSymbol()
 				#Avoid epsilon
 				if(symbol != epsilon):
-					newAlphabet.add(symbol)
+					if (t.getSymbolEnd() == None):
+						newAlphabet.add(symbol)
+					else:
+						end = t.getSymbolEnd()
+						newAlphabet.add(symbol + '-' + end)
 		return sorted(newAlphabet)
 
 	#Parameters: Set<AFN>
@@ -307,7 +326,10 @@ class AFN:
 			#Iterate over the alphabet
 			for symbol in self.getAlphabet():
 				#Apply goTo function to the popped set
-				aux = setsUtil.goTo(Si, symbol)
+				if(len(symbol) > 1):
+					aux = setsUtil.goTo(Si, symbol[0], symbol[2])
+				else:
+					aux = setsUtil.goTo(Si, symbol)
 
 				#Set is empty, we append -1 to the row
 				if(aux == set()):

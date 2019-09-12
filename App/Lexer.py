@@ -7,91 +7,110 @@ endString = '\0'
 class Lexer:
     #Constructor
     def __init__(self, afd, string):
-        self.afd = afd                          #AFD
+        self.alphabet = afd.getAlphabet()       #List<String>
+        self.table = afd.getTable() 			#List<List<String>>
         self.string = string + endString        #String
         self.actualSymbolPos = 0                #Integer
-        self.reachedAccept = False                   #Boolean
-        self.actualState = 0                         #Integer
-        self.beginLexPos = -1                   #Integer
-        self.endLexPos = -1                     #Integer
-        self.stack = deque()                    #Stack<Integer>
-        self.status = -1                
+        self.reachedAccept = False              #Boolean
+        self.actualState = 0                    #Integer
+        self.beginLexPos = 0                    #Integer
+        self.endLexPos = 0                      #Integer
+        self.stackTokens = deque()              #Stack<Integer>
+        self.stackLexems = deque()              #Stack<String>
         self.token = -1                         #Integer
-        self.lex = ""                           #String
+        self.lexem = ""                         #String
 
+    #Parameters: Nothing
+    #Return: Integer
     def getToken(self):
-        return self.token   
+        if (self.stackTokens):
+            self.token = self.stackTokens.pop()
+            return self.token
+        return Token.END
 
+    #Parameters: Nothing
+    #Return: Nothing
     def returnToken(self):
-        return
+        self.stackTokens.append(self.token)
 
-    def getStatus(self):
-        return
+    #Parameters: Nothing
+    #Return: String
+    def getLexem(self):
+        if (self.stackLexems):
+            self.lexem = self.stackLexems.pop()
+            return self.lexem
+        return endString
 
-    def setStatus(self):
-        return
+    #Parameters: Nothing
+    #Return: Nothing
+    def returnLexem(self):
+        self.stackLexems.append(self.lexem)
+
+    #Parameters: Nothing
+    #Return: Nothing
+    def analize(self):
+        res = self.yylex()
+        while(res != Token.END):
+            self.stackTokens.append(self.token)
+            self.stackLexems.append(self.lexem)
+            res = self.yylex()
+
+        self.stackTokens.reverse()
+        self.stackLexems.reverse()
+        self.token = -1
+        self.lexem = ""
 
     #Parameters: Nothing
     #Return: Integer
     def yylex(self):
-        self.reachedAccept = False
         self.actualState = 0
-        alphabet = self.afd.getAlphabet()
-        table = self.afd.getTable()
+        self.reachedAccept = False
 
         if(self.string[self.actualSymbolPos] == endString):
             return Token.END
 
-        self.stack.append(self.actualSymbolPos)
         self.beginLexPos = self.actualSymbolPos
 
         while(self.string[self.actualSymbolPos] != endString):
-            self.alphabetIndex = -1
+            alphabetIndex = -1
+            for i in range(0, len(self.alphabet)):
+                if(len(self.alphabet[i]) > 2):
+                    if(self.alphabet[i][0] <= self.string[self.actualSymbolPos] <= self.alphabet[i][2]):
+                        alphabetIndex = i
+                        break   
+                else:
+                    if(self.string[self.actualSymbolPos] == self.alphabet[i]):
+                        alphabetIndex = i
+                        break
 
-            for i in range(0, len(alphabet)):
-                if(alphabet[i] == self.string[self.actualSymbolPos]):
-                    self.alphabetIndex = i
-                    break
-
-            if(self.alphabetIndex == -1):
+            if(alphabetIndex == -1):
                 if(self.reachedAccept == False):
-                    self.lex = self.string[self.actualSymbolPos:self.actualSymbolPos]
-                    self.actualSymbolPos += self.beginLexPos
+                    self.lexem = self.string[self.actualSymbolPos:self.actualSymbolPos + 1] #substring
+                    self.actualSymbolPos = self.beginLexPos + 1
+                    self.token = Token.ERROR
                     return Token.ERROR
 
-                self.lex = self.string[self.beginLexPos:self.endLexPos]
-                self.actualSymbolPos += self.endLexPos
+                self.lexem = self.string[self.beginLexPos:self.endLexPos + 1] #substring
+                self.actualSymbolPos = self.endLexPos + 1
                 return self.token
 
-            self.actualState = table[self.actualState][self.alphabetIndex]
+            self.actualState = self.table[self.actualState][alphabetIndex]
 
             if(self.actualState != -1):
-                if(table[self.actualState][len(alphabet)] != 1):
-                    self.token = table[self.actualState][len(alphabet)]
+                if(self.table[self.actualState][len(self.alphabet)] != 1):
+                    self.token = self.table[self.actualState][len(self.alphabet)]
                     self.reachedAccept = True
                     self.endLexPos = self.actualSymbolPos
+
                 self.actualSymbolPos += 1
+                self.lexem = self.string[self.beginLexPos:self.endLexPos + 1] #substring
             else:
                 if(self.reachedAccept == False):
-                    self.lex = self.string[self.actualSymbolPos:self.actualSymbolPos]
-                    self.actualSymbolPos += self.beginLexPos
+                    self.lexem = self.string[self.actualSymbolPos:self.actualSymbolPos + 1] #substring
+                    self.actualSymbolPos = self.beginLexPos + 1
+                    self.token = Token.ERROR
                     return Token.ERROR
 
-                self.lex = self.string[self.beginLexPos:self.endLexPos]
-                self.actualSymbolPos += self.endLexPos
+                self.lexem = self.string[self.beginLexPos:self.endLexPos + 1] #substring
+                self.actualSymbolPos = self.endLexPos + 1
                 return self.token
-
-
-
-                                
-
-                
-
-
-                        
-
-
-
-
-
-

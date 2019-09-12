@@ -17,6 +17,47 @@ afnAvailable = {}
 alphabet = {}
 idAfnAvailable = {}
 cont = 0
+afn1 = AFN.createBasic('+')
+afn2 = AFN.createBasic('-')
+afn3 = AFN.createBasic('D')
+afn4 = AFN.createBasic('.')
+afn5 = AFN.createBasic('D')
+afnA = afn1.join(afn2).optional().concat(afn3.positiveClosure()).concat(afn4).concat(afn5.positiveClosure())
+afnA.setToken(10)
+afnA.display()
+
+print("")
+afn6 = AFN.createBasic('+')
+afn7 = AFN.createBasic('-')
+afn8 = AFN.createBasic('D')
+afnB = afn6.join(afn7).optional().concat(afn8.positiveClosure())
+afnB.setToken(20)
+
+print("")
+afn9 = AFN.createBasic('l')
+afn10 = AFN.createBasic('L')
+afn11 = AFN.createBasic('l')
+afn12 = AFN.createBasic('L')
+afn13 = AFN.createBasic('D')
+afnC = afn9.join(afn10).concat(afn11.join(afn12).join(afn13).kleeneClosure())
+afnC.setToken(30)
+
+afn14 = AFN.createBasic('+')
+afn15 = AFN.createBasic('+')
+afnD = afn14.concat(afn15)
+afnD.setToken(40)
+
+afn16 = AFN.createBasic('+')
+afn16.setToken(50)
+
+automatota = AFN.specialJoin(set([afnA, afnB, afnC, afnD, afn16]))
+automatota.display()
+afnAvailable[automatota.getId()] = automatota
+idAfnAvailable[automatota.getId()] = automatota.getId()
+# cs = CustomSet(automatota.getStates())
+# afd = automatota.convertToAFD(cs)
+# afd.displayTable()
+
 
 @app.route("/")
 def index():
@@ -45,77 +86,74 @@ def convert():
 
 	# Option: ADD 
 	if request.method == 'POST' and opt == "0":
-			c = addForm.char.data
-			afn = AFN.createBasic(c)
-			afnAvailable[afn.getId()] = afn
-			idAfnAvailable[afn.getId()] = afn.getId()
-			print("SIZE:", len(afnAvailable))
+		c = addForm.char.data
+		afn = AFN.createBasic(c)
+		afnAvailable[afn.getId()] = afn
+		idAfnAvailable[afn.getId()] = afn.getId()
+		print("SIZE:", len(afnAvailable))
+
 	# Option: JOIN	
 	elif request.method == 'POST' and opt == "1":
-		if len(afn1) > 0 and len(afn2) > 0:
-			newAfn = afnAvailable[int(afn1)].join(afnAvailable[int(afn2)])
-			afnAvailable[newAfn.getId()] = newAfn
-			idAfnAvailable[newAfn.getId()] = newAfn.getId()
-			# Remove AFN1 and AFN2
-			idAfnAvailable[int(afn1)] = -1
-			idAfnAvailable[int(afn2)] = -1
-			print("--------------------------")
-			print("SIZE:", len(afnAvailable))
+		newAfn = afnAvailable[int(afn1)].join(afnAvailable[int(afn2)])
+		afnAvailable[newAfn.getId()] = newAfn
+		idAfnAvailable[newAfn.getId()] = newAfn.getId()
+		# Remove AFN1 and AFN2
+		idAfnAvailable[int(afn1)] = -1
+		idAfnAvailable[int(afn2)] = -1
+		print("--------------------------")
+		print("SIZE:", len(afnAvailable))
 
 	# Option: CONCAT 
 	elif request.method == 'POST' and opt == "2":
-		if len(afn1) > 0 and len(afn2) > 0:
-			newAfn = afnAvailable[int(afn1)].concat(afnAvailable[int(afn2)])
-			afnAvailable[newAfn.getId()] = newAfn
-			idAfnAvailable[newAfn.getId()] = newAfn.getId()
-			# Remove AFN1 and AFN2
-			idAfnAvailable[int(afn1)] = -1
-			idAfnAvailable[int(afn2)] = -1
-			print("SIZE:", len(afnAvailable))
+		newAfn = afnAvailable[int(afn1)].concat(afnAvailable[int(afn2)])
+		afnAvailable[newAfn.getId()] = newAfn
+		idAfnAvailable[newAfn.getId()] = newAfn.getId()
+		# Remove AFN1 and AFN2
+		idAfnAvailable[int(afn1)] = -1
+		idAfnAvailable[int(afn2)] = -1
+		print("SIZE:", len(afnAvailable))
 
 	# Option: +CLOSURE
 	elif request.method == 'POST' and opt == "3":
-		if len(afn1) > 0:
-			newAfn = afnAvailable[int(afn1)].positiveClosure()
-			afnAvailable[newAfn.getId()] = newAfn
-			idAfnAvailable[newAfn.getId()] = newAfn.getId()
-			print("SIZE:", len(afnAvailable))
+		newAfn = afnAvailable[int(afn1)].positiveClosure()
+		afnAvailable[newAfn.getId()] = newAfn
+		idAfnAvailable[newAfn.getId()] = newAfn.getId()
+		# Remove AFN1 
+		idAfnAvailable[int(afn1)] = -1
+		print("SIZE:", len(afnAvailable))
 
 	# Option: *CLOSURE
 	elif request.method == 'POST' and opt == "4":
-		if len(afn1) > 0:
-			newAfn = afnAvailable[int(afn1)].kleeneClosure()
-			afnAvailable[newAfn.getId()] = newAfn
-			idAfnAvailable[newAfn.getId()] = newAfn.getId()
-			print("SIZE:", len(afnAvailable))
+		newAfn = afnAvailable[int(afn1)].kleeneClosure()
+		afnAvailable[newAfn.getId()] = newAfn
+		idAfnAvailable[newAfn.getId()] = newAfn.getId()
+		# Remove AFN1 
+		idAfnAvailable[int(afn1)] = -1
+		print("SIZE:", len(afnAvailable))
 
 	# Option: ?Optional
 	elif request.method == 'POST' and opt == "5":
-		if len(afn1) > 0:
-			aux = CustomSet(afnAvailable[int(afn1)].getStates())
-			e = afnAvailable[int(afn1)].getStart()
-			statesEpsilon = aux.epsilonClosure(e)
-			#for e in statesEpsilon:
-			#	print("E: {}".format(e.getId()))
-			print("SIZE:", len(afnAvailable))
+		newAfn = afnAvailable[int(afn1)].optional()
+		afnAvailable[newAfn.getId()] = newAfn
+		idAfnAvailable[newAfn.getId()] = newAfn.getId()
+		# Remove AFN1
+		idAfnAvailable[int(afn1)] = -1
+		print("SIZE:", len(afnAvailable))
 
 	# Option: SET TOKEN
-	elif request.method == 'POST' and opt == "6":
-		if len(afn1) > 0:
-			number = addToken.token.data
-			#print("Add toke to:", afn1)
-			#print("Token:", number)
-			afnAvailable[int(afn1)].setToken(number)
+	elif request.method == 'POST' and opt == "6":		
+		number = addToken.token.data
+		print("Add toke to:", afn1)
+		print("Token:", number)
+		afnAvailable[int(afn1)].setToken(number)
 
 	# Option: TO AFD
 	elif request.method == 'POST' and opt == "7":
-		if len(afn1) > 0:
-			aux = CustomSet(afnAvailable[int(afn1)].getStates())
-			e = afnAvailable[int(afn1)].getStart()
-			afdNew = afnAvailable[int(afn1)].convertToAFD(aux)
-			table = afdNew.getTable()
-			afdNew.displayTable()
-			show = int(1)
+		aux = CustomSet(afnAvailable[int(afn1)].getStates())
+		afdNew = afnAvailable[int(afn1)].convertToAFD(aux)
+		table = afdNew.getTable()
+		afdNew.displayTable()
+		show = int(1)
 
 	# Option: SPECIAL JOIN -- Create select
 	elif request.method == 'POST' and opt == "8":
