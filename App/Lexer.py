@@ -74,13 +74,10 @@ class Lexer:
         while(self.string[self.actualSymbolPos] != endString):
             alphabetIndex = -1
             for i in range(0, len(self.alphabet)):
-                if(len(self.alphabet[i]) > 1):
-                    inf = ord(self.alphabet[i][0])
-                    sup = ord(self.alphabet[i][2])
-                    actual = ord(self.string[self.actualSymbolPos])
-                    if(inf >= actual and actual <= sup):
+                if(len(self.alphabet[i]) > 2):
+                    if(self.alphabet[i][0] <= self.string[self.actualSymbolPos] <= self.alphabet[i][2]):
                         alphabetIndex = i
-                        break
+                        break   
                 else:
                     if(self.string[self.actualSymbolPos] == self.alphabet[i]):
                         alphabetIndex = i
