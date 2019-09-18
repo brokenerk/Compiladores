@@ -6,14 +6,14 @@ class Transition:
 	@dispatch(str, object)
 	def __init__(self, symbol, next):
 		self.symbol = symbol	#Char
+		self.endSymbol = None 	#Char
 		self.next = next 		#State
-		self.symbolEnd = None 	#Char
 
 	@dispatch(str, str, object)
-	def __init__(self, symbol, symbolEnd, next):
-		self.symbol = symbol		#Char
-		self.symbolEnd = symbolEnd 	#Char
-		self.next = next			#State
+	def __init__(self, symbol, endSymbol, next):
+		self.symbol = symbol			#Char
+		self.endSymbol = endSymbol  	#Char
+		self.next = next				#State
 
 	#Parameters: Nothing
 	#Return: Char
@@ -22,8 +22,8 @@ class Transition:
 
 	#Parameters: Nothing
 	#Return: Char
-	def getSymbolEnd(self):
-		return self.symbolEnd
+	def getEndSymbol(self):
+		return self.endSymbol 
 
 	#Parameters: Nothing
 	#Return: State

@@ -1,7 +1,7 @@
 #!python3
 Id = 0
 
-class AFD:
+class DFA:
     #Constructor
     def __init__(self, table, alphabet):
         global Id

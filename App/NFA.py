@@ -1,16 +1,15 @@
 #!python3
 from State import State
 from Transition import Transition
-from AFD import AFD
-from CustomSet import CustomSet
+from DFA import DFA
 from copy import deepcopy
 from multipledispatch import dispatch
+from collections import deque
 
 epsilon = '\u03B5'
 Id = 0
-noAccepted = -1
 
-class AFN:
+class NFA:
 	#Constructor
 	def __init__(self, states, alphabet, start, accepts):
 		global Id
@@ -20,7 +19,6 @@ class AFN:
 		self.alphabet = alphabet			#Set<Char>
 		self.start = start 					#State
 		self.accepts = accepts 				#Set<State>
-		#self.tokens = tokens 				#Set<Integer
 
 	#Parameters: Nothing
 	#Return: Integer
@@ -70,17 +68,17 @@ class AFN:
 	#Parameters: Nothing
 	#Return: Nothing
 	def display(self):
-		print("Id: {}".format(self.getId()))
-		print("Alfabeto: {}".format(self.getAlphabet()))
-		print("Estado inicial: {}".format(self.getStart().getId()))
+		print("Id: {}".format(self.id))
+		print("Alfabeto: {}".format(self.alphabet))
+		print("Estado inicial: {}".format(self.start.getId()))
 		print("Estados Finales: ")
-		for a in self.getAccepts():
+		for a in self.accepts:
 			print("{} ".format(a.getId()))
 		for e in self.states:
 			e.displayTransitions()   
 
 	#Parameters: Character
-	#Return: AFN
+	#Return: NFA
 	@dispatch(str)
 	def createBasic(symbol):
 		e1 = State()
@@ -89,19 +87,19 @@ class AFN:
 		e1.addTransition(t1)
 		states = set([e1, e2])
 		alphabet = set([symbol])
-		return AFN(states, alphabet, e1, set([e2]))
+		return NFA(states, alphabet, e1, set([e2]))
 
 	#Parameters: Character, Character
-	#Return: AFN
+	#Return: NFA
 	@dispatch(str, str)
-	def createBasic(symbol, symbolEnd):
+	def createBasic(symbol, endSymbol):
 		e1 = State()
 		e2 = State()
-		t1 = Transition(symbol, symbolEnd, e2)
+		t1 = Transition(symbol, endSymbol, e2)
 		e1.addTransition(t1)
 		states = set([e1, e2])
-		alphabet = set([symbol + '-' + symbolEnd])
-		return AFN(states, alphabet, e1, set([e2]))
+		alphabet = set([symbol + '-' + endSymbol])
+		return NFA(states, alphabet, e1, set([e2]))
 
 	#Parameters: Set<States>
 	#Return: Set<Char>
@@ -113,40 +111,40 @@ class AFN:
 				symbol = t.getSymbol()
 				#Avoid epsilon
 				if(symbol != epsilon):
-					if (t.getSymbolEnd() == None):
+					if (t.getEndSymbol() == None):
 						newAlphabet.add(symbol)
 					else:
-						end = t.getSymbolEnd()
+						end = t.getEndSymbol()
 						newAlphabet.add(symbol + '-' + end)
 		return sorted(newAlphabet)
 
-	#Parameters: Set<AFN>
-	#Return: AFN
-	def specialJoin(afns):
+	#Parameters: Set<NFA>
+	#Return: NFA
+	def specialJoin(nfas):
 		newStart = State()
 		newStates = set([])
 		accepts = set([])
 
-		for afn in afns:
-			start = deepcopy(afn.getStart())
+		for nfa in nfas:
+			start = deepcopy(nfa.getStart())
 			newStart.addTransition(Transition(epsilon, start))
-			for e in afn.getAccepts():
+			for e in nfa.getAccepts():
 				accepts.add(e)
-			newStates = newStates.union(afn.getStates())
+			newStates = newStates.union(nfa.getStates())
 			del start
 
 		newStates.add(newStart)
-		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, accepts)
+		return NFA(newStates, NFA.addNewAlphabet(newStates), newStart, accepts)
 
-	#Parameters: AFN
-	#Return: AFN
-	def join(self, afnB):
-		#Create a deepcopy of start states from both afns
-		startA = deepcopy(self.getStart())
-		startB = deepcopy(afnB.getStart())
+	#Parameters: NFA
+	#Return: NFA
+	def join(self, nfaB):
+		#Create a deepcopy of start states from both NFAs
+		startA = deepcopy(self.start)
+		startB = deepcopy(nfaB.getStart())
 		#Create a deepcopy of accept states
-		acceptsA = deepcopy(self.getAccepts()) 
-		acceptsB = deepcopy(afnB.getAccepts())     
+		acceptsA = deepcopy(self.accepts) 
+		acceptsB = deepcopy(nfaB.getAccepts())     
 		#Create new start, accept state and new states set
 		newStart = State()
 		newAccept = State()
@@ -156,9 +154,11 @@ class AFN:
 		newStart.addTransition(Transition(epsilon, startB))    
 		#Add epsilon transition to new accept state
 		for a in acceptsA:
+			a.setToken(-1)
 			a.addTransition(Transition(epsilon, newAccept))
 
 		for b in acceptsB:
+			b.setToken(-1)
 			b.addTransition(Transition(epsilon, newAccept)) 
 
 		#Add updated "accept" states (no longer accepted), new start and new accept
@@ -171,13 +171,13 @@ class AFN:
 			newStates.add(b)
 
 		#Add the remaining states
-		for e1 in self.getStates():
-			for a in self.getAccepts():
+		for e1 in self.states:
+			for a in self.accepts:
 				if(e1.equals(a) == False):
 					newStates.add(e1)
 
-		for e2 in afnB.getStates():
-			for b in afnB.getAccepts():
+		for e2 in nfaB.getStates():
+			for b in nfaB.getAccepts():
 				if(e2.equals(b) == False):
 					newStates.add(e2)
 
@@ -186,48 +186,49 @@ class AFN:
 		del startB
 		del acceptsA
 		del acceptsB
-		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))   
+		return NFA(newStates, NFA.addNewAlphabet(newStates), newStart, set([newAccept]))   
 
-	#Parameters: AFN
-	#Return: AFN
-	def concat(self, afnB):
-		#Create a deepcopy of start states from both afns
-		startA = deepcopy(self.getStart())
-		startB = deepcopy(afnB.getStart())
+	#Parameters: NFA
+	#Return: NFA
+	def concat(self, nfaB):
+		#Create a deepcopy of start states from both NFAs
+		startA = deepcopy(self.start)
+		startB = deepcopy(nfaB.getStart())
 
 		#Create a deepcopy of accept states
-		acceptsA = deepcopy(self.getAccepts()) 
-		acceptsB = deepcopy(afnB.getAccepts())  
+		acceptsA = deepcopy(self.accepts) 
+		acceptsB = deepcopy(nfaB.getAccepts())  
 
-		#Add AFNB start state's transitions to AFNA accept state
+		#Add NFAB start state's transitions to NFAA accept state
 		#Merge states
 		for t in startB.getTransitions():
 			for a in acceptsA:
+				a.setToken(-1)
 				a.addTransition(t)    
 
-		#Add updated AFNA "accept" state (no longer an accepted state)
+		#Add updated NFAA "accept" state (no longer an accepted state)
 		newStates = set([])
 		for a in acceptsA:
 			newStates.add(a)
 
 		#Add all states to new set, 
-		#except original AFNA accept state and AFNB start state
-		for e1 in self.getStates():
-			for a in self.getAccepts():
+		#except original NFAA accept state and NFAB start state
+		for e1 in self.states:
+			for a in self.accepts:
 				if(e1.equals(a) == False):
 					newStates.add(e1)
 
-		for e2 in afnB.getStates():
-			if(e2.equals(afnB.getStart()) == False):
+		for e2 in nfaB.getStates():
+			if(e2.equals(nfaB.getStart()) == False):
 				newStates.add(e2)
 
 		#Free memory
 		del startB
 		del acceptsA
-		return AFN(newStates, AFN.addNewAlphabet(newStates), startA, acceptsB)    
+		return NFA(newStates, NFA.addNewAlphabet(newStates), startA, acceptsB)    
 
 	#Parameters: Nothing
-	#Return: AFN
+	#Return: NFA
 	def positiveClosure(self):
 		#Create new start state
 		newStart = State()
@@ -235,35 +236,37 @@ class AFN:
 		newAccept = State()
 
 		#Create a deepcopy of actual start and accept state
-		start = deepcopy(self.getStart())
-		accepts = deepcopy(self.getAccepts()) 
+		start = deepcopy(self.start)
+		accepts = deepcopy(self.accepts) 
 
 		#Add epsilon transitions
 		newStart.addTransition(Transition(epsilon, start))
+
 		for a in accepts:
-			a.setToken ( noAccepted )
+			a.setToken(-1)
 			a.addTransition(Transition(epsilon, newAccept))
 			a.addTransition(Transition(epsilon, start))
 
 		#Add updated states on new set
 		newStates = set([newStart, start, newAccept])  
+
 		for a in accepts:
 			newStates.add(a)
 
 		#Add remaining states to new set
-		for s in self.getStates():
+		for s in self.states:
 			if(s.equals(start) == False):
-				for a in self.getAccepts():
+				for a in self.accepts:
 					if(s.equals(a) == False):
 						newStates.add(s) 
 
 		#Free memory
 		del start
 		del accepts 
-		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))
+		return NFA(newStates, NFA.addNewAlphabet(newStates), newStart, set([newAccept]))
 
 	#Parameters: Nothing
-	#Return: AFN
+	#Return: NFA
 	def kleeneClosure(self):
 		#Get positive closure
 	    posClosure = self.positiveClosure(); 
@@ -276,44 +279,129 @@ class AFN:
 	    return posClosure
 
 	#Parameters: Nothing
-	#Return: AFN
+	#Return: NFA
 	def optional(self):
 		newStart = State()
 		newAccept = State()
-		start = deepcopy(self.getStart())
-		accepts = deepcopy(self.getAccepts()) 
+		start = deepcopy(self.start)
+		accepts = deepcopy(self.accepts) 
 
 		newStart.addTransition(Transition(epsilon, start))
 		newStart.addTransition(Transition(epsilon, newAccept))
+
 		for a in accepts:
-			a.setToken( noAccepted )
+			a.setToken(-1)
 			a.addTransition(Transition(epsilon, newAccept)) 
+
 		newStates = set([newStart, start, newAccept])
+
 		for a in accepts:
 			newStates.add(a)  
 
-		for s in self.getStates():
+		for s in self.states:
 			if(s.equals(start) == False):
-				for a in self.getAccepts():
+				for a in self.accepts:
 					if(s.equals(a) == False):
 						newStates.add(s)
 
 		#Free memory
 		del start
 		del accepts
-		return AFN(newStates, AFN.addNewAlphabet(newStates), newStart, set([newAccept]))
+		return NFA(newStates, NFA.addNewAlphabet(newStates), newStart, set([newAccept]))
 	
 	#Parameters: Integer
 	#Return: Nothing
 	def setToken(self, token):
-		statesAceppted = self.getAccepts()
-		for e in statesAceppted:
+		for e in self.accepts:
 			e.setToken(int(token))
 
+	#Parameters: Integer
+	#Return: State
+	def searchState(self, id):
+		for e in self.states:
+			if(e.getId() == id):
+				return e
+
+	#Parameters: State
+	#Return: Set<State>
+	def epsilonClosure(self, state):
+		s = set([]) #Set
+		p = deque() #Stack
+		p.append(state)
+
+		while p:
+			e = p.pop()
+
+			if(e in(s)):
+				continue
+			s.add(e)
+
+			for t in e.getTransitions():
+				if (t.getSymbol() == epsilon):
+					id = t.getNext().getId()	#Search by Id
+					p.append(self.searchState(id))
+		return s
+
+	#Parameters: Set<State>, Char
+	#Return: Set<State>
+	@dispatch(object, str)
+	def move(self, states, symbol):
+		R = set([])
+		for e in states:
+			for t in e.getTransitions():
+				if(t.getSymbol() == symbol):
+					id = t.getNext().getId()	#Search by Id
+					R.add(self.searchState(id))
+		return R
+
+	#Parameters: Set<State>, Char , Char
+	#Return: Set<State>
+	@dispatch(object, str, str)
+	def move(self, states, symbol, endSymbol):
+		R = set([])
+		for e in states:
+			for t in e.getTransitions():
+				if(symbol == t.getSymbol() and t.getEndSymbol() == endSymbol):
+					id = t.getNext().getId()	#Search by Id
+					R.add(self.searchState(id))
+		return R
+
+	#Parameters: Set<State>, Char
+	#Return: Set<State>
+	@dispatch(set, str)
+	def goTo(self, states, symbol):
+		moveStates = self.move(states, symbol);
+		returnStates = set([])
+		for e in moveStates:
+			returnStates = returnStates.union(self.epsilonClosure(e))
+		return returnStates
+
+	#Parameters: Set<State>, Char , Char
+	#Return: Set<State>
+	@dispatch(set, str, str)
+	def goTo(self, states, symbol, endSymbol):
+		moveStates = self.move(states, symbol, endSymbol);
+		returnStates = set([])
+		for e in moveStates:
+			returnStates = returnStates.union(self.epsilonClosure(e))
+		return returnStates
+
+	#Parameters: List<Set>, Set
+	#Return: Integer
+	def exists(self, list, s):
+		list.sort() 	#Sort sets list first
+		#Iterate the list
+		for i in range(0, len(list)):
+			#If the set exists in list, we return the set Id
+			if(list[i] == s):
+				return i
+		#If not, there's a new set
+		return -1
+
 	#Parameters: CustomSet
-	#Return: AFD
-	def convertToAFD(self, setsUtil):
-		S0 = setsUtil.epsilonClosure(self.getStart())
+	#Return: DFA
+	def convertToDFA(self):
+		S0 = self.epsilonClosure(self.start)
 		queue = [S0] 		#Queue<Set>
 		list = [S0] 		#List<Set>
 		table = []			#List<List>
@@ -324,12 +412,12 @@ class AFN:
 			row = []							#Row - List
 
 			#Iterate over the alphabet
-			for symbol in self.getAlphabet():
+			for symbol in self.alphabet:
 				#Apply goTo function to the popped set
 				if(len(symbol) > 1):
-					aux = setsUtil.goTo(Si, symbol[0], symbol[2])
+					aux = self.goTo(Si, symbol[0], symbol[2])
 				else:
-					aux = setsUtil.goTo(Si, symbol)
+					aux = self.goTo(Si, symbol)
 
 				#Set is empty, we append -1 to the row
 				if(aux == set()):
@@ -337,7 +425,7 @@ class AFN:
 					continue
 
 				#Verify is set already exists in list
-				nSet = setsUtil.exists(list, aux)
+				nSet = self.exists(list, aux)
 				#If it exists, we need to add their Id on the row
 				if(nSet != -1):
 					row.append(nSet)
@@ -354,7 +442,7 @@ class AFN:
 			#Check tokens in accepted states
 			tok = -1
 			for e1 in Si:
-				for e2 in self.getAccepts():
+				for e2 in self.accepts:
 					if(e1.equals(e2) == True):
 						tok = e2.getToken()
 						break
@@ -372,4 +460,4 @@ class AFN:
 		del row
 		del Si
 		del aux
-		return AFD(table, self.getAlphabet());
+		return DFA(table, self.alphabet);

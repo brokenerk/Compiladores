@@ -38,20 +38,16 @@ class State:
     def addTransition(self, t):
         self.transitions.add(t)  
 
-    #Parameters: Nothing
-    #Return: Hash
-    def hash(self):
-    	return hash(self.id)    
     #Parameters: State
     #Return: Boolean
     def equals(self, other):
-    	return (self.__class__ == other.__class__ and self.id == other.id)  
+    	return self.__class__ == other.__class__ and self.id == other.id
 
     #Parameters: Nothing
     #Return: Nothing
     def displayTransitions(self):
     	for t in self.transitions:
-            if (t.getSymbolEnd() != None):
-    	        print("{} -- {}-{} -- > {}".format(self.id, t.getSymbol(), t.getSymbolEnd() ,t.getNext().getId()))
+            if (t.getEndSymbol() != None):
+    	        print("{} -- {}-{} -- > {}".format(self.id, t.getSymbol(), t.getEndSymbol(), t.getNext().getId()))
             else:
-                print("{} -- {} --> {}".format(self.id, t.getSymbol(),t.getNext().getId()))
+                print("{} -- {} --> {}".format(self.id, t.getSymbol(), t.getNext().getId()))

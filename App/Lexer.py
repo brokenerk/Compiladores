@@ -1,5 +1,5 @@
 #!python3
-from AFD import AFD
+from DFA import DFA
 from Token import Token
 from collections import deque
 endString = '\0'
