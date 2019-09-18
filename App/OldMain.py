@@ -69,7 +69,12 @@ if __name__ == "__main__":
     afn15 = afnk.concat(afnl).concat(afnm).concat(afnn).concat(afno)
     afn15.setToken(121)
 
-    automatota = AFN.specialJoin(set([afn1, afn2, afn3, afn4, afn5,afn6,afn7,afn8,afn9,afn10,afn11,afn12,afn13,afn14,afn15]))
+    afnp = AFN.createBasic('/')
+    afnq = AFN.createBasic('+')
+    afn16 = afnp.concat(afnq)
+    afn16.setToken(220)
+
+    automatota = AFN.specialJoin(set([afn1, afn2, afn3, afn4, afn5,afn6,afn7,afn8,afn9,afn10,afn11,afn12,afn13,afn14,afn15,afn16]))
     automatota.display()
 
     cs = CustomSet(automatota.getStates())
@@ -79,7 +84,7 @@ if __name__ == "__main__":
     afd.displayTable()
 
     print("")
-    string = "[0-9]+&.&[0-9]+" #(a|b)+&d*  [0-9]+&.&[0-9]+  ([a-z]|[A-Z])&([a-z]|[A-Z]|[0-9])*
+    string = "(/+|-)?&[0-9]+&.&[0-9]+" #(a|b)+&d*  [0-9]+&.&[0-9]+  ([a-z]|[A-Z])&([a-z]|[A-Z]|[0-9])*
     print("Lexer: " + string)
     
     lex = Lexer(afd, string)

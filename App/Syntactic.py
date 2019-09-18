@@ -146,3 +146,11 @@ class SyntacticAfn:
         if ( tok == 170): # .
             af = AFN.createBasic(lexema)
             return ( True, af )
+
+        if ( tok == 220): # /+
+            af = AFN.createBasic(lexema[1])
+            return ( True, af )
+
+        if ( tok == 160): # -
+            af = AFN.createBasic(lexema)
+            return ( True, af )
