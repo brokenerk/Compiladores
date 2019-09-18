@@ -16,6 +16,7 @@ class Token:
 	KLEEN = 190
 	PAR_I = 200
 	PAR_D = 210
+	PLUS = 220
 
 	END = 0
 	PLUS = 10
