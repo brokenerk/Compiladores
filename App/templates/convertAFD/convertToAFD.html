@@ -28,6 +28,41 @@
          </div>
       </div>
 	</div>
+
+   <div id="principal" class="container">
+      <br><br>
+      <div id="showTable">
+         {% if afd %}
+            <script type="text/javascript">
+               document.getElementById('convertToAFD').style.display = "none";
+            </script>
+            <br>
+            <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Table of the AFD</p>
+            <br> <br>
+            <table class="striped">
+               <thead>
+                  <tr>
+                     <th>Id</th>
+                     {% for a in afd.getAlphabet() %}
+                        <th>{{ a }}</th>
+                     {% endfor %}
+                     <th> Token </th> 
+                  </tr>
+               </thead>
+               <tbody>
+                  {% for i in afdTable %}
+                     <tr>
+                        <td> {{ loop.index - 1 }} </td>
+                        {% for j in i %}
+                           <td>{{ j }}</td>
+                        {% endfor %}
+                     </tr>
+                  {% endfor %}
+               </tbody>
+            </table>
+         {% endif %}
+      </div>
+   </div>
    <script>
       $(document).ready(function() {
          $('select').material_select();

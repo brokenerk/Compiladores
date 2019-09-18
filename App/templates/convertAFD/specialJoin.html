@@ -22,11 +22,12 @@
 
       <div id="principal" class="container">
          <div id="showSelect">
+            <br><br>
             <div class="col s12">
-               <script type="text/javascript">
-                  document.getElementById('Add').style.display = "none";
-               </script>
                {% if nSelect %}
+               <script type="text/javascript">
+                  document.getElementById('SpecialJoin').style.display = "none";
+               </script>
                   <form method="POST">
                      <input type="hidden" id="optSpecialJoinOk" name="option">
                      {% for i in range(0, nSelect): %}
@@ -52,5 +53,9 @@
          </div>
       </div>
 	</div>
-   
+   <script>
+      $(document).ready(function() {
+         $('select').material_select();
+      });
+   </script>
 {% endblock %}
