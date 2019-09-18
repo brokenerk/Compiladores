@@ -17,6 +17,8 @@ class Token:
 	PAR_I = 200
 	PAR_D = 210
 	PLUS = 220
+	EQUALS = 230
+	PROD = 240
 
 	END = 0
 	PLUS = 10

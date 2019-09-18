@@ -31,6 +31,9 @@ if __name__ == "__main__":
     afn7 = AFN.createBasic('-')
     afn7.setToken(160)
 
+    afn71 = AFN.createBasic('=')
+    afn71.setToken(230)
+
     afn8 = AFN.createBasic('.')
     afn8.setToken(170)
     afn9 = AFN.createBasic('?')
@@ -69,19 +72,55 @@ if __name__ == "__main__":
     afn15 = afnk.concat(afnl).concat(afnm).concat(afnn).concat(afno)
     afn15.setToken(121)
 
-    afnp = AFN.createBasic('/')
+    afnp = AFN.createBasic('¬')
     afnq = AFN.createBasic('+')
     afn16 = afnp.concat(afnq)
     afn16.setToken(220)
 
-    automatota = AFN.specialJoin(set([afn1, afn2, afn3, afn4, afn5,afn6,afn7,afn8,afn9,afn10,afn11,afn12,afn13,afn14,afn15,afn16]))
-    automatota.display()
+    afnp2 = AFN.createBasic('¬')
+    afnq2 = AFN.createBasic('*')
+    afn17 = afnp2.concat(afnq2)
+    afn17.setToken(240)
+
+    automatota = AFN.specialJoin(set([afn1, afn2, afn3, afn4, afn5,afn6,afn7,afn71,afn8,afn9,afn10,afn11,afn12,afn13,afn14,afn15,afn16, afn17]))
+    #automatota.display()
 
     cs = CustomSet(automatota.getStates())
     afd = automatota.convertToAFD(cs)
-    print("")
-    print("AFD: ")
-    afd.displayTable()
+    #print("")
+    #print("AFD: ")
+    #afd.displayTable()
+
+    try:
+	    archivo = open("er.txt", "r")
+	    afns = set([])
+
+	    print("Leeyendo ER...")
+	    print("")
+	    
+	    for linea in archivo:
+	    	print(linea)
+	    	stringAux = linea.split(' ')
+	    	lex = Lexer(afd, stringAux[0])
+	    	lex.analize()
+
+	    	syn = SyntacticAfn(lex)
+	    	afnAux = syn.start()
+	    	afnAux.setToken(int(stringAux[1]))
+	    	afns.add(afnAux)
+
+	    archivo.close()
+
+	    automatotaER = AFN.specialJoin(afns)
+	    csER = CustomSet(automatotaER.getStates())
+	    afdER = automatotaER.convertToAFD(csER)
+	    print("")
+	    print("AFD Resultante:")
+	    afdER.displayTable()
+    except:
+    	print("Ha ocurrido un error...")
+
+    '''
 
     print("")
     string = "(/+|-)?&[0-9]+&.&[0-9]+" #(a|b)+&d*  [0-9]+&.&[0-9]+  ([a-z]|[A-Z])&([a-z]|[A-Z]|[0-9])*
@@ -90,11 +129,10 @@ if __name__ == "__main__":
     lex = Lexer(afd, string)
     lex.analize()
 
-    Sin = SyntacticAfn (lex)
-    afn13 = Sin.start()
+    syn = SyntacticAfn(lex)
+    afn13 = syn.start()
     afn13.display()
 
-    '''
     afn1 = AFN.createBasic('+')
     afn2 = AFN.createBasic('-')
     afn3 = AFN.createBasic('0','9')

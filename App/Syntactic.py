@@ -32,7 +32,6 @@ class SyntacticAfn:
         if tok == 130: #OR
             f2 = self.T ( f2 )
             if f2[0]:
-                print('JOIN')
                 afna =F[1].join( f2[1] )
                 F = ( F[0] , afna)
                 F = self.Ep(F)
@@ -58,7 +57,6 @@ class SyntacticAfn:
         if tok == 140: #'CONC'
             fn2 = self.C(fn2)
             if fn2[0]:
-                print('Concat')
                 afna = F[1].concat(fn2[1])
                 F = ( F[0] , afna)
                 F = self.Tp(F)
@@ -95,7 +93,6 @@ class SyntacticAfn:
                 return ( True,F[1] )
             return ( False,F[1] )
         if tok == 180: #'OPC'
-            print('Optional')
             afna = F[1].optional()
             F = ( F[0] , afna)
             F = self.Cp(F)
@@ -147,10 +144,18 @@ class SyntacticAfn:
             af = AFN.createBasic(lexema)
             return ( True, af )
 
-        if ( tok == 220): # /+
+        if ( tok == 220): # ¬+
+            af = AFN.createBasic(lexema[1])
+            return ( True, af )
+
+        if ( tok == 240): # ¬*
             af = AFN.createBasic(lexema[1])
             return ( True, af )
 
         if ( tok == 160): # -
+            af = AFN.createBasic(lexema)
+            return ( True, af )
+
+        if ( tok == 230): # =
             af = AFN.createBasic(lexema)
             return ( True, af )
