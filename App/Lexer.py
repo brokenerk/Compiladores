@@ -60,6 +60,10 @@ class Lexer:
         self.token = -1
         self.lexem = ""
 
+    def display(self):
+        while self.stackTokens:
+            print(str(self.getToken()) + ": " + self.getLexem())
+
     #Parameters: Nothing
     #Return: Integer
     def yylex(self):

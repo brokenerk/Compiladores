@@ -83,13 +83,9 @@ if __name__ == "__main__":
     afn17.setToken(240)
 
     automatota = AFN.specialJoin(set([afn1, afn2, afn3, afn4, afn5,afn6,afn7,afn71,afn8,afn9,afn10,afn11,afn12,afn13,afn14,afn15,afn16, afn17]))
-    #automatota.display()
 
     cs = CustomSet(automatota.getStates())
     afd = automatota.convertToAFD(cs)
-    #print("")
-    #print("AFD: ")
-    #afd.displayTable()
 
     try:
 	    archivo = open("er.txt", "r")
@@ -120,8 +116,13 @@ if __name__ == "__main__":
     except:
     	print("Ha ocurrido un error...")
 
+    print("")
+    stringPrueba = "SSS+965+TTT+74.96STTSLDLDSSLDDDT+++179SSLDLLL"
+    print("Lexer: " + stringPrueba)
+    lex2 = Lexer(afdER, stringPrueba)
+    lex2.analize()
+    lex2.display()
     '''
-
     print("")
     string = "(/+|-)?&[0-9]+&.&[0-9]+" #(a|b)+&d*  [0-9]+&.&[0-9]+  ([a-z]|[A-Z])&([a-z]|[A-Z]|[0-9])*
     print("Lexer: " + string)
