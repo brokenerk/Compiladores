@@ -1,0 +1,36 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+
+	<div class="container">
+		<div id="+Closure" class="col s12">
+         <div class="col s12">
+            <div class="row">
+               <form method="POST">
+                  <input type="hidden" id="opt+" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> + Closure </p>
+                  <div class="input-field col s9">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button onclick="document.getElementById('opt+').value = 3" class="waves-effect waves-light #03a9f4 light-blue btn-large"><i class="material-icons left">add</i>Closure</a>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+	</div>
+   <script>
+      $(document).ready(function() {
+         $('select').material_select();
+      });
+   </script>
+{% endblock %}

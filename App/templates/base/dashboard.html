@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+   <link rel="shortcut icon" href="https://www.gamefaces.com/wp-content/uploads/2016/11/H-33-2.png" />
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-
    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
    <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
    <style>
@@ -14,16 +14,25 @@
 <body> 
    <!-- Dropdown Structure -->
    <ul id="dropdown1" class="dropdown-content">
-      <li><a href="/convert" onclick="show(getElementById('Add'))">one</a></li>
+      <li><a href="/add">Add</a></li>   
+      <li><a href="/join">Join</a></li>   
+      <li><a href="/specialJoin">Special Join</a></li>   
+      <li><a href="/concat">Concat</a></li> 
+      <li><a href="/positiveClosure">+Closure</a></li> 
+      <li><a href="/starClosure">*Closure</a></li>
+      <li><a href="/optional">?Optional</a></li>
+      <li><a href="/setToken">setToken</a></li>
+      <li><a href="/convertToAFD">convertToAFD</a></li> 
    </ul>
    <nav>
       <div class="nav-wrapper #01579b light-blue darken-4">
          <a href="#!" class="brand-logo center" style="font-family: 'Lobster', cursive;"> - Compiler - </a>
          <ul class="right hide-on-med-and-down">
-            <li><a href="/home">Home</a></li>
-            <li><a href="/aboutus">About us</a></li>
-            <!-- Dropdown Trigger -->
+            <li><a href="/">Home</a></li>
+            <li><a href="/aboutUs">About us</a></li>
+            <!-- Dropdown Trigger: CONVERT TO AFD -->
             <li><a class="dropdown-button" href="/convert" data-activates="dropdown1">Convert to AFN<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a href="/lexico">Lexico</a></li>
          </ul>
       </div>
    </nav>

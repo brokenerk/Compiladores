@@ -1,0 +1,48 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+	<div class="container">
+		<!-- Join -->
+	      <div id="Join">
+	         <div class="col s12">
+	            <div class="row">
+	               <form method="POST">
+	                  <input type="hidden" id="optJoin" name="option">
+	                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Join </p>
+	                  <div class="input-field col s5">
+	                     <select name="afn1">
+	                        <option value="12" disabled selected>Choose 1st</option>
+	                        {% if idAfn %}
+	                           {% for afn in idAfn.values() %}
+	                              {% if afn > 0 %}
+	                                 <option value="{{ afn }}"> {{ afn }} </option>
+	                              {% endif %}
+	                           {% endfor %}
+	                        {% endif %}
+	                     </select>
+	                  </div>
+	                  <div class="input-field col s5">
+	                     <select name="afn2">
+	                        <option value="11" disabled selected>Choose 2nd</option>
+	                        {% if idAfn %}
+	                           {% for afn in idAfn.values() %}
+	                              {% if afn > 0 %}
+	                                 <option value="{{ afn }}"> {{ afn }} </option>
+	                              {% endif %}
+	                           {% endfor %}
+	                        {% endif %}
+	                     </select>
+	                  </div>
+	                  <div class="input-field col s2">
+	                     <button onclick="document.getElementById('optJoin').value = 1" type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">sync</i>Join</a>
+	                  </div>
+	               </form>
+	            </div>
+	         </div>
+	      </div>
+	</div>
+	<script>
+      $(document).ready(function() {
+      	$('select').material_select();
+      });
+   </script>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+
+	<div class="container">
+		<div id="setToken" class="col s12">
+         <div class="col s12">
+            <div class="row">
+               {% from "_macroToken.html" import render_field %}
+               <form  name="sendToken" id="addToken" method="POST">
+                  <input type="hidden" id="optSetToken" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Set Token </p>
+                  <div class="input-field col s4">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s4">
+                     {{ render_field(addT.token) }}
+                  </div>
+                  <div class="input-field col s4">
+                     <button onclick="document.getElementById('optSetToken').value = 6;" class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>Set Token</a>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+	</div>
+   <script>
+      $(document).ready(function() {
+         $('select').material_select();
+      });
+   </script>
+{% endblock %}

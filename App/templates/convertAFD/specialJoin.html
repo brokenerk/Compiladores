@@ -1,0 +1,56 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+
+	<div class="container">
+		<div id="SpecialJoin" class="col s12">
+         <div class="col s12">
+            <div class="row">
+               <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Special Join </p>
+               {% from "_macroAdd.html" import render_field %}
+               <form method="POST">
+                  <div class="input-field col s9">
+                     {{ render_field(addSJ.number) }}
+                  </div>
+                  <input type="hidden" id="optSpecialJoin" name="option">
+                  <div class="input-field col s3">
+                     <button onclick="document.getElementById('optSpecialJoin').value = 8;" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large">Add to SJ</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+
+      <div id="principal" class="container">
+         <div id="showSelect">
+            <div class="col s12">
+               <script type="text/javascript">
+                  document.getElementById('Add').style.display = "none";
+               </script>
+               {% if nSelect %}
+                  <form method="POST">
+                     <input type="hidden" id="optSpecialJoinOk" name="option">
+                     {% for i in range(0, nSelect): %}
+                        <div class="row">
+                           <select name="sjArray[]">
+                              <option value="12" disabled selected>Choose {{ loop.index }} AFN</option>
+                              {% if idAfn %}
+                                 {% for afn in idAfn.values() %}
+                                    {% if afn > 0 %}
+                                       <option value="{{ afn }}"> {{ afn }} </option>
+                                    {% endif %}
+                                 {% endfor %}
+                              {% endif %}
+                           </select>
+                        </div>
+                     {% endfor %}
+                     <div class="col s4">
+                        <button onclick="document.getElementById('optSpecialJoinOk').value = 9;" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large">Special Join</button>   
+                     </div>
+                  </form>
+               {% endif %}
+            </div>
+         </div>
+      </div>
+	</div>
+   
+{% endblock %}

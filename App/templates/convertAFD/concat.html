@@ -1,0 +1,47 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+	<div class="container">
+		<div id="Concat" class="col s12">
+         <div class="col s12">
+            <div class="row">
+               <form method="POST">
+                  <input type="hidden" id="optConcat" name="option">
+                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Concat </p>
+                  <div class="input-field col s5">
+                     <select name="afn1">
+                        <option value="12" disabled selected>Choose 1st</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s4">
+                     <select name="afn2">
+                        <option value="11" disabled selected>Choose 2nd</option>
+                        {% if idAfn %}
+                           {% for afn in idAfn.values() %}
+                              {% if afn > 0 %}
+                                 <option value="{{ afn }}"> {{ afn }} </option>
+                              {% endif %}
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button onclick="document.getElementById('optConcat').value = 2" class="waves-effect waves-light #039be5 light-blue darken-1 btn-large"><i class="material-icons right">redo</i>Concat</a>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+	</div>
+	<script>
+      $(document).ready(function() {
+      	$('select').material_select();
+      });
+   </script>
+{% endblock %}
