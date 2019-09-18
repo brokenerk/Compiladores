@@ -3,9 +3,93 @@ from AFN import AFN
 from AFD import AFD
 from Lexer import Lexer
 from CustomSet import CustomSet
+from Syntactic import SyntacticAfn
+from Lexer import Lexer
+
 epsilon = '\u03B5'
 
 if __name__ == "__main__":
+
+    afn1 = AFN.createBasic('a','z')
+    afn1.setToken(100)
+
+    afn2 = AFN.createBasic('A','Z')
+    afn2.setToken(110)
+
+    afn3 = AFN.createBasic('0','9')
+    afn3.setToken(120)
+
+    afn4 = AFN.createBasic('|')
+    afn4.setToken(130)
+
+    afn5 = AFN.createBasic('&')
+    afn5.setToken(140)
+
+    afn6 = AFN.createBasic('+')
+    afn6.setToken(150)
+
+    afn7 = AFN.createBasic('-')
+    afn7.setToken(160)
+
+    afn8 = AFN.createBasic('.')
+    afn8.setToken(170)
+    afn9 = AFN.createBasic('?')
+    afn9.setToken(180)
+
+    afn10 = AFN.createBasic('*')
+    afn10.setToken(190)
+
+    afn11 = AFN.createBasic('(')
+    afn11.setToken(200)
+
+    afn12 = AFN.createBasic(')')
+    afn12.setToken(210)
+
+    afna = AFN.createBasic ('[')
+    afnb = AFN.createBasic ('a','z')
+    afnc = AFN.createBasic ('-')
+    afnd = AFN.createBasic ('a','z')
+    afne = AFN.createBasic (']')
+    afn13 = afna.concat(afnb).concat(afnc).concat(afnd).concat(afne)
+    afn13.setToken(101)
+
+    afnf = AFN.createBasic ('[')
+    afng = AFN.createBasic ('A','Z')
+    afnh = AFN.createBasic ('-')
+    afni = AFN.createBasic ('A','Z')
+    afnj = AFN.createBasic (']')
+    afn14 = afnf.concat(afng).concat(afnh).concat(afni).concat(afnj)
+    afn14.setToken(111)
+
+    afnk = AFN.createBasic ('[')
+    afnl = AFN.createBasic ('0','9')
+    afnm = AFN.createBasic ('-')
+    afnn = AFN.createBasic ('0','9')
+    afno = AFN.createBasic (']')
+    afn15 = afnk.concat(afnl).concat(afnm).concat(afnn).concat(afno)
+    afn15.setToken(121)
+
+    automatota = AFN.specialJoin(set([afn1, afn2, afn3, afn4, afn5,afn6,afn7,afn8,afn9,afn10,afn11,afn12,afn13,afn14,afn15]))
+    automatota.display()
+
+    cs = CustomSet(automatota.getStates())
+    afd = automatota.convertToAFD(cs)
+    print("")
+    print("AFD: ")
+    afd.displayTable()
+
+    print("")
+    string = "[0-9]+&.&[0-9]+" #(a|b)+&d*  [0-9]+&.&[0-9]+  ([a-z]|[A-Z])&([a-z]|[A-Z]|[0-9])*
+    print("Lexer: " + string)
+    
+    lex = Lexer(afd, string)
+    lex.analize()
+
+    Sin = SyntacticAfn (lex)
+    afn13 = Sin.start()
+    afn13.display()
+
+    '''
     afn1 = AFN.createBasic('+')
     afn2 = AFN.createBasic('-')
     afn3 = AFN.createBasic('0','9')
@@ -64,7 +148,6 @@ if __name__ == "__main__":
     print(str(lex.getToken()) + ": " + lex.getLexem())
     print(str(lex.getToken()) + ": " + lex.getLexem())
     
-    '''
     print("")
     afn1 = AFN.createBasic('S')
     afn2 = AFN.createBasic('D')
