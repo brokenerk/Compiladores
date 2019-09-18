@@ -1,13 +1,30 @@
 #!python3
 class Token:
+	#Create AFN with Patterns
+	SYMBOL_LOWER = 100
+	SYMBOL_UPPER = 110
+	RANGELOWER = 101
+	RANGEUPPER = 111
+	NUM = 120
+	RANGENUM = 121
+	JOIN = 130
+	CONCAT = 140
+	POSITIVE = 150
+	MINUS = 160
+	POINT = 170
+	OPTIONAL = 180
+	KLEEN = 190
+	PAR_I = 200
+	PAR_D = 210
+
 	END = 0
 	PLUS = 10
 	MINUS = 20
-	PROD = 30
+	#PROD = 30
 	DIV = 40
-	PAR_I = 50
-	PAR_D = 60
-	NUM = 70
+	#PAR_I = 50
+	#PAR_D = 60
+	#NUM = 70
 	POW = 80
 	SIN = 90
 	COS = 100
