@@ -16,6 +16,7 @@ class NFA:
 		Id += 1
 		self.id = Id 						#Integer
 		self.states = states 				#Set<State>
+		self.statesList = [] 				#List<States>
 		self.alphabet = alphabet			#Set<Char>
 		self.start = start 					#State
 		self.accepts = accepts 				#Set<State>
@@ -71,10 +72,14 @@ class NFA:
 		print("Id: {}".format(self.id))
 		print("Alfabeto: {}".format(self.alphabet))
 		print("Estado inicial: {}".format(self.start.getId()))
-		print("Estados Finales: ")
-		for a in self.accepts:
-			print("{} ".format(a.getId()))
-		for e in self.states:
+		print("Estados Finales: ", end = '')
+		
+		sortedAccepts = sorted(self.accepts, key=lambda a: a.getId())
+		for a in sortedAccepts:
+			print("{}, ".format(a.getId()), end = '')
+		print("")
+		sortedStates = sorted(self.states, key=lambda edo: edo.getId(), reverse=True)
+		for e in sortedStates:
 			e.displayTransitions()   
 
 	#Parameters: Character
@@ -318,9 +323,20 @@ class NFA:
 	#Parameters: Integer
 	#Return: State
 	def searchState(self, id):
-		for e in self.states:
-			if(e.getId() == id):
-				return e
+		#Binary search
+		n = len(self.states)
+		inf = 0
+		sup = n - 1
+		center = 0
+
+		while inf <= sup:
+			center = int(((sup + inf) / 2))
+			if(self.statesList[center].getId() == id):
+				return self.statesList[center]
+			elif(id < self.statesList[center].getId()):
+				sup = center - 1
+			else:
+				inf = center + 1
 
 	#Parameters: State
 	#Return: Set<State>
@@ -401,6 +417,7 @@ class NFA:
 	#Parameters: CustomSet
 	#Return: DFA
 	def convertToDFA(self):
+		self.statesList = sorted(self.states, key=lambda edo: edo.getId()) #Sort states
 		S0 = self.epsilonClosure(self.start)
 		queue = [S0] 		#Queue<Set>
 		list = [S0] 		#List<Set>
@@ -460,4 +477,5 @@ class NFA:
 		del row
 		del Si
 		del aux
+		self.statesList = []
 		return DFA(table, self.alphabet);

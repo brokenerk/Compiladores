@@ -38,7 +38,7 @@ class DFA:
         self.alphabet = alphabet
 
     def displayTable(self):
-        print("Id: {}".format(self.getId()))
-        print("  {}[Token]".format(self.getAlphabet()))
-        for i in range(0, len(self.getTable())):
-            print("{} {}".format(i, self.getTable()[i]))
+        print("Id: {}".format(self.id))
+        print("  {}[Token]".format(self.alphabet))
+        for i in range(0, len(self.table)):
+            print("{} {}".format(i, self.table[i]))
