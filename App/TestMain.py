@@ -9,83 +9,72 @@ import traceback
 epsilon = '\u03B5'
 
 if __name__ == "__main__":
-    afn1 = NFA.createBasic('a', 'z')
-    afn1.setToken(Token.SYMBOL_LOWER)
+        afn1 = NFA.createBasic('a', 'z')
+        afn1.setToken(Token.LETT_LOWER)
 
-    afn2 = NFA.createBasic('A', 'Z')
-    afn2.setToken(Token.SYMBOL_UPPER)
+        afn2 = NFA.createBasic('A', 'Z')
+        afn2.setToken(Token.LETT_UPPER)
 
-    afn3 = NFA.createBasic('0', '9')
-    afn3.setToken(Token.NUM)
+        afn3 = NFA.createBasic('0', '9')
+        afn3.setToken(Token.NUM)
 
-    afn4 = NFA.createBasic('|')
-    afn4.setToken(Token.JOIN)
+        afn4 = NFA.createBasic('|')
+        afn4.setToken(Token.JOIN)
 
-    afn5 = NFA.createBasic('&')
-    afn5.setToken(Token.CONCAT)
+        afn5 = NFA.createBasic('&')
+        afn5.setToken(Token.CONCAT)
 
-    afn6 = NFA.createBasic('+')
-    afn6.setToken(Token.POSCLO)
+        afn6 = NFA.createBasic('+')
+        afn6.setToken(Token.POSCLO)
 
-    afn7 = NFA.createBasic('-')
-    afn7.setToken(Token.MINUS)
+        afn7 = NFA.createBasic('-')
+        afn7.setToken(Token.DASH)
 
-    afn71 = NFA.createBasic('=')
-    afn71.setToken(Token.EQUALS)
+        afn71 = NFA.createBasic('=')
+        afn71.setToken(Token.EQUALS)
 
-    afn8 = NFA.createBasic('.')
-    afn8.setToken(Token.POINT)
+        afn8 = NFA.createBasic('.')
+        afn8.setToken(Token.POINT)
 
-    afn9 = NFA.createBasic('?')
-    afn9.setToken(Token.OPTIONAL)
+        afn9 = NFA.createBasic('?')
+        afn9.setToken(Token.OPTIONAL)
 
-    afn10 = NFA.createBasic('*')
-    afn10.setToken(Token.KLEEN)
+        afn10 = NFA.createBasic('*')
+        afn10.setToken(Token.KLEEN)
 
-    afn11 = NFA.createBasic('(')
-    afn11.setToken(Token.PAR_L)
+        afn11 = NFA.createBasic('(')
+        afn11.setToken(Token.PAR_L)
 
-    afn12 = NFA.createBasic(')')
-    afn12.setToken(Token.PAR_R)
+        afn12 = NFA.createBasic(')')
+        afn12.setToken(Token.PAR_R)
 
-    afna = NFA.createBasic ('[')
-    afnb = NFA.createBasic ('a', 'z')
-    afnc = NFA.createBasic ('-')
-    afnd = NFA.createBasic ('a', 'z')
-    afne = NFA.createBasic (']')
-    afn13 = afna.concat(afnb).concat(afnc).concat(afnd).concat(afne)
-    afn13.setToken(Token.RANGELOWER)
+        afn13 = NFA.createBasic ('[')
+        afn13.setToken(Token.SQUBRACK_L)
 
-    afnf = NFA.createBasic ('[')
-    afng = NFA.createBasic ('A', 'Z')
-    afnh = NFA.createBasic ('-')
-    afni = NFA.createBasic ('A', 'Z')
-    afnj = NFA.createBasic (']')
-    afn14 = afnf.concat(afng).concat(afnh).concat(afni).concat(afnj)
-    afn14.setToken(Token.RANGEUPPER)
+        afn14 = NFA.createBasic (']')
+        afn14.setToken(Token.SQUBRACK_R)
 
-    afnk = NFA.createBasic ('[')
-    afnl = NFA.createBasic ('0', '9')
-    afnm = NFA.createBasic ('-')
-    afnn = NFA.createBasic ('0', '9')
-    afno = NFA.createBasic (']')
-    afn15 = afnk.concat(afnl).concat(afnm).concat(afnn).concat(afno)
-    afn15.setToken(Token.RANGENUM)
+        afnp = NFA.createBasic('"')
+        afnq = NFA.createBasic('+')
+        afn15 = afnp.concat(afnq)
+        afn15.setToken(Token.PLUS)
 
-    afnp = NFA.createBasic('"')
-    afnq = NFA.createBasic('+')
-    afn16 = afnp.concat(afnq)
-    afn16.setToken(Token.PLUS)
+        afnp2 = NFA.createBasic('"')
+        afnq2 = NFA.createBasic('*')
+        afn16 = afnp2.concat(afnq2)
+        afn16.setToken(Token.PROD)
 
-    afnp2 = NFA.createBasic('"')
-    afnq2 = NFA.createBasic('*')
-    afn17 = afnp2.concat(afnq2)
-    afn17.setToken(Token.PROD)
+        afnp3 = NFA.createBasic('"')
+        afnq3 = NFA.createBasic('-')
+        afn17 = afnp3.concat(afnq3)
+        afn17.setToken(Token.MINUS)
 
-    automatota = NFA.specialJoin(set([afn1, afn2, afn3, afn4, afn5, afn6, afn7, afn71, afn8, afn9, afn10, afn11, afn12, afn13, afn14, afn15, afn16, afn17]))
-    afd = automatota.convertToDFA()
+        afn18 = NFA.createBasic('/')
+        afn18.setToken(Token.DIV)
 
-    try:
+        automatota = NFA.specialJoin(set([afn1, afn2, afn3, afn4, afn5, afn6, afn7, afn71, afn8, afn9, afn10, afn11, afn12, afn13, afn14, afn15, afn16, afn17, afn18]))
+        afd = automatota.convertToDFA()
+
         archivo = open("er.txt", "r")
         afns = set([])
 
@@ -93,6 +82,7 @@ if __name__ == "__main__":
         print("")
 
         for linea in archivo:
+            print("")
             print(linea)
             stringAux = linea.split(' ')
             lex = Lexer(afd, stringAux[0])
@@ -100,6 +90,10 @@ if __name__ == "__main__":
 
             syn = SyntacticNFA(lex)
             afnAux = syn.start()
+
+            if(afnAux == False):
+                exit()
+                
             afnAux.setToken(int(stringAux[1]))
             afns.add(afnAux)
 
@@ -117,6 +111,3 @@ if __name__ == "__main__":
         lex2 = Lexer(afdER, stringPrueba)
         lex2.analize()
         lex2.display()
-    except:
-        print("Ha ocurrido el siguiente error: ")
-        print(traceback.format_exc())

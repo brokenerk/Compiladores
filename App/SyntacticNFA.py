@@ -12,9 +12,11 @@ class SyntacticNFA:
         f = (False, NFA(None, None, None, None))
         f = self.E(f)
         if(f[0]):
+            print('... AFN construido')
             return f[1]
         else:
-            print('ER No valida')
+            print('... ER No valida, saliendo.')
+            return False
 
     def E(self, f):
         f = self.T(f)
@@ -105,6 +107,7 @@ class SyntacticNFA:
     def F(self, f):
         tok = self.lex.getToken()
         lexema = self.lex.getLexem()
+
         if(tok == Token.PAR_L): #'PAR_I' 
             f = self.E(f)
             if(f[0]):
@@ -112,48 +115,89 @@ class SyntacticNFA:
                 lexem = self.lex.getLexem()
                 if(tk == Token.PAR_R): #'PAR_D'
                     return (True, f[1])
-            return (False, f[1])
 
-        elif(tok == Token.SYMBOL_LOWER): #SIMB
+        elif(tok == Token.SQUBRACK_L): #[
+            tk = self.lex.getToken()
+            lxm = self.lex.getLexem()
+
+            if(tk == Token.LETT_LOWER): #a
+                tk2 = self.lex.getToken()
+                lxm2 = self.lex.getLexem()
+
+                if(tk2 == Token.DASH): # -
+                    tk3 = self.lex.getToken()
+                    lxm3 = self.lex.getLexem()
+
+                    if(tk3 == Token.LETT_LOWER): #z
+                        tk4 = self.lex.getToken()
+                        lxm4 = self.lex.getLexem()
+
+                        if(tk4 == Token.SQUBRACK_R): #]
+                            af = NFA.createBasic(lxm, lxm3) #[a-z]
+                            return (True, af)
+
+            elif(tk == Token.LETT_UPPER): #A
+                tk2 = self.lex.getToken()
+                lxm2 = self.lex.getLexem()
+
+                if(tk2 == Token.DASH): # -
+                    tk3 = self.lex.getToken()
+                    lxm3 = self.lex.getLexem()
+
+                    if(tk3 == Token.LETT_UPPER): #Z
+                        tk4 = self.lex.getToken()
+                        lxm4 = self.lex.getLexem()
+
+                        if(tk4 == Token.SQUBRACK_R): #]
+                            af = NFA.createBasic(lxm, lxm3) #[A-Z]
+                            return (True, af)
+
+            elif(tk == Token.NUM): #0
+                tk2 = self.lex.getToken()
+                lxm2 = self.lex.getLexem()
+
+                if(tk2 == Token.DASH): # -
+                    tk3 = self.lex.getToken()
+                    lxm3 = self.lex.getLexem()
+
+                    if(tk3 == Token.NUM): #9
+                        tk4 = self.lex.getToken()
+                        lxm4 = self.lex.getLexem()
+
+                        if(tk4 == Token.SQUBRACK_R): #]
+                            af = NFA.createBasic(lxm, lxm3) #[0-9]
+                            return (True, af)
+
+        elif(tok == Token.LETT_UPPER or tok == Token.LETT_LOWER): # Letters
             af = NFA.createBasic(lexema)
             return (True, af)
-        
-        elif(tok == Token.SYMBOL_UPPER): #SIMB UPPER
+
+        elif(tok == Token.NUM): # 0123
             af = NFA.createBasic(lexema)
-            return (True, af)
-
-        elif(tok == Token.RANGELOWER): #[a-z]
-            af = NFA.createBasic(lexema[1], lexema[3])
-            return (True, af)
-
-        elif(tok == Token.RANGEUPPER): #[A-Z]
-            af = NFA.createBasic(lexema[1], lexema[3])
-            return (True, af)
-
-        elif(tok == Token.NUM): #NUM
-            af = NFA.createBasic(lexema)
-            return (True, af)
-
-        elif(tok == Token.RANGENUM): #[0-9]
-            af = NFA.createBasic(lexema[1], lexema[3])
             return (True, af)
 
         elif(tok == Token.POINT): # .
-            af = NFA.createBasic(lexema)
-            return (True, af)
+                af = NFA.createBasic(lexema)
+                return (True, af)
 
         elif(tok == Token.PLUS): # "+
-            af = NFA.createBasic(lexema[1])
-            return (True, af)
+                af = NFA.createBasic(lexema[1])
+                return (True, af)
 
         elif(tok == Token.PROD): # "*
-            af = NFA.createBasic(lexema[1])
-            return (True, af)
+                af = NFA.createBasic(lexema[1])
+                return (True, af)
 
-        elif(tok == Token.MINUS): # -
-            af = NFA.createBasic(lexema)
-            return (True, af)
+        elif(tok == Token.MINUS): # "-
+                af = NFA.createBasic(lexema[1])
+                return (True, af)
+
+        elif(tok == Token.DIV): # /
+                af = NFA.createBasic(lexema)
+                return (True, af)
 
         elif(tok == Token.EQUALS): # =
-            af = NFA.createBasic(lexema)
-            return (True, af)
+                af = NFA.createBasic(lexema)
+                return (True, af)
+
+        return (False, f[1])

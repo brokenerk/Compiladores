@@ -73,13 +73,11 @@ class NFA:
 		print("Alfabeto: {}".format(self.alphabet))
 		print("Estado inicial: {}".format(self.start.getId()))
 		print("Estados Finales: ", end = '')
-		
-		sortedAccepts = sorted(self.accepts, key=lambda a: a.getId())
-		for a in sortedAccepts:
+		for a in self.accepts:
 			print("{}, ".format(a.getId()), end = '')
 		print("")
-		sortedStates = sorted(self.states, key=lambda edo: edo.getId(), reverse=True)
-		for e in sortedStates:
+
+		for e in self.states:
 			e.displayTransitions()   
 
 	#Parameters: Character

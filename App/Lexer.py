@@ -23,7 +23,7 @@ class Lexer:
     #Parameters: Nothing
     #Return: Integer
     def getToken(self):
-        if (self.stackTokens):
+        if(self.stackTokens):
             self.token = self.stackTokens.pop()
             return self.token
         return Token.END
@@ -36,7 +36,7 @@ class Lexer:
     #Parameters: Nothing
     #Return: String
     def getLexem(self):
-        if (self.stackLexems):
+        if(self.stackLexems):
             self.lexem = self.stackLexems.pop()
             return self.lexem
         return endString
@@ -75,7 +75,7 @@ class Lexer:
 
         self.beginLexPos = self.actualSymbolPos
 
-        while(self.string[self.actualSymbolPos] != endString):
+        while self.string[self.actualSymbolPos] != endString:
             alphabetIndex = -1
             for i in range(0, len(self.alphabet)):
                 if(len(self.alphabet[i]) > 2):
