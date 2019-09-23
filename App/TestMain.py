@@ -10,10 +10,10 @@ epsilon = '\u03B5'
 
 if __name__ == "__main__":
         afn1 = NFA.createBasic('a', 'z')
-        afn1.setToken(Token.LETT_LOWER)
+        afn1.setToken(Token.SYMBOL_LOWER)
 
         afn2 = NFA.createBasic('A', 'Z')
-        afn2.setToken(Token.LETT_UPPER)
+        afn2.setToken(Token.SYMBOL_UPPER)
 
         afn3 = NFA.createBasic('0', '9')
         afn3.setToken(Token.NUM)
@@ -29,9 +29,6 @@ if __name__ == "__main__":
 
         afn7 = NFA.createBasic('-')
         afn7.setToken(Token.DASH)
-
-        afn71 = NFA.createBasic('=')
-        afn71.setToken(Token.EQUALS)
 
         afn8 = NFA.createBasic('.')
         afn8.setToken(Token.POINT)
@@ -59,20 +56,12 @@ if __name__ == "__main__":
         afn15 = afnp.concat(afnq)
         afn15.setToken(Token.PLUS)
 
-        afnp2 = NFA.createBasic('"')
-        afnq2 = NFA.createBasic('*')
-        afn16 = afnp2.concat(afnq2)
-        afn16.setToken(Token.PROD)
-
         afnp3 = NFA.createBasic('"')
         afnq3 = NFA.createBasic('-')
-        afn17 = afnp3.concat(afnq3)
-        afn17.setToken(Token.MINUS)
+        afn16 = afnp3.concat(afnq3)
+        afn16.setToken(Token.MINUS)
 
-        afn18 = NFA.createBasic('/')
-        afn18.setToken(Token.DIV)
-
-        automatota = NFA.specialJoin(set([afn1, afn2, afn3, afn4, afn5, afn6, afn7, afn71, afn8, afn9, afn10, afn11, afn12, afn13, afn14, afn15, afn16, afn17, afn18]))
+        automatota = NFA.specialJoin(set([afn1, afn2, afn3, afn4, afn5, afn6, afn7, afn8, afn9, afn10, afn11, afn12, afn13, afn14, afn15, afn16]))
         afd = automatota.convertToDFA()
 
         archivo = open("er.txt", "r")

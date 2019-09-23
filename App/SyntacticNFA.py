@@ -120,7 +120,7 @@ class SyntacticNFA:
             tk = self.lex.getToken()
             lxm = self.lex.getLexem()
 
-            if(tk == Token.LETT_LOWER): #a
+            if(tk == Token.SYMBOL_LOWER): #a
                 tk2 = self.lex.getToken()
                 lxm2 = self.lex.getLexem()
 
@@ -128,7 +128,7 @@ class SyntacticNFA:
                     tk3 = self.lex.getToken()
                     lxm3 = self.lex.getLexem()
 
-                    if(tk3 == Token.LETT_LOWER): #z
+                    if(tk3 == Token.SYMBOL_LOWER): #z
                         tk4 = self.lex.getToken()
                         lxm4 = self.lex.getLexem()
 
@@ -136,7 +136,7 @@ class SyntacticNFA:
                             af = NFA.createBasic(lxm, lxm3) #[a-z]
                             return (True, af)
 
-            elif(tk == Token.LETT_UPPER): #A
+            elif(tk == Token.SYMBOL_UPPER): #A
                 tk2 = self.lex.getToken()
                 lxm2 = self.lex.getLexem()
 
@@ -144,7 +144,7 @@ class SyntacticNFA:
                     tk3 = self.lex.getToken()
                     lxm3 = self.lex.getLexem()
 
-                    if(tk3 == Token.LETT_UPPER): #Z
+                    if(tk3 == Token.SYMBOL_UPPER): #Z
                         tk4 = self.lex.getToken()
                         lxm4 = self.lex.getLexem()
 
@@ -168,7 +168,7 @@ class SyntacticNFA:
                             af = NFA.createBasic(lxm, lxm3) #[0-9]
                             return (True, af)
 
-        elif(tok == Token.LETT_UPPER or tok == Token.LETT_LOWER): # Letters
+        elif(tok == Token.SYMBOL_UPPER or tok == Token.SYMBOL_LOWER): # Letters
             af = NFA.createBasic(lexema)
             return (True, af)
 
