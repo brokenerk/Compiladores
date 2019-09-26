@@ -15,32 +15,31 @@ class Lexer:
         self.actualState = 0                    #Integer
         self.beginLexPos = 0                    #Integer
         self.endLexPos = 0                      #Integer
-        self.stackTokens = deque()              #Stack<Integer>
-        self.stackLexems = deque()              #Stack<String>
+        self.stack = deque()              		#Stack<Integer>
         self.token = -1                         #Integer
         self.lexem = ""                         #String
 
     #Parameters: Nothing
     #Return: Integer
     def getToken(self):
-        if(self.stackTokens):
-            self.token = self.stackTokens.pop()
-            return self.token
-        return Token.END
+    	self.yylex()
+    	if(self.stack):
+    		return self.token
+    	return Token.ERROR
 
     #Parameters: Nothing
     #Return: Nothing
     def returnToken(self):
-        self.stackTokens.append(self.token)
+    	self.actualSymbolPos = self.stack.pop()
 
     #Parameters: Nothing
     #Return: String
     def getLexem(self):
-        if(self.stackLexems):
-            self.lexem = self.stackLexems.pop()
+        if(self.stack):
             return self.lexem
         return endString
-
+        
+    '''
     #Parameters: Nothing
     #Return: Nothing
     def returnLexem(self):
@@ -63,6 +62,7 @@ class Lexer:
     def display(self):
         while self.stackTokens:
             print(str(self.getToken()) + ": " + self.getLexem())
+    '''
 
     #Parameters: Nothing
     #Return: Integer
@@ -73,6 +73,7 @@ class Lexer:
         if(self.string[self.actualSymbolPos] == endString):
             return Token.END
 
+        self.stack.append(self.actualSymbolPos)
         self.beginLexPos = self.actualSymbolPos
 
         while self.string[self.actualSymbolPos] != endString:
