@@ -1,0 +1,117 @@
+bool G(Nodo n) {
+	if(ListaReglas(n))
+		return true;
+	return false;
+}
+
+bool ListaReglas(Nodo n) {
+	int Token;
+	if(Regla(n)) {
+		Token = Lexic.geToken();
+		if(Token == PC) {
+			Nodo n2;
+
+			if(ListaReglasP(n2)) {
+				n.enlazarAbajo(n2);
+				return true;
+			}
+		}
+		return false;
+	}
+	return false;
+}
+
+bool ListaReglasP(Nodo n) {
+	EdoAnaliz E;
+	int Token;
+	E = Lexic.getEdoAnalizador();
+	if(Regla(n)) {
+		Token = Lexic.getToken();
+		if(Token == PC) {
+			Nodo n2;
+			
+			if(ListaReglasP(n2)) {
+				n.enlazarAbajo(n2);
+				return true;
+			}
+		}
+		return false;
+	}
+	Lexic.setEdoAnalizador(E);
+	return true;
+}
+
+bool Regla(Nodo n) {
+	int Token;
+	if(LadoIzquierdo(n)) {
+		Token = Lexic.getToken();
+		if(Token == FLECHA) {
+			Nodo n2;
+			
+			if(LadosDerechos(n2)) {
+				n.enlazarDerecha(n2);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool LadoIzquierdo(Nodo n) {
+	int Token;
+	Token = Lexic.getToken();
+	if(Token == SIMBOLO) {
+		n.crear(Lexic.lexema[0]);
+		n.setTerminal(false);
+		return true;
+	}
+	return false;
+}
+
+bool LadosDerechos(Nodo n) {
+	if(ListaSimbolos(n))
+		if(LadosDerechosP(n))
+			return true;
+	return false;
+}
+
+bool LadosDerechosP(Nodo n) {
+	int Token;
+	Token = Lexic.getToken();
+	if(Token == OR) {
+		Nodo n2;
+		
+		if(ListaSimbolos(n2)) {
+			if(LadosDerechos(n2)) {
+				n.enlazarDerecha(n2);
+				return true;
+			}
+		}
+		return false;
+	}
+	Lexic.regresarToken();
+	return true;
+}
+
+bool ListaSimbolos(Nodo n) {
+	int Token;
+	Token = Lexic.getToken();
+	if(Token == SIMBOLO) {
+		n.crear(Lexic.lexema[0]);
+		if(ListaSimbolosP(n))
+			return true;
+	}
+	return false;
+}
+
+bool ListaSimbolosP(Nodo n) {
+	int Token;
+	Token = Lexic.getToken();
+	if(Token == SIMBOLO) {
+		n.crear(Lexic.lexema[0]);
+		if(ListaSimbolosP(n))
+			return true;
+	}
+	Lexic.regresarToken();
+	return false;
+}
