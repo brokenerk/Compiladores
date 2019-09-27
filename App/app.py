@@ -3,9 +3,8 @@ from flask import render_template
 from flask import request
 from flask import url_for
 
-from AFN import AFN
-from AFD import AFD
-from CustomSet import CustomSet
+from NFA import NFA
+from DFA import DFA
 epsilon = '\u03B5'
 
 import forms
@@ -41,7 +40,7 @@ def add():
 
 	if request.method == 'POST':
 		c = addForm.char.data
-		afn = AFN.createBasic(c)
+		afn = NFA.createBasic(c)
 		afnAvailable[afn.getId()] = afn
 		idAfnAvailable[afn.getId()] = afn.getId()
 		print("SIZE:", len(afnAvailable))
@@ -71,7 +70,7 @@ def join():
 # ---------------------------------------------------------------------
 @app.route("/specialJoin", methods = ['GET', 'POST'])
 def specialJoin():
-	createSpecialJoin = forms.CreateSpecialJoin(request.form)
+	createSpecialJoin = forms.specialJoin(request.form)
 	afn1 = request.form.get('afn1')
 	afn2 = request.form.get('afn2')
 	opt = request.form.get('option')
@@ -81,7 +80,7 @@ def specialJoin():
 	
 	# Option: SPECIAL JOIN -- Create select
 	if request.method == 'POST' and opt == "8":
-		n = int(createSpecialJoin.number.data)
+		n = int(specialJoin.number.data)
 		print(n)
 		show = int(2)
 
