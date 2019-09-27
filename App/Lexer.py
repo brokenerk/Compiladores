@@ -8,62 +8,41 @@ class Lexer:
     #Constructor
     def __init__(self, afd, string):
         self.alphabet = afd.getAlphabet()       #List<String>
-        self.table = afd.getTable() 			#List<List<String>>
+        self.table = afd.getTable()				#List<List<String>>
         self.string = string + endString        #String
         self.actualSymbolPos = 0                #Integer
         self.reachedAccept = False              #Boolean
         self.actualState = 0                    #Integer
         self.beginLexPos = 0                    #Integer
         self.endLexPos = 0                      #Integer
-        self.stack = deque()              		#Stack<Integer>
+        self.stack = deque()                    #Stack<Integer>
         self.token = -1                         #Integer
         self.lexem = ""                         #String
 
     #Parameters: Nothing
     #Return: Integer
     def getToken(self):
-    	self.yylex()
-    	if(self.stack):
-    		return self.token
-    	return Token.ERROR
+        self.yylex()
+        return self.token
 
     #Parameters: Nothing
     #Return: Nothing
     def returnToken(self):
-    	self.actualSymbolPos = self.stack.pop()
+        self.actualSymbolPos = self.stack.pop()
 
     #Parameters: Nothing
     #Return: String
     def getLexem(self):
-        if(self.stack):
-            return self.lexem
-        return endString
-        
-    '''
-    #Parameters: Nothing
-    #Return: Nothing
-    def returnLexem(self):
-        self.stackLexems.append(self.lexem)
+        return self.lexem
 
-    #Parameters: Nothing
+   	#Parameters: Nothing
     #Return: Nothing
-    def analize(self):
+    def display(self):
         res = self.yylex()
         while(res != Token.END):
-            self.stackTokens.append(self.token)
-            self.stackLexems.append(self.lexem)
+            print(str(self.token) + ": " + self.lexem)
             res = self.yylex()
-
-        self.stackTokens.reverse()
-        self.stackLexems.reverse()
-        self.token = -1
-        self.lexem = ""
-
-    def display(self):
-        while self.stackTokens:
-            print(str(self.getToken()) + ": " + self.getLexem())
-    '''
-
+            
     #Parameters: Nothing
     #Return: Integer
     def yylex(self):
@@ -71,6 +50,7 @@ class Lexer:
         self.reachedAccept = False
 
         if(self.string[self.actualSymbolPos] == endString):
+            self.token = Token.END
             return Token.END
 
         self.stack.append(self.actualSymbolPos)

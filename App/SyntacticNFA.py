@@ -29,7 +29,6 @@ class SyntacticNFA:
     def Ep(self, f):
         f2 = (False, NFA(None, None, None, None))
         tok = self.lex.getToken()  
-        lexema = self.lex.getLexem()  
         if(tok == Token.JOIN): #OR
             f2 = self.T(f2)
             if(f2[0]):
@@ -39,7 +38,6 @@ class SyntacticNFA:
                 if(f[0]):
                     return (True, f[1])
             return (False, f[1])
-        self.lex.returnLexem()
         self.lex.returnToken()
         return (True, f[1])
 
@@ -54,7 +52,6 @@ class SyntacticNFA:
     def Tp(self, f):
         fn2 = (False, NFA(None, None, None, None))
         tok = self.lex.getToken()
-        lexema = self.lex.getLexem()
         if(tok == Token.CONCAT): #'CONC'
             fn2 = self.C(fn2)
             if(fn2[0]):
@@ -65,7 +62,6 @@ class SyntacticNFA:
                     return (True, f[1])
             return (False, f[1])
         self.lex.returnToken()
-        self.lex.returnLexem()
         return (True, f[1])
 
     def C(self, f) :
@@ -78,12 +74,11 @@ class SyntacticNFA:
 
     def Cp (self, f):
         tok = self.lex.getToken() 
-        lexema = self.lex.getLexem() 
         if(tok == Token.KLEEN): #kleen
             afna = f[1].kleeneClosure()
             f = (f[0], afna)
             f = self.Cp(f)
-            if(f[1]):
+            if(f[0]):
                 return (True, f[1])
             return (False, f[1])
         elif(tok == Token.POSCLO): #Positive
@@ -101,7 +96,6 @@ class SyntacticNFA:
                 return (True, f[1])
             return (False, f[1])
         self.lex.returnToken()
-        self.lex.returnLexem()
         return (True, f[1])
 
     def F(self, f):
@@ -112,7 +106,6 @@ class SyntacticNFA:
             f = self.E(f)
             if(f[0]):
                 tk = self.lex.getToken()
-                lexem = self.lex.getLexem()
                 if(tk == Token.PAR_R): #'PAR_D'
                     return (True, f[1])
 
@@ -122,7 +115,6 @@ class SyntacticNFA:
 
             if(tk == Token.SYMBOL_LOWER): #a
                 tk2 = self.lex.getToken()
-                lxm2 = self.lex.getLexem()
 
                 if(tk2 == Token.DASH): # -
                     tk3 = self.lex.getToken()
@@ -130,7 +122,6 @@ class SyntacticNFA:
 
                     if(tk3 == Token.SYMBOL_LOWER): #z
                         tk4 = self.lex.getToken()
-                        lxm4 = self.lex.getLexem()
 
                         if(tk4 == Token.SQUBRACK_R): #]
                             af = NFA.createBasic(lxm, lxm3) #[a-z]
@@ -138,7 +129,6 @@ class SyntacticNFA:
 
             elif(tk == Token.SYMBOL_UPPER): #A
                 tk2 = self.lex.getToken()
-                lxm2 = self.lex.getLexem()
 
                 if(tk2 == Token.DASH): # -
                     tk3 = self.lex.getToken()
@@ -146,7 +136,6 @@ class SyntacticNFA:
 
                     if(tk3 == Token.SYMBOL_UPPER): #Z
                         tk4 = self.lex.getToken()
-                        lxm4 = self.lex.getLexem()
 
                         if(tk4 == Token.SQUBRACK_R): #]
                             af = NFA.createBasic(lxm, lxm3) #[A-Z]
@@ -154,7 +143,6 @@ class SyntacticNFA:
 
             elif(tk == Token.NUM): #0
                 tk2 = self.lex.getToken()
-                lxm2 = self.lex.getLexem()
 
                 if(tk2 == Token.DASH): # -
                     tk3 = self.lex.getToken()
@@ -162,7 +150,6 @@ class SyntacticNFA:
 
                     if(tk3 == Token.NUM): #9
                         tk4 = self.lex.getToken()
-                        lxm4 = self.lex.getLexem()
 
                         if(tk4 == Token.SQUBRACK_R): #]
                             af = NFA.createBasic(lxm, lxm3) #[0-9]

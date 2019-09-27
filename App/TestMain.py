@@ -5,11 +5,10 @@ from Token import Token
 from Lexer import Lexer
 from SyntacticNFA import SyntacticNFA
 from Lexer import Lexer
-import traceback
 epsilon = '\u03B5'
 
 if __name__ == "__main__":
-    '''
+
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
 
@@ -76,14 +75,13 @@ if __name__ == "__main__":
         print(linea)
         stringAux = linea.split(' ')
         lex = Lexer(afd, stringAux[0])
-        lex.analize()
 
         syn = SyntacticNFA(lex)
         afnAux = syn.start()
 
         if(afnAux == False):
-                exit()
-                
+            exit()
+                        
         afnAux.setToken(int(stringAux[1]))
         afns.add(afnAux)
 
@@ -99,10 +97,9 @@ if __name__ == "__main__":
     stringPrueba = "SSS+965+TTT+74.96STTSLDLDSSLDDDT+++179SSLDLLL"
     print("Lexer: " + stringPrueba)
     lex2 = Lexer(afdER, stringPrueba)
-    lex2.analize()
     lex2.display()
-    '''
 
+    '''
     afnaux1 = NFA.createBasic('a', 'z')
     afn1 = afnaux1.positiveClosure()
     afn1.setToken(Token.SYMBOL_LOWER)
@@ -119,12 +116,9 @@ if __name__ == "__main__":
     afd = automatota.convertToDFA()
     afd.displayTable()
 
+    print("")
     string = "ABCfgada898ghafd"
     print(string)
     lex = Lexer(afd, string)
-    print(str(lex.getToken()) + ": " +lex.getLexem())
-    print(str(lex.getToken()) + ": " +lex.getLexem())
-    print(str(lex.getToken()) + ": " +lex.getLexem())
-    lex.returnToken()
-    print(str(lex.getToken()) + ": " +lex.getLexem())
-    print(str(lex.getToken()) + ": " +lex.getLexem())
+    lex.display()
+    '''
