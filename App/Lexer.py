@@ -1,6 +1,7 @@
 #!python3
 from DFA import DFA
 from Token import Token
+from LexerStatus import LexerStatus
 from collections import deque
 endString = '\0'
 
@@ -34,6 +35,23 @@ class Lexer:
     #Return: String
     def getLexem(self):
         return self.lexem
+
+    #Parameters: Nothing
+    #Return: Status
+    def getStatus(self):
+        return LexerStatus(self.actualSymbolPos, self.reachedAccept, self.actualState, self.beginLexPos, self.endLexPos, self.stack.copy(), self.token, self.lexem)
+        
+    #Parameters: Status
+    #Return: Nothing
+    def setStatus(self, s):
+        self.actualSymbolPos = s.getActualSymbolPos()
+        self.reachedAccept = s.getReachedAccept()
+        self.actualState = s.getActualState()
+        self.beginLexPos = s.getBeginLexPos()
+        self.endLexPos = s.getEndLexPos()
+        self.stack = s.getStack()
+        self.token = s.getToken()
+        self.lexem = s.getLexem()
 
    	#Parameters: Nothing
     #Return: Nothing
