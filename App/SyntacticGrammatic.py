@@ -1,102 +1,125 @@
 #!python3
+from Node import Node
+from Token import Token
+from Lexer import Lexer
 
-class NFA:
-    def __init__ (self,grammars):
-        self.grammars = grammars
+class SyntacticGrammatic:
+    #Constructor
+    def __init__(self, lex):
+        self.lex = lex      #Lexer
+        self.arrRules = []  #List<Node>
 
-    def G (self):
-        if(ListaReglas()):
-            return true
-        return false
+    def start(self):
+        if(self.G()):
+            return self.arrRules
+        else:
+            print("... Error al construir la gramatica, saliendo.")
+            return False
+
+    def G(self):
+        if(self.ListaReglas()):
+            return True
+        return False
 
     def ListaReglas(self):
-	    int Token
-	    if(Regla()):
-		Token = Lexic.geToken()
-		if(Token == PC): 
-			if(ListaReglasP()):
-				return true
-		    return false
-	    return false
+        if(self.Regla()):
+            token = self.lex.getToken()
 
+            if(token == Token.SEMICOLON): 
+                if(self.ListaReglasP()):
+                    return True
+        return False
 
     def ListaReglasP(self): 
-	    EdoAnaliz E
-	    int Token
-	    E = Lexic.getEdoAnalizador()
-	    if(Regla()):
-		    Token = Lexic.getToken()
-		    if(Token == PC):
-			    if(ListaReglasP()):
-				    return true
-		    return false
-	    Lexic.setEdoAnalizador(E)
-	    return true
+        E = self.lex.getStatus()
+
+        if(self.Regla()):
+            token = self.lex.getToken()
+
+            if(token == Token.SEMICOLON):
+                if(self.ListaReglasP()):
+                    return True
+            return False
+
+        self.lex.setStatus(E)
+        return True
 
     def Regla(self):
-	    int Token
-	    String ladoI
-	    if(LadoIzquierdo(ladoI)):
-		    Token = Lexic.getToken()
-		    if(Token == FLECHA):
-			    if(LadosDerechos(ladoI)):
-				    return true
-	    return false
+        ladoI = (False, None)
+        ladoI = self.LadoIzquierdo(ladoI) #Boolean - String
 
-    def LadoIzquierdo(self,String s): 
-	    int Token
-	    Token = Lexic.getToken()
-	    if(Token == SIMBOLO):
-		    s = Lexic.getLexema()
-		    return true
-	    return false
+        if(ladoI[0]):
+            token = self.lex.getToken()
 
-    def LadosDerechos(self,String s):
-	    Nodo N
-	    if(ListaSimbolos(N)):
-		    ArrReglas[IndiceArr].simb = s
-		    ArrReglas[IndiceArr].Ap = N
-		    IndiceArr+=1
-		    if(LadosDerechosP(s)):
-			    return true
-	    return false
+            if(token == Token.ARROW):
+                ladoI = self.LadosDerechos(ladoI) #Boolean - String
 
-    def LadosDerechosP(self,String s): 
-    	int Token
-    	Nodo N
-    	Token = Lexic.getToken()
-    	if(Token == OR):
-    		if(ListaSimbolos(N)):
-    			ArrReglas[IndiceArr].simb = s
-    			ArrReglas[IndiceArr].Ap = N
-    			IndiceArr+=1
-    			if(LadosDerechosP(s)): 
-    				return true
-    		return false
-    	Lexic.regresarToken()
-    	return true
+                if(ladoI[0]):
+                    return True
+        return False
 
-    def ListaSimbolos(self,Nodo N):
-    	int Token
-    	Nodo N2
-    	Token = Lexic.getToken()
+    def LadoIzquierdo(self, s): #Boolean - String
+        token = self.lex.getToken()
+
+        if(token == Token.SYMBOL):
+            return (True, self.lex.getLexem())
+        return (False, s[1])
+
+    def LadosDerechos(self, s): #Boolen - String
+        N = (False, None)
+        N = self.ListaSimbolos(N) #Boolean - Node
+
+        if(N[0]):
+            self.arrRules.append(Node(s[1], N[1]))
+            s = self.LadosDerechosP(s)
+
+            if(s[0]):
+                return (True, s[1])
+        return (False, s[1])
+
+    def LadosDerechosP(self, s): #Boolean - String
+        token = self.lex.getToken()
+
+        if(token == Token.OR):
+            N = (False, None)
+            N = self.ListaSimbolos(N) #Boolean - Node
+
+            if(N[0]):
+                self.arrRules.append(Node(s[1], N[1]))
+                s = self.LadosDerechosP(s) #Boolean - String
+
+                if(s[0]): 
+                    return (True, s[1])
+            return (False, s[1])
+
+        self.lex.returnToken()
+        return (True, s[1])
+
+    def ListaSimbolos(self, N): #Boolean - Node
+        N2 = (False, None)
+        token = self.lex.getToken()
     
-    	if(Token == SIMBOLO):
-    		Nodo N = new Nodo(Lexic.getLexema())
-    		if(ListaSimbolosP(N2)):
-    			N.sig = N2
-    			return true
-    	return false
+        if(token == Token.SYMBOL):
+            N = (N[0], Node(self.lex.getLexem(), None))
+            N2 = self.ListaSimbolosP(N2) #Boolean - Node
 
-    def ListaSimbolosP(self,Nodo N): 
-    	int Token
-    	Nodo N2
-    	Token = Lexic.getToken()
-    	if(Token == SIMBOLO):
-    		Nodo N = new Nodo(Lexic.getLexema())
-    		if(ListaSimbolosP(N2)):
-    			N.sig = N2
-    			return true
-    	N = NULL
-    	Lexic.regresarToken()
-    	return false
+            if(N2[0]):
+                N[1].setNext(N2[1])
+                return (True, N[1])
+        return (False, N[1])
+
+    def ListaSimbolosP(self, N):  #Boolean - Node
+        N2 = (False, None)
+        token = self.lex.getToken()
+
+        if(token == Token.SYMBOL):
+            N = (N[0], Node(self.lex.getLexem(), None))
+            N2 = self.ListaSimbolosP(N2) #Boolean - Node
+
+            if(N2[0]):
+                N[1].setNext(N2[1])
+                return (True, N[1])
+            return (False, N[1])
+
+        self.lex.returnToken()
+        return (True, None)

@@ -117,5 +117,5 @@ bool ListaSimbolosP(Nodo N) {
 	}
 	N = NULL;
 	Lexic.regresarToken();
-	return false;
+	return true;
 }

@@ -30,4 +30,10 @@ class Token:
 	KLEEN = 260
 	EQUALS = 270
 
+	SYMBOL = 280
+	ARROW = 290
+	SEMICOLON = 300
+	OR = 310
+	#SPACE = 320
+
 	ERROR = 1000

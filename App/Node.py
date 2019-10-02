@@ -1,13 +1,13 @@
 #!python3
 
 class Node:
-    def __init__(self, next,terminal,symbol):
-        self.next = next
-        self.terminal = terminal
-        self.symbol = symbol
+    def __init__(self, symbol, next):
+        self.symbol = symbol    #String
+        self.next = next        #Node
+        self.terminal = False   #Boolean
 
     #Parameters: Nothing
-    #Return: Integer
+    #Return: Node
     def getNext(self):
         return self.next
 
@@ -17,21 +17,32 @@ class Node:
         self.next = next
     
     #Parameters: Nothing
-    #Return: Integer
-    def getNext(self):
+    #Return: Boolean
+    def getTerminal(self):
         return self.terminal
 
     #Parameters: Integer
-    #Return: Nothing
-    def setNext(self, terminal):
+    #Return: Boolean
+    def setTerminal(self, terminal):
         self.terminal = terminal
-        
+            
     #Parameters: Nothing
-    #Return: Integer
-    def getNext(self):
+    #Return: String
+    def getSymbol(self):
         return self.symbol
 
-    #Parameters: string
+    #Parameters: String
     #Return: Nothing
-    def setNext(self, symbol):
-        self.symbol = symbol  
+    def setSymbol(self, symbol):
+        self.symbol = symbol
+
+    #Parameters: Nothing
+    #Return: Nothing
+    def displayRule(self):
+        havNext = True
+        print("{} ---> ".format(self.symbol), end = '')
+        while havNext:
+            havNext = False
+            print("{}".format(self.next.getSymbol()))
+            if(self.next.getNext() != None):
+                havNext = True
