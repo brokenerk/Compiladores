@@ -39,10 +39,4 @@ class Node:
     #Parameters: Nothing
     #Return: Nothing
     def displayRule(self):
-        havNext = True
-        print("{} ---> ".format(self.symbol), end = '')
-        while havNext:
-            havNext = False
-            print("{}".format(self.next.getSymbol()))
-            if(self.next.getNext() != None):
-                havNext = True
+        print("{} ---> {}".format(self.symbol, self.next.getSymbol()))
