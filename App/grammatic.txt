@@ -1,0 +1,6 @@
+S->aAC|Bb;
+A->eD;
+B->f|g;
+C->h|i;
+D->bE| ;
+E->eD|dD;

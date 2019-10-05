@@ -14,7 +14,8 @@ if __name__ == "__main__":
     afn4 = NFA.createBasic('-')
     afn5 = NFA.createBasic('*')
     afn6 = NFA.createBasic('/')
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6)
+    afn61 = NFA.createBasic(' ')
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn61)
 
     afn7 = NFA.createBasic('a', 'z')
     afn8 = NFA.createBasic('A', 'Z')
@@ -44,16 +45,26 @@ if __name__ == "__main__":
     afd.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    string = "S->aAC|Bb;A->eD;B->f|g;C->h|i;D->bE;E->eD|dD;"
+    archivo = open("grammatic.txt", "r")
+
+    print("Leeyendo Gramatica...")
+    string = ""
+    #Epsilon is a space ' '
+    for linea in archivo:
+        string = string + linea.rstrip("\n")
+
+    archivo.close()
+    
     print("\nAnalizando cadena: " + string)
     lex = Lexer(afd, string)
+
     print("Lexico OK. Analizando sintacticamente...")
     syn = SyntacticGrammatic(lex)
 
     print("\nGramatica construida: ")
     grammatic = syn.start()
     if(grammatic):
-        ruleNumber = 0
+        ruleNumber = 1
         for r in grammatic:
             print("{} ".format(ruleNumber), end = '')
             r.displayRule()
