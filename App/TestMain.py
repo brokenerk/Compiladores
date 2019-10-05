@@ -58,7 +58,21 @@ if __name__ == "__main__":
             print("{} ".format(ruleNumber), end = '')
             r.displayRule()
             ruleNumber += 1
-    '''
+        #Analysis
+        analysis = LL1(grammatic)
+        if(analysis.isLL1()):
+            print("Hi from main")
+            #To show table in FRONT
+            #table = analysis.getTable()
+            #if(analysis.check("aaabbb")):
+                #YAAAS
+            #else:
+                #Error
+        else:
+            print("Upss")
+            #Error
+        #LL1(grammatic)    
+    '''    
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
 
