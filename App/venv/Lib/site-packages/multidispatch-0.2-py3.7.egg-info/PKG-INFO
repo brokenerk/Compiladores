@@ -1,0 +1,18 @@
+Metadata-Version: 1.1
+Name: multidispatch
+Version: 0.2
+Summary: Create multi-dispatch functions.
+Home-page: code.google.com/p/py-multimethod
+Author: Fábio Macêdo Mendes
+Author-email: fabiomacedomendes@gmail.com
+License: UNKNOWN
+Description: Multidispatch functions: easily define multiple implementations for the same 
+        function depending on the number and type of its arguments.
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Libraries

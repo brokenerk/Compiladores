@@ -3,6 +3,7 @@ from NFA import NFA
 from DFA import DFA
 from Token import Token
 from Lexer import Lexer
+from LL1 import LL1
 from SyntacticNFA import SyntacticNFA
 from SyntacticGrammatic import SyntacticGrammatic
 epsilon = '\u03B5'
@@ -79,8 +80,8 @@ if __name__ == "__main__":
                 #YAAAS
             #else:
                 #Error
-        else:
-            print("Upss")
+        # else:
+            # print("Upss")
             #Error
         #LL1(grammatic)    
     '''    
