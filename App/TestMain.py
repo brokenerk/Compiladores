@@ -5,7 +5,7 @@ from Token import Token
 from Lexer import Lexer
 from LL1 import LL1
 from SyntacticNFA import SyntacticNFA
-from SyntacticGrammatic import SyntacticGrammatic
+from SyntacticGrammar import SyntacticGrammar
 epsilon = '\u03B5'
 
 if __name__ == "__main__":
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     afd.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammatic.txt", "r")
+    archivo = open("grammar2.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -62,19 +62,19 @@ if __name__ == "__main__":
     lex = Lexer(afd, string)
     #lex.display()
     print("Lexico OK. Analizando sintacticamente...")
-    syn = SyntacticGrammatic(lex)
+    syn = SyntacticGrammar(lex)
 
     print("\nGramatica construida: ")
-    grammatic = syn.start()
-    if(grammatic):
+    grammar = syn.start()
+    if(grammar):
         ruleNumber = 1
-        for r in grammatic:
+        for r in grammar:
             print("{} ".format(ruleNumber), end = '')
             r.displayRule()
             ruleNumber += 1
     '''
         #Analysis
-        analysis = LL1(grammatic)
+        analysis = LL1(grammar)
         if(analysis.isLL1()):
             print("Hi from main")
             #To show table in FRONT
@@ -86,7 +86,7 @@ if __name__ == "__main__":
         # else:
             # print("Upss")
             #Error
-        #LL1(grammatic)    
+        #LL1(grammar)    
    
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)

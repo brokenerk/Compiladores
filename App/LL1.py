@@ -1,6 +1,6 @@
 #!python3
 from Node import Node
-from SyntacticGrammatic import SyntacticGrammatic
+from SyntacticGrammar import SyntacticGrammar
 
 class LL1:
 	#Constructor
