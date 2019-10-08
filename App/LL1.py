@@ -17,19 +17,21 @@ class LL1:
 	#		0 if not
 	def isLL1(self):
 		#For each rule
-		print("hi from LL1")
 		#fillTable()	             
-		ruleNumber = 1
-		self.setTerminal()
 		self.setNoTerminal()
-		#print(terminals)
-		for r in self.rules:
-			#print("Analizo:")
-			#print("{} ".format(ruleNumber), end = '')
-			#r.displayRule()
-			ruleNumber += 1
-			# s = First(rightPart)
-			# if(s == empty || s == Epsilon):
+		self.setTerminal()
+		print("Terminals: ", self.terminals)
+		print("No terminals: ", self.noTerminals)
+
+		for i in range(0, len(self.rules)):
+			print(">>>>>>>> Analizando: ", self.rules[i].next.getSymbol())
+			s = self.first(self.rules[i].next.getSymbol())
+		#	print("First: ", s)
+			if len(s) <= 1:
+				if " " in s or s == 0:
+					print("Hago follow")
+					s = self.follow(self.rules[i].getSymbol()[0])
+			print("First: ", s)
 			# 	s = Follow(leftPart)
 			# for i in s:
 			# 	if(table[leftPart][i] != -1):
@@ -50,26 +52,23 @@ class LL1:
 			for j in range(m):
 				table[i][j] = -1
 	
-	def setTerminal(self):
-		#print("Terminals")
+	def setNoTerminal(self):
 		for i in range(0, len(self.rules)):
-			self.terminals.add(self.rules[i].getSymbol()[0]) 
-			#print(self.rules[i].getSymbol()[0])
-
+			self.noTerminals.add(self.rules[i].getSymbol()[0]) 
+			
 	#Parameters: Nothing
 	#Return: Fill Set with not terminal symbols
-	def setNoTerminal(self):
+	def setTerminal(self):
 		#print("No terminals")
 		for i in range(0, len(self.rules)):
 			st = self.rules[i].next.getSymbol()
-			#print(st)
 			for k in range(0, len(st)):
-				if st[k] not in self.terminals:
+				if st[k] not in self.noTerminals:
 					#print(st[k])
-					self.noTerminals.add(st[k])
+					self.terminals.add(st[k])
 
 	def getInitialSymbol(self):
-		return rules[0][0]
+		return self.rules[0].getSymbol()[0]
 
 	#Parameters: Nothing 
 	#Return: List<List>
@@ -80,22 +79,38 @@ class LL1:
 	#Parameters: Terminals or No terminals symbols
 	#Return: Set of terminals or Epsilon
 	def first(self, symbol):
-		c = {} 	#Set<>
-		if symbol == Epsilon:
-			c.add(symbol)
+		c = set() 	#Set<>
+		for i in range(0, len(symbol)):
+			if symbol[i] == " ":
+				c.add(symbol[i])
+				return c
+			if symbol[i] in self.terminals:
+				c.add(symbol[i])
+				return c
+			for j in range(0, len(self.rules)):
+				if symbol[i] == self.rules[j].getSymbol()[0]:
+					c = c.union(self.first(self.rules[j].next.getSymbol()))
 			return c
-		if symbol in terminals:
-			c.add(symbol)
-			return c
-		#if symbol is a not terminal
-			#----
-		return c
 
 	#Parameters: No terminal symbol
 	#Return: Set or terminals or $
 	def follow(self, symbol):
+		print("Hi from Follow")
+		print("------------- Follow de: ", symbol)
 		c = {}
-		if symbol == getInitialSymbol:
+		if symbol == self.getInitialSymbol():
 			c.add("$")
+		for i in range(0, len(self.rules)):
+			st = self.rules[i].next.getSymbol()
+			print("Soy: ", st)
+			for k in range(0, len(st)):
+				if st[k] == symbol:
+					aux = self.first(self.rules[i].next.getSymbol()[0])
+					if " " in aux:
+						c = c.union(self.follow(self.rules[i].next.getSymbol()[0]))
+						aux = aux - {" "}
+					c = c.union(aux)
+					#for j in range(k+1, len())
+
 		return c
 
