@@ -11,37 +11,39 @@ epsilon = '\u03B5'
 if __name__ == "__main__":
     afn1 = NFA.createBasic('a', 'z')
     afn2 = NFA.createBasic('A', 'Z')
-    afn3 = NFA.createBasic('+')
-    afn4 = NFA.createBasic('-')
-    afn5 = NFA.createBasic('*')
-    afn6 = NFA.createBasic('/')
-    afn61 = NFA.createBasic(' ')
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn61)
+    afn3 = NFA.createBasic('0', '9')
+    afn4 = NFA.createBasic('+')
+    afn5 = NFA.createBasic('-')
+    afn6 = NFA.createBasic('*')
+    afn7 = NFA.createBasic('/')
+    afn8 = NFA.createBasic('(')
+    afn9 = NFA.createBasic(' ') #El epsilon se representa como un espacio
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9)
 
-    afn7 = NFA.createBasic('a', 'z')
-    afn8 = NFA.createBasic('A', 'Z')
-    afn9 = NFA.createBasic('0', '9')
-    afn10 = NFA.createBasic ("'")
-    afn11 = NFA.createBasic('_')
-
-    afnB = afn7.join(afn8).join(afn9).join(afn10).join(afn11)
+    afn10 = NFA.createBasic('A', 'Z')
+    afn11 = NFA.createBasic('a', 'z')
+    afn12 = NFA.createBasic ("'")
+    afn13 = NFA.createBasic('_')
+    afnB = afn10.join(afn11).join(afn12).join(afn13)
     afnC = afnB.kleeneClosure()
 
-    afnD = afnA.concat(afnC)
+    afn14 = NFA.createBasic(')').optional()
+
+    afnD = afnA.concat(afnC).concat(afn14)
     afnD.setToken(Token.SYMBOL)
 
-    afn12 = NFA.createBasic('-')
-    afn13 = NFA.createBasic('>')
-    afnE = afn12.concat(afn13)
+    afn15 = NFA.createBasic('-')
+    afn16 = NFA.createBasic('>')
+    afnE = afn15.concat(afn16)
     afnE.setToken(Token.ARROW)
 
-    afn14 = NFA.createBasic(';')
-    afn14.setToken(Token.SEMICOLON)
+    afn17 = NFA.createBasic(';')
+    afn17.setToken(Token.SEMICOLON)
 
-    afn15 = NFA.createBasic('|')
-    afn15.setToken(Token.OR)
+    afn18 = NFA.createBasic('|')
+    afn18.setToken(Token.OR)
 
-    automatota = NFA.specialJoin(set([afnD, afnE, afn14, afn15]))
+    automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18]))
     afd = automatota.convertToDFA()
     afd.displayTable()
 
@@ -58,7 +60,7 @@ if __name__ == "__main__":
     
     print("\nAnalizando cadena: " + string)
     lex = Lexer(afd, string)
-
+    #lex.display()
     print("Lexico OK. Analizando sintacticamente...")
     syn = SyntacticGrammatic(lex)
 
@@ -70,6 +72,7 @@ if __name__ == "__main__":
             print("{} ".format(ruleNumber), end = '')
             r.displayRule()
             ruleNumber += 1
+    '''
         #Analysis
         analysis = LL1(grammatic)
         if(analysis.isLL1()):
@@ -84,7 +87,7 @@ if __name__ == "__main__":
             # print("Upss")
             #Error
         #LL1(grammatic)    
-    '''    
+   
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
 
