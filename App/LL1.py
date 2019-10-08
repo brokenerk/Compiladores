@@ -7,10 +7,11 @@ class LL1:
 	def __init__(self, rules):
 		self.rules = rules 			#List<Nodes>
 		self.table = []  			#List<List>
-		self.dpFirst = []			#List<Set>
-		self.dpFollow = []			#List<Set>
+		self.dpFirst = {}			#Dictionary
+		self.dpFollow = {}			#Dictionary
 		self.terminals = set()		#Set<>
 		self.noTerminals = set()	#Set<>
+		self.visited = set()		#Set<>
 
 	#Parameters:
 	#Return: 1 if is possible create a Table
@@ -20,20 +21,21 @@ class LL1:
 		#fillTable()	             
 		self.setNoTerminal()
 		self.setTerminal()
+		self.setDPfirst()
+		#self.setDPfollow()
 		print("Terminals: ", self.terminals)
 		print("No terminals: ", self.noTerminals)
 
 		for i in range(0, len(self.rules)):
 			print(">>>>>>>> Analizando: ", self.rules[i].next.getSymbol())
-			s = self.first(self.rules[i].next.getSymbol())
-		#	print("First: ", s)
+			s = self.dpFirst[self.rules[i].next.getSymbol()]
+			
 			if len(s) <= 1:
 				if " " in s or s == 0:
-					print("Hago follow")
+					print("Hago follow de: ", self.rules[i].getSymbol()[0])
 					s = self.follow(self.rules[i].getSymbol()[0])
 			print("First: ", s)
-			# 	s = Follow(leftPart)
-			# for i in s:
+			#for i in s:
 			# 	if(table[leftPart][i] != -1):
 			# 		return -1
 			# 	else:
@@ -95,22 +97,48 @@ class LL1:
 	#Parameters: No terminal symbol
 	#Return: Set or terminals or $
 	def follow(self, symbol):
-		print("Hi from Follow")
-		print("------------- Follow de: ", symbol)
-		c = {}
+		self.visited.add(symbol)
+		print(" ------------------------- FOLLOW DE: ", symbol)
+		c = set()
 		if symbol == self.getInitialSymbol():
 			c.add("$")
 		for i in range(0, len(self.rules)):
 			st = self.rules[i].next.getSymbol()
-			print("Soy: ", st)
 			for k in range(0, len(st)):
 				if st[k] == symbol:
-					aux = self.first(self.rules[i].next.getSymbol()[0])
-					if " " in aux:
-						c = c.union(self.follow(self.rules[i].next.getSymbol()[0]))
-						aux = aux - {" "}
-					c = c.union(aux)
-					#for j in range(k+1, len())
+					#print("Soy: ", st)
+					for j in range(k+1, len(st)):
+						aux = self.first(st[j])
+						if " " in aux:
+							if self.rules[i].next.getSymbol()[0] in self.visited:
+								c = c.union(set())
+							else:
+								c = c.union(self.follow(self.rules[i].next.getSymbol()[0]))
+							aux = aux - {" "}
+						c = c.union(aux)
+					break	
+		print("Conjunto actual: ", c)	
+		for i in range(0, len(self.rules)):
+			st = self.rules[i].next.getSymbol()
+			for k in range(0, len(st)):
+				if st[k] == symbol:
 
+					if self.rules[i].getSymbol()[0] in self.visited:
+						print("Somo iguales, al que quiero, entonces NO HAGO FOLLOW")
+						c = c.union(set())
+					else:
+						c = c.union(self.follow(self.rules[i].getSymbol()[0]))
+					break
+		print("follow de: ", symbol, " es: ", c)
 		return c
+
+	def setDPfirst(self):
+		for i in range(0, len(self.rules)):
+			self.dpFirst[self.rules[i].next.getSymbol()] = self.first(self.rules[i].next.getSymbol())
+		for i in range(0, len(self.rules)):
+			self.dpFirst[self.rules[i].getSymbol()[0]] = self.first(self.rules[i].getSymbol()[0]) 
+		# print("DP:")
+		# for i in self.dpFirst.values():
+		# 	print(i)	
+
 
