@@ -196,6 +196,13 @@ def convertToAFD():
 		
 	return render_template('convertAFD/convertToAFD.html', idAfn=idAfnAvailable, afd=afdNew, afdTable=table)
 
+# ---------------------------------------------------------------------
+#						ANALYSIS: LL(1)
+# ---------------------------------------------------------------------
+@app.route("/LL(1)", methods = ['GET', 'POST'])
+def ll1():
+	return render_template('analysis/ll1.html')
+
 @app.route("/lexico")
 def lexico():
 	return render_template('lexico.html')
