@@ -3,7 +3,7 @@ from Node import Node
 from Token import Token
 from Lexer import Lexer
 #Epsilon is a space ' '
-class SyntacticGrammatic:
+class SyntacticGrammar:
     #Constructor
     def __init__(self, lex):
         self.lex = lex      #Lexer

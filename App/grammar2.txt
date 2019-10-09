@@ -1,10 +1,5 @@
 E->Te;
-e->+Te;
-e->-Te;
-e-> ;
+e->+Te|-Te| ;
 T->Ft;
-t->*Ft;
-t->/Ft;
-t-> ;
-F->(E);
-F->n;
+t->*Ft|/Ft| ;
+F->(E)|n;
