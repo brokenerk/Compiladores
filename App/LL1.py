@@ -12,6 +12,7 @@ class LL1:
 		self.terminals = set()		#Set<>
 		self.noTerminals = set()	#Set<>
 		self.visited = set()		#Set<>
+		self.index = {}				#Dictionary
 
 	#Parameters:
 	#Return: 1 if is possible create a Table
@@ -22,41 +23,84 @@ class LL1:
 		self.setNoTerminal()
 		self.setTerminal()
 		self.setDPfirst()
-		#self.setDPfollow()
-		print("Terminals: ", self.terminals)
-		print("No terminals: ", self.noTerminals)
-
+		self.setDPfollow()
+		self.initTable()
 		for i in range(0, len(self.rules)):
-			print(">>>>>>>> Analizando: ", self.rules[i].next.getSymbol())
-			s = self.dpFirst[self.rules[i].next.getSymbol()]
-			
+			srt = self.rules[i].next.getSymbol()
+			s = self.dpFirst[srt[0]]
 			if len(s) <= 1:
 				if " " in s or s == 0:
-					print("Hago follow de: ", self.rules[i].getSymbol()[0])
 					s = self.follow(self.rules[i].getSymbol()[0])
-			print("First: ", s)
-			#for i in s:
-			# 	if(table[leftPart][i] != -1):
-			# 		return -1
-			# 	else:
-			# 		table[leftPart][i] = rightPart
+			l = list(s)
+			for j in range(0, len(l)):
+				x = self.index[self.rules[i].getSymbol()[0]]
+				y = self.index[l[j]] - len(self.noTerminals)
+				if self.table[x][y] == 0:
+					if srt == " ":
+						self.table[x][y] = "Epsilon"
+					else:
+						self.table[x][y] = srt
+				else:
+					return -1
+
+		print("")
+		print("TABLA")
+		for i in self.table:
+			print(i)
 		return 1
 
 	#Parameters: Nothing
 	#Return: Nothing
 	#Note: Fill the grammar table with -1
-	def fillTable(self):
+	def initTable(self):
 		#List of 3 list
 		#table = [[] for i in range (3)]
-		for i in range(n):
-			table.append([])
-		for i in range(n):
-			for j in range(m):
-				table[i][j] = -1
+		t = list(self.terminals - {" "})
+		nt = list(self.noTerminals - {" "})
+
+		print(t)
+		j = 0
+		for i in range(0, len(nt)):
+			self.index[nt[i]] = j + 1
+			j += 1
+		for i in range(0, len(t)):
+			self.index[t[i]] = j + 1
+			j += 1
+
+		for i in range(len(self.terminals) + len(self.noTerminals) + 1):
+			self.table.append([0] * (len(self.terminals) + 1))
+
+		for i in range(0, len(self.terminals) + len(self.noTerminals)):
+			for j in range(0, len(self.terminals)):
+				if (i - len(t) + 2) == j:
+					self.table[i][j] = "pop"
+				else:
+					self.table[i][j] =0
+
+		self.table[0][0] = " "
+		self.table[len(self.terminals) + len(self.noTerminals) - 1][0] = "$"
+		self.table[0][len(self.terminals) - 1] = "$"
+		self.table[len(self.terminals) + len(self.noTerminals)][len(self.terminals)] = "AC"
+		# Fill with No terminals
+		j = 1
+		for i in range(0, len(nt)):
+			self.table[j][0] = nt[i]
+			j += 1
+		# Fill with terminals
+		for i in range(0, len(t)):	
+			self.table[j][0] = t[i]
+			j += 1
+		self.table[j][0] = "$"
+		j = 1
+		for i in range(0, len(t)):
+			self.table[0][j] = t[i];
+			j += 1
+		self.table[0][j] = "$"
 	
 	def setNoTerminal(self):
 		for i in range(0, len(self.rules)):
 			self.noTerminals.add(self.rules[i].getSymbol()[0]) 
+
 			
 	#Parameters: Nothing
 	#Return: Fill Set with not terminal symbols
@@ -81,64 +125,62 @@ class LL1:
 	#Parameters: Terminals or No terminals symbols
 	#Return: Set of terminals or Epsilon
 	def first(self, symbol):
+		if symbol in self.dpFirst:
+			return self.dpFirst[symbol]
 		c = set() 	#Set<>
-		for i in range(0, len(symbol)):
-			if symbol[i] == " ":
-				c.add(symbol[i])
-				return c
-			if symbol[i] in self.terminals:
-				c.add(symbol[i])
-				return c
+		if symbol == " ":
+			c.add(symbol)
+		if symbol in self.terminals:
+			c.add(symbol)
+		else:
 			for j in range(0, len(self.rules)):
-				if symbol[i] == self.rules[j].getSymbol()[0]:
-					c = c.union(self.first(self.rules[j].next.getSymbol()))
-			return c
+				if symbol == self.rules[j].getSymbol()[0]:
+					c = c.union(self.first(self.rules[j].next.getSymbol()[0]))
+		self.dpFirst[symbol] = c
+		return  c
 
 	#Parameters: No terminal symbol
 	#Return: Set or terminals or $
 	def follow(self, symbol):
-		self.visited.add(symbol)
-		print(" ------------------------- FOLLOW DE: ", symbol)
+		if symbol in self.dpFollow:
+			return self.dpFollow[symbol]
 		c = set()
+		self.visited.add(symbol)
 		if symbol == self.getInitialSymbol():
 			c.add("$")
 		for i in range(0, len(self.rules)):
 			st = self.rules[i].next.getSymbol()
 			for k in range(0, len(st)):
 				if st[k] == symbol:
-					#print("Soy: ", st)
-					for j in range(k+1, len(st)):
-						aux = self.first(st[j])
-						if " " in aux:
-							if self.rules[i].next.getSymbol()[0] in self.visited:
-								c = c.union(set())
-							else:
-								c = c.union(self.follow(self.rules[i].next.getSymbol()[0]))
-							aux = aux - {" "}
-						c = c.union(aux)
-					break	
-		print("Conjunto actual: ", c)	
-		for i in range(0, len(self.rules)):
-			st = self.rules[i].next.getSymbol()
-			for k in range(0, len(st)):
-				if st[k] == symbol:
-
-					if self.rules[i].getSymbol()[0] in self.visited:
-						print("Somo iguales, al que quiero, entonces NO HAGO FOLLOW")
-						c = c.union(set())
-					else:
-						c = c.union(self.follow(self.rules[i].getSymbol()[0]))
-					break
-		print("follow de: ", symbol, " es: ", c)
+					if k == (len(st) - 1):
+						if self.rules[i].getSymbol()[0] not in self.visited:
+							c = c.union(self.follow(self.rules[i].getSymbol()[0]))
+					else:				
+						for j in range(k + 1, len(st)):
+							aux = self.first(st[j])
+							if " " in aux:
+								if self.rules[i].getSymbol()[0] not in self.visited:
+									c = c.union(self.follow(self.rules[i].getSymbol()[0]))
+								aux = aux - {" "}
+							c = c.union(aux);
+		if len(c) > 0:
+			self.dpFollow[symbol] = c
 		return c
 
 	def setDPfirst(self):
-		for i in range(0, len(self.rules)):
-			self.dpFirst[self.rules[i].next.getSymbol()] = self.first(self.rules[i].next.getSymbol())
-		for i in range(0, len(self.rules)):
-			self.dpFirst[self.rules[i].getSymbol()[0]] = self.first(self.rules[i].getSymbol()[0]) 
-		# print("DP:")
-		# for i in self.dpFirst.values():
-		# 	print(i)	
+		for i in self.terminals:
+			self.dpFirst[i] = self.first(i)
+		for i in self.noTerminals:
+			self.dpFirst[i] = self.first(i)		
 
+	def setDPfollow(self):
+		for i in self.noTerminals:
+			self.initVisited()
+			self.dpFollow[i] = self.follow(i)
 
+		# print("follows")
+		# for i in self.dpFollow.values():
+		# 	print(i)
+	
+	def initVisited(self):
+		self.visited = set()
