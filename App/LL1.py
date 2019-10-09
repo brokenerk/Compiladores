@@ -1,13 +1,13 @@
 #!python3
 from Node import Node
-from SyntacticGrammar import SyntacticGrammar
+epsilon = '\u03B5'
 
 class LL1:
 	#Constructor
 	def __init__(self, rules):
 		self.rules = rules 			#List<Nodes>
 		self.table = []  			#List<List>
-		self.checkTable = []		#List<List>
+		self.analysisTable = []		#List<List>
 		self.dpFirst = {}			#Dictionary
 		self.dpFollow = {}			#Dictionary
 		self.terminals = set()		#Set<>
@@ -16,8 +16,8 @@ class LL1:
 		self.index = {}				#Dictionary
 
 	#Parameters: Rules from a correct grammar
-	#Return: 1 if is possible create a Table
-	#		 0 if not
+	#Return: True if is possible create a Table
+	#		 False if not
 	def isLL1(self):             
 		self.setNoTerminal()
 		self.setTerminal()
@@ -36,18 +36,18 @@ class LL1:
 				y = self.index[l[j]] - len(self.noTerminals)
 				if self.table[x][y] == 0:
 					if srt == " ":
-						self.table[x][y] = "Eps"
+						self.table[x][y] = epsilon
 					else:
 						self.table[x][y] = srt
 				else:
-					return 0
-		return 1
+					return False
+		return True
 
 	#Paamaters: String
-	#Return: 1 if is a correct string
-	#		 0 if not
-	def check(self, c):
-		self.initCheckTable()
+	#Return: True if is a correct string
+	#		 False if not
+	def analyze(self, c):
+		self.initAnalysisTable()
 		p = []
 		srt = []
 		p.append("$")
@@ -62,7 +62,7 @@ class LL1:
 		i = 0
 		while len(p) > 0:
 			if len(srt) == 0:
-				return 0
+				return False
 			aux = srt[:]
 			aux.reverse()
 			values = []
@@ -74,33 +74,30 @@ class LL1:
 			values.append(self.convertToString(p))
 			values.append(self.convertToString(aux))
 			values.append(action)
-			self.checkTable.append(values)
+			self.analysisTable.append(values)
 			if action == 0:
-				return 0
-			elif action == "AC":
-				return 1
+				return False
+			elif action == "accept":
+				return True
 			elif action == "pop":
 				p.pop()
 				srt.pop()
-			elif action == "Eps":
+			elif action == epsilon:
 				p.pop()
 			elif action != 0:
 				p.pop()
 				action = action[::-1]
 				for i in range(0, len(action)):
 					p.append(action[i])
-		return 0
+		return False
 
-	def initCheckTable(self):
+	def initAnalysisTable(self):
 		for i in range(1):
-			self.checkTable.append([0] * 3)
-		self.checkTable[0][0] = "STACK"
-		self.checkTable[0][1] = "STRING"
-		self.checkTable[0][2] = "ACTION"
+			self.analysisTable.append([0] * 3)
+		self.analysisTable[0][0] = "STACK"
+		self.analysisTable[0][1] = "STRING"
+		self.analysisTable[0][2] = "ACTION"
 		
-	def getCheckTable(self):
-		return self.checkTable
-
 	def convertToString(self, l):
 		s = ""
 		for i in range(0, len(l)):
@@ -129,12 +126,12 @@ class LL1:
 				if (i - len(nt)) == j:
 					self.table[i][j] = "pop"
 				else:
-					self.table[i][j] =0
+					self.table[i][j] = 0
 
 		self.table[0][0] = " "
 		self.table[len(self.terminals) + len(self.noTerminals) - 1][0] = "$"
 		self.table[0][len(self.terminals) - 1] = "$"
-		self.table[len(self.terminals) + len(self.noTerminals)][len(self.terminals)] = "AC"
+		self.table[len(self.terminals) + len(self.noTerminals)][len(self.terminals)] = "accept"
 		# Fill with No terminals
 		j = 1
 		for i in range(0, len(nt)):
@@ -154,7 +151,7 @@ class LL1:
 	#Parameters: Nothing
 	#Return: Nothing
 	#Note: Clear visited
-	def initVisited(self):
+	def clearVisited(self):
 		self.visited = set()
 
 	#Parameters: Nothing
@@ -171,7 +168,7 @@ class LL1:
 	#Note: Fill DP of follow
 	def setDPfollow(self):
 		for i in self.noTerminals:
-			self.initVisited()
+			self.clearVisited()
 			self.dpFollow[i] = self.follow(i)
 	
 	#Parameters: Nothing
@@ -192,24 +189,26 @@ class LL1:
 				if st[k] not in self.noTerminals:
 					#print(st[k])
 					self.terminals.add(st[k])
+
 	#Parameters: Nothing
 	#Return: Initial symbol of the grammar
 	def getInitialSymbol(self):
 		return self.rules[0].getSymbol()[0]
 
-	#Parameters: Nothing 
-	#Return: List<List>
-	#Note: Is importat to check if isLL1
-	def getTable(self):
-		return self.table
-
 	#Parameters: Nothing
 	#Return: Nothing
 	#Note: Show table of LL1
-	def displayTable(self, t):
-		print("")
-		print("TABLA")
-		for i in t:
+	def displayTable(self):
+		print("\nTABLA RELACION REGLAS")
+		for i in self.table:
+			print(i)
+
+	#Parameters: Nothing
+	#Return: Nothing
+	#Note: Show analysis table of LL1
+	def displayAnalysisTable(self):
+		print("\nTABLA ANALISIS LL(1)")
+		for i in self.analysisTable:
 			print(i)
 
 	#Parameters: Terminals or No terminals symbols
@@ -230,7 +229,7 @@ class LL1:
 		return  c
 
 	#Parameters: No terminal symbol
-	#Return: Set or terminals or $
+	#Return: Set of terminals or $
 	def follow(self, symbol):
 		if symbol in self.dpFollow:
 			return self.dpFollow[symbol]
@@ -256,5 +255,3 @@ class LL1:
 		if len(c) > 0:
 			self.dpFollow[symbol] = c
 		return c
-
-	

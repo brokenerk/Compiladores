@@ -72,24 +72,25 @@ if __name__ == "__main__":
             print("{} ".format(ruleNumber), end = '')
             r.displayRule()
             ruleNumber += 1
-    
+
         #Analysis
+        print("\nAnalisis LL(1): ")
         analysis = LL1(grammar)
+
         if(analysis.isLL1()):
-            print("Correct grammar")
-            table = analysis.getTable()
-            analysis.displayTable(table)
-            #To show table in front:
-            #if(analysis.check("abbcab")):
-            #if(analysis.check("aebdhh")):
-            if(analysis.check("n+n*(n-n)")):
-                print("Correct check")
+            print("Gramatica valida para LL(1)")
+            analysis.displayTable()
+
+            palabra = "n+n*(n-n)"
+            result = analysis.analyze(palabra)
+            analysis.displayAnalysisTable()
+
+            if(result):
+                print("\n" + palabra + " pertenece a la gramatica")
             else:
-                print("Incorrect check")
-            checkT = analysis.getCheckTable()
-            analysis.displayTable(checkT)
+                print("\nIncorrecto. " + palabra + " no pertenece a la gramatica.")
         else:
-            print("ERROR ")
+            print("ERROR. No se puede realizar el analisis LL(1)")
     '''
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
