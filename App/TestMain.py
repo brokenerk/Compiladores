@@ -45,10 +45,10 @@ if __name__ == "__main__":
 
     automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18]))
     afd = automatota.convertToDFA()
-    afd.displayTable()
+    #afd.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar3.txt", "r")
+    archivo = open("grammar2.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -77,14 +77,19 @@ if __name__ == "__main__":
         analysis = LL1(grammar)
         if(analysis.isLL1()):
             print("Correct grammar")
-            analysis.displayTable()
-            #To show table in front:
             table = analysis.getTable()
-            if(analysis.check("abbcab")):
-            #if(analysis.check("n+n*(n-n)")):
-                print("Hi from main")
+            analysis.displayTable(table)
+            #To show table in front:
+            #if(analysis.check("abbcab")):
+            #if(analysis.check("aebdhh")):
+            if(analysis.check("n+n*(n-n)")):
+                print("Correct check")
             else:
-                print("Error")
+                print("Incorrect check")
+            checkT = analysis.getCheckTable()
+            analysis.displayTable(checkT)
+        else:
+            print("ERROR ")
     '''
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
