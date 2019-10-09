@@ -48,7 +48,7 @@ if __name__ == "__main__":
     afd.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar2.txt", "r")
+    archivo = open("grammar3.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -72,22 +72,20 @@ if __name__ == "__main__":
             print("{} ".format(ruleNumber), end = '')
             r.displayRule()
             ruleNumber += 1
-    '''
+    
         #Analysis
         analysis = LL1(grammar)
         if(analysis.isLL1()):
-            print("Hi from main")
-            #To show table in FRONT
-            #table = analysis.getTable()
-            #if(analysis.check("aaabbb")):
-                #YAAAS
-            #else:
-                #Error
-        # else:
-            # print("Upss")
-            #Error
-        #LL1(grammar)    
-   
+            print("Correct grammar")
+            analysis.displayTable()
+            #To show table in front:
+            table = analysis.getTable()
+            if(analysis.check("abbcab")):
+            #if(analysis.check("n+n*(n-n)")):
+                print("Hi from main")
+            else:
+                print("Error")
+    '''
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
 

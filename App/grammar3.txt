@@ -1,0 +1,5 @@
+S->aABC;
+A->a|bbD;
+B->a| ;
+C->b| ;
+D->c| ;
