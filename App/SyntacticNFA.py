@@ -1,4 +1,4 @@
-# !/python3
+#!python3
 from NFA import NFA
 from Token import Token
 from Lexer import Lexer

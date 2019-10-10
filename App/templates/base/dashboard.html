@@ -1,46 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-   <link rel="shortcut icon" href="https://www.gamefaces.com/wp-content/uploads/2016/11/H-33-2.png" />
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-   <style>
-      body {
-         font: 'Roboto', sans-serif;
-      }     
-   </style>
+   <script>
+      $(document).ready(function(){
+         $('select').formSelect();
+         $('.dropdown-trigger').dropdown();
+      });
+   </script>
+   <title>Compiler</title>
 </head>
 <body> 
-   <!-- Dropdown Structure -->
-   <ul id="dropdown1" class="dropdown-content">
-      <li><a href="/add">Add</a></li>   
-      <li><a href="/join">Join</a></li>   
-      <li><a href="/specialJoin">Special Join</a></li>   
-      <li><a href="/concat">Concat</a></li> 
-      <li><a href="/positiveClosure">+Closure</a></li> 
-      <li><a href="/starClosure">*Closure</a></li>
-      <li><a href="/optional">?Optional</a></li>
-      <li><a href="/setToken">setToken</a></li>
-      <li><a href="/convertToAFD">convertToAFD</a></li> 
-   </ul>
-   <ul id="dropdown-analysis" class="dropdown-content">
-      <li><a href="/LL(1)">LL(1)</a></li>
-   </ul>
    <nav>
       <div class="nav-wrapper #01579b light-blue darken-4">
-         <a href="#!" class="brand-logo center" style="font-family: 'Lobster', cursive;"> - Compiler - </a>
+         <a href="" class="brand-logo" style="padding-left: 50px;">Compiler</a>
          <ul class="right hide-on-med-and-down">
             <li><a href="/">Home</a></li>
             <li><a href="/aboutUs">About us</a></li>
             <!-- Dropdown Trigger: ANALYSIS -->
-            <li><a class="dropdown-button" href="/analysis" data-activates="dropdown-analysis">Analysis<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a class="dropdown-trigger button" href="#" data-target="dropdown-analysis">Syntactic Analysis<i class="material-icons right">arrow_drop_down</i></a></li>
             <!-- Dropdown Trigger: CONVERT TO AFD -->
-            <li><a class="dropdown-button" href="/convert" data-activates="dropdown1">Convert to AFN<i class="material-icons right">arrow_drop_down</i></a></li>
-            <li><a href="/lexico">Lexico</a></li>
+            <li><a class="dropdown-trigger button" href="#" data-target="dropdown-nfa">NFA Operations<i class="material-icons right">arrow_drop_down</i></a></li>
+            <li><a href="/lexico">Lexic Analysis</a></li>
          </ul>
       </div>
    </nav>
+
+   <ul id="dropdown-nfa" class="dropdown-content">
+      <li><a href="/add">Add Basic NFA</a></li>   
+      <li><a href="/join">Join</a></li>   
+      <li><a href="/concat">Concatenate</a></li> 
+      <li><a href="/positiveClosure">Positive Closure</a></li> 
+      <li><a href="/kleeneClosure">Kleene Closure</a></li>
+      <li><a href="/optional">? Optional</a></li>
+      <li><a href="/setToken">Set Token</a></li>
+      <li><a href="/specialJoin">Special Join</a></li>  
+      <li><a href="/convertToAFD">Convert to DFA</a></li> 
+   </ul>
+
+   <ul id="dropdown-analysis" class="dropdown-content">
+      <li><a href="#">NFA Syntactic</a></li>
+      <li><a href="#">Grammar Syntactic</a></li>
+      <li><a href="/LL(1)">LL(1) Analysis</a></li>
+   </ul>
   {% block content %}
   {% endblock %}
 </body>   

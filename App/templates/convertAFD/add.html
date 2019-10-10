@@ -4,20 +4,22 @@
 	<div class="container">
       <!-- Add -->
       <div id="Add">
-         <div class="col s12">
-            <div class="row">
-               <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Add new </p>
-               {% from "_macroAdd.html" import render_field %}
-               <form name="sendName" id="addChar" method="POST">
-                  <div class="input-field col s9">
-                     {{ render_field(add.char) }}
-                  </div>
-                  <input type="hidden" id="optAdd" name="option">
-                  <div class="input-field col s3">
-                     <button type="submit" onclick="document.getElementById('optAdd').value = 0" class="waves-effect waves-light #0288d1 light-blue darken-3 btn-large"><i class="material-icons right">add_circle</i>Add</button>
-                  </div>
-               </form>
-            </div>
+         <div class="row">
+            <p style="text-align: center; font-size: 25px;"> Add new NFA </p>
+            {% from "_macroAdd.html" import render_field %}
+            <form name="sendName" id="addChar" method="POST">
+               <div class="input-field col s9">
+                  {{ render_field(add.char) }}
+               </div>
+               <input type="hidden" id="optAdd" name="option">
+
+               <div class="input-field col s3">
+                  <button type="submit" onclick="document.getElementById('optAdd').value = 0" class="waves-effect waves-light #0288d1 light-blue darken-3 btn-large"><i class="material-icons right">add_circle</i>Add</button>
+               </div>
+            </form>
+         </div>
+         <div class="row">
+            Aqui van los grafos con vis.js
          </div>
       </div>
     </div>
