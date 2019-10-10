@@ -114,6 +114,8 @@ class LL1:
 	def initTable(self):
 		t = list(self.terminals - {" "})
 		nt = list(self.noTerminals - {" "})
+		t.sort()
+		nt.sort()
 		j = 0
 		for i in range(0, len(nt)):
 			self.index[nt[i]] = j + 1
