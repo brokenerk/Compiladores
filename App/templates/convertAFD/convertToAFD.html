@@ -7,7 +7,7 @@
             <div class="row">
                <form method="POST">
                   <input type="hidden" id="optToAFD" name="option">
-                  <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Convert to AFD </p>
+                  <p style="text-align: center; font-size: 25px;"> Convert to DFA </p>
                   <div class="input-field col s9">
                      <select name="afn1">
                         <option value="12" disabled selected>Choose 1st</option>
@@ -21,7 +21,7 @@
                      </select>
                   </div>
                   <div class="input-field col s3">
-                     <button onclick="document.getElementById('optToAFD').value = 7; " class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>To AFD</a>
+                     <button onclick="document.getElementById('optToAFD').value = 7; " class="waves-effect waves-light #4fc3f7 light-blue lighten-2 btn-large"></i>To DFA</a>
                   </div>
                </form>
             </div>
@@ -37,7 +37,7 @@
                document.getElementById('convertToAFD').style.display = "none";
             </script>
             <br>
-            <p style="font-family: 'Lobster', cursive; text-align: center; font-size: 25px;"> Table of the AFD</p>
+            <p style="text-align: center; font-size: 25px;"> Table of the AFD</p>
             <br> <br>
             <table class="striped">
                <thead>
@@ -63,9 +63,4 @@
          {% endif %}
       </div>
    </div>
-   <script>
-      $(document).ready(function() {
-         $('select').material_select();
-      });
-   </script>
 {% endblock %}

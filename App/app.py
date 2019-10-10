@@ -10,7 +10,6 @@ epsilon = '\u03B5'
 import forms
 
 app = Flask(__name__)
-
 # Manage every AFN that has been created
 afnAvailable = {}
 alphabet = {}
@@ -18,18 +17,18 @@ idAfnAvailable = {}
 cont = 0
 
 # ---------------------------------------------------------------------
-#								HOME
+#								INDEX
 # ---------------------------------------------------------------------
 @app.route("/")
 def index():
-	return render_template('home.html')
+	return render_template('index.html')
 
 # ---------------------------------------------------------------------
 #								ABOUT US
 # ---------------------------------------------------------------------
 @app.route("/aboutUs")
 def aboutUs():
-	return render_template('aboutus.html')
+	return render_template('aboutUs.html')
 
 # ---------------------------------------------------------------------
 #						CONVERT TO AFD: ADD
@@ -70,7 +69,7 @@ def join():
 # ---------------------------------------------------------------------
 @app.route("/specialJoin", methods = ['GET', 'POST'])
 def specialJoin():
-	createSpecialJoin = forms.specialJoin(request.form)
+	createSpecialJoin = forms.CreateSpecialJoin(request.form)
 	afn1 = request.form.get('afn1')
 	afn2 = request.form.get('afn2')
 	opt = request.form.get('option')
@@ -133,7 +132,7 @@ def positiveClosure():
 # ---------------------------------------------------------------------
 #						CONVERT TO AFD: *CLOSURE
 # ---------------------------------------------------------------------
-@app.route("/starClosure", methods = ['GET', 'POST'])
+@app.route("/kleeneClosure", methods = ['GET', 'POST'])
 def starClosure():
 	afn1 = request.form.get('afn1')
 	afn2 = request.form.get('afn2')
@@ -145,7 +144,7 @@ def starClosure():
 		# Remove AFN1 
 		idAfnAvailable[int(afn1)] = -1
 
-	return render_template('convertAFD/starClosure.html', idAfn=idAfnAvailable)
+	return render_template('convertAFD/kleeneClosure.html', idAfn=idAfnAvailable)
 
 # ---------------------------------------------------------------------
 #						CONVERT TO AFD: OPTIONAL
@@ -205,7 +204,7 @@ def ll1():
 
 @app.route("/lexico")
 def lexico():
-	return render_template('lexico.html')
+	return render_template('lexic.html')
 
 if __name__ == '__main__':
 	app.run(debug = True, port = 5000)

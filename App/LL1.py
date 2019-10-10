@@ -15,6 +15,17 @@ class LL1:
 		self.visited = set()		#Set<>
 		self.index = {}				#Dictionary
 
+	#Parameters: Nothing
+	#Return: Initial symbol of the grammar
+	def getInitialSymbol(self):
+		return self.rules[0].getSymbol()[0]
+
+	def getTable(self):
+		return self.table
+
+	def getAnalysisTable(self):
+		return self.analysisTable
+
 	#Parameters: Rules from a correct grammar
 	#Return: True if is possible create a Table
 	#		 False if not
@@ -190,10 +201,7 @@ class LL1:
 					#print(st[k])
 					self.terminals.add(st[k])
 
-	#Parameters: Nothing
-	#Return: Initial symbol of the grammar
-	def getInitialSymbol(self):
-		return self.rules[0].getSymbol()[0]
+	
 
 	#Parameters: Nothing
 	#Return: Nothing
