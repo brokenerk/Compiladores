@@ -56,8 +56,6 @@ class LL1:
 		c = c[::-1]
 		for i in range(0, len(c)):
 			srt.append(c[i])
-		# print(p)
-		# print(srt)
 		aux = []
 		i = 0
 		while len(p) > 0:
@@ -113,6 +111,8 @@ class LL1:
 	def initTable(self):
 		t = list(self.terminals - {" "})
 		nt = list(self.noTerminals - {" "})
+		t.sort()
+		nt.sort()
 		j = 0
 		for i in range(0, len(nt)):
 			self.index[nt[i]] = j + 1
@@ -207,8 +207,6 @@ class LL1:
 	#Return: Nothing
 	#Note: Show table of LL1
 	def displayTable(self, t):
-		print("")
-		print("TABLA")
 		for i in t:
 			print(i)
 
