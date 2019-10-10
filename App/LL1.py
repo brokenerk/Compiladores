@@ -56,8 +56,6 @@ class LL1:
 		c = c[::-1]
 		for i in range(0, len(c)):
 			srt.append(c[i])
-		# print(p)
-		# print(srt)
 		aux = []
 		i = 0
 		while len(p) > 0:
@@ -68,30 +66,30 @@ class LL1:
 			values = []
 			lastP = p[len(p) - 1]
 			lastC = srt[len(srt) - 1]
-			
-			if lastC not in self.terminals:
+			if lastC in self.terminals or lastC == "$":
+				x = self.index[lastP]
+				y = self.index[lastC] - len(self.noTerminals)
+				action = self.table[x][y]
+				values.append(self.convertToString(p))
+				values.append(self.convertToString(aux))
+				values.append(action)
+				self.checkTable.append(values)
+				if action == 0:
+					return 0
+				elif action == "AC":
+					return 1
+				elif action == "pop":
+					p.pop()
+					srt.pop()
+				elif action == "Eps":
+					p.pop()
+				elif action != 0:
+					p.pop()
+					action = action[::-1]
+					for i in range(0, len(action)):
+						p.append(action[i])
+			else:
 				return 0
-			x = self.index[lastP]
-			y = self.index[lastC] - len(self.noTerminals)
-			action = self.table[x][y]
-			values.append(self.convertToString(p))
-			values.append(self.convertToString(aux))
-			values.append(action)
-			self.checkTable.append(values)
-			if action == 0:
-				return 0
-			elif action == "AC":
-				return 1
-			elif action == "pop":
-				p.pop()
-				srt.pop()
-			elif action == "Eps":
-				p.pop()
-			elif action != 0:
-				p.pop()
-				action = action[::-1]
-				for i in range(0, len(action)):
-					p.append(action[i])
 		return 0
 
 	def initCheckTable(self):

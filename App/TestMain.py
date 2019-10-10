@@ -48,7 +48,7 @@ if __name__ == "__main__":
     #afd.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar1.txt", "r")
+    archivo = open("grammar3.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -75,14 +75,12 @@ if __name__ == "__main__":
     
         #Analysis
         analysis = LL1(grammar)
+        c = "abbcab"
         if(analysis.isLL1()):
             print("Correct grammar")
             table = analysis.getTable()
             analysis.displayTable(table)
-            #To show table in front:
-            #if(analysis.check("abbcab")):
-            #if(analysis.check("aebdhh")):
-            if(analysis.check("n+*(n-n)")):
+            if(analysis.check(c)):
                 print("Correct check")
             else:
                 print("Incorrect check")
