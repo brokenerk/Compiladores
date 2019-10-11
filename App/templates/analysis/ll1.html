@@ -2,11 +2,18 @@
 {% block content %}	
 	<div class="container">
       <div id="ll1" class="col s12">
-         <div class="col s12">
-            <div class="row">
+         <div class="row">
+            <form method="POST">
+               {% from "_macroInputs.html" import render_field %}
                <p style="text-align: center; font-size: 25px;"> LL(1) Syntactic Analysis </p>
-               Aquí va lo de la llave 
-            </div>
+               <div class="input-field  col s6">
+                  {{ render_field(add.symbol) }}
+               </div>
+               <div class="col s6">
+
+                  Aquí va lo de la llave 
+               </div>
+            </form>
          </div>
       </div>
    </div>

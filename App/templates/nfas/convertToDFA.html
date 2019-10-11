@@ -1,0 +1,68 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+
+	<div class="container">
+		<!-- ConvertToDFA -->
+         <div id="ConvertToDFA">
+            <div class="col s12">
+               <div class="row">
+                  <form method="POST">
+                  <p style="text-align: center; font-size: 25px;"> Convert NFA To DFA </p>
+                  <div class="input-field col s8 offset-s1">
+                     <select name="nfa">
+                        <option disabled selected>Choose 1st</option>
+                        {% if nfaDictionary %}
+                           {% for id, nfa in nfaDictionary.items() %}
+                              {% if id > 0 %}
+                                 <option value="{{ id }}"> {{ id }} </option>
+                              {% endif %}
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"></i>To DFA</a>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+	</div>
+
+   <div id="principal" class="container">
+      <div id="showTable" class="row">
+         {% if dfa %}
+            <script type="text/javascript">
+               document.getElementById('ConvertToDFA').style.display = "none";
+            </script>
+
+            <p style="text-align: center; font-size: 25px;">DFA Id: {{ dfa.getId() }} Table</p>
+         </div>
+         <div class="row">
+            <table class="striped centered responsive-table">
+               <thead class="#0288d1 light-blue darken-2">
+                  <tr>
+                     <th class="white-text">State</th>
+
+                     {% for a in dfa.getAlphabet() %}
+                        <th class="white-text">{{ a }}</th>
+                     {% endfor %}
+                     <th class="white-text">Token</th> 
+                  </tr>
+               </thead>
+               <tbody>
+                  {% for i in dfa.getTable() %}
+                     <tr>
+                        <td> {{ loop.index - 1 }} </td>
+                        {% for j in i %}
+                           <td>{{ j }}</td>
+                        {% endfor %}
+                     </tr>
+                  {% endfor %}
+               </tbody>
+            </table>
+         </div>
+         {% endif %}
+      </div>
+   </div>
+{% endblock %}

@@ -1,210 +1,203 @@
-from flask import Flask
-from flask import render_template
-from flask import request
-from flask import url_for
-
+from flask import Flask, render_template, request, url_for, redirect
 from NFA import NFA
 from DFA import DFA
+from Token import Token
+from Lexer import Lexer
+from LL1 import LL1
+from SyntacticNFA import SyntacticNFA
+from SyntacticGrammar import SyntacticGrammar
+import WTForms as forms
 epsilon = '\u03B5'
-
-import forms
 
 app = Flask(__name__)
 # Manage every AFN that has been created
-afnAvailable = {}
-alphabet = {}
-idAfnAvailable = {}
-cont = 0
+nfaDictionary = {}
 
 # ---------------------------------------------------------------------
-#								INDEX
+#                               INDEX
 # ---------------------------------------------------------------------
 @app.route("/")
 def index():
-	return render_template('index.html')
+    return render_template('index.html')
 
 # ---------------------------------------------------------------------
-#								ABOUT US
+#                               ABOUT US
 # ---------------------------------------------------------------------
 @app.route("/aboutUs")
 def aboutUs():
-	return render_template('aboutUs.html')
+    return render_template('aboutUs.html')
 
 # ---------------------------------------------------------------------
-#						CONVERT TO AFD: ADD
+#                       NFA: ADD
 # ---------------------------------------------------------------------
 @app.route("/add", methods = ['GET', 'POST'])
 def add():
-	addForm = forms.AddForm(request.form)
+    addForm = forms.AddNFA(request.form)
 
-	if request.method == 'POST':
-		c = addForm.char.data
-		afn = NFA.createBasic(c)
-		afnAvailable[afn.getId()] = afn
-		idAfnAvailable[afn.getId()] = afn.getId()
-		print("SIZE:", len(afnAvailable))
+    if request.method == 'POST':
+        symbol = addForm.symbol.data
+        if(len(symbol) > 2):
+            nfa = NFA.createBasic(symbol[0], symbol[2])
+        else:
+            nfa = NFA.createBasic(symbol)
+        nfa.display()
+        nfaDictionary[nfa.getId()] = nfa
+        return redirect(url_for('add'))
 
-	return render_template('convertAFD/add.html', add=addForm)
+    return render_template('nfas/add.html', add=addForm)
 
 # ---------------------------------------------------------------------
-#						CONVERT TO AFD: JOIN
+#                       NFA: JOIN
 # ---------------------------------------------------------------------
 @app.route("/join", methods = ['GET', 'POST'])
 def join():
-	afn1 = request.form.get('afn1')
-	afn2 = request.form.get('afn2')
-		
-	if request.method == 'POST':
-		newAfn = afnAvailable[int(afn1)].join(afnAvailable[int(afn2)])
-		afnAvailable[newAfn.getId()] = newAfn
-		idAfnAvailable[newAfn.getId()] = newAfn.getId()
-		# Remove AFN1 and AFN2
-		idAfnAvailable[int(afn1)] = -1
-		idAfnAvailable[int(afn2)] = -1
+    nfa1 = request.form.get('nfa1')
+    nfa2 = request.form.get('nfa2')
+        
+    if request.method == 'POST':
+        nfaJoin = nfaDictionary[int(nfa1)].join(nfaDictionary[int(nfa2)])
+        nfaJoin.display()
+        nfaDictionary[nfaJoin.getId()] = nfaJoin
+        # Remove AFN1 and AFN2
+        del nfaDictionary[int(nfa1)]
+        del nfaDictionary[int(nfa2)]
+        return redirect(url_for('join'))
 
-	return render_template('convertAFD/join.html', idAfn=idAfnAvailable)
+    return render_template('nfas/join.html', nfaDictionary=nfaDictionary)
 
 # ---------------------------------------------------------------------
-#						CONVERT TO AFD: SPECIAL JOIN
+#                       NFA: SPECIAL JOIN
 # ---------------------------------------------------------------------
 @app.route("/specialJoin", methods = ['GET', 'POST'])
 def specialJoin():
-	createSpecialJoin = forms.CreateSpecialJoin(request.form)
-	afn1 = request.form.get('afn1')
-	afn2 = request.form.get('afn2')
-	opt = request.form.get('option')
-	selectSJ = request.form.getlist('sjArray[]')
-	n = 0
-	nSelect = 0
-	
-	# Option: SPECIAL JOIN -- Create select
-	if request.method == 'POST' and opt == "8":
-		n = int(specialJoin.number.data)
-		print(n)
-		show = int(2)
+    nfasList = request.form.getlist('nfasList')
+    if request.method == 'POST':
+        nfaSet = set([])
+        for nfa in nfasList:
+            nfaSet.add(nfaDictionary[int(nfa)])
+            del nfaDictionary[int(nfa)]
 
-	# Option: SPECIAL JOIN -- CREATE SPECIAL JOIN
-	elif request.method == 'POST' and opt == "9":
-		print(len(selectSJ))
-		use = [None] * len(selectSJ)
-		for i in range(0, len(selectSJ)):
-			use[i] = afnAvailable[int(selectSJ[i])]
+        automatota = NFA.specialJoin(nfaSet)
+        automatota.display()
+        nfaDictionary[automatota.getId()] = automatota
+        return redirect(url_for('specialJoin'))
 
-		automatota = AFN.specialJoin(set(use))
-		automatota.display()
-	return render_template('convertAFD/specialJoin.html', addSJ=createSpecialJoin, idAfn=idAfnAvailable, nSelect=n)
+    return render_template('nfas/specialJoin.html', nfaDictionary=nfaDictionary)
 
 # ---------------------------------------------------------------------
-#						CONVERT TO AFD: CONCAT
+#                       NFA: CONCAT
 # ---------------------------------------------------------------------
 @app.route("/concat", methods = ['GET', 'POST'])
 def concat():
-	afn1 = request.form.get('afn1')
-	afn2 = request.form.get('afn2')
-	
-	if request.method == 'POST':
-		newAfn = afnAvailable[int(afn1)].concat(afnAvailable[int(afn2)])
-		afnAvailable[newAfn.getId()] = newAfn
-		idAfnAvailable[newAfn.getId()] = newAfn.getId()
-		# Remove AFN1 and AFN2
-		idAfnAvailable[int(afn1)] = -1
-		idAfnAvailable[int(afn2)] = -1
-	
-	return render_template('convertAFD/concat.html', idAfn=idAfnAvailable)
+    nfa1 = request.form.get('nfa1')
+    nfa2 = request.form.get('nfa2')
+        
+    if request.method == 'POST':
+        nfaConcat = nfaDictionary[int(nfa1)].concat(nfaDictionary[int(nfa2)])
+        nfaConcat.display()
+        nfaDictionary[nfaConcat.getId()] = nfaConcat
+        # Remove AFN1 and AFN2
+        del nfaDictionary[int(nfa1)]
+        del nfaDictionary[int(nfa2)]
+        return redirect(url_for('concat'))
+
+    return render_template('nfas/concat.html', nfaDictionary=nfaDictionary)
 
 # ---------------------------------------------------------------------
-#						CONVERT TO AFD: +CLOSURE
+#                       NFA: +CLOSURE
 # ---------------------------------------------------------------------
 @app.route("/positiveClosure", methods = ['GET', 'POST'])
 def positiveClosure():
-	afn1 = request.form.get('afn1')
-	afn2 = request.form.get('afn2')
+    nfa = request.form.get('nfa')
 
-	if request.method == 'POST':
-		newAfn = afnAvailable[int(afn1)].positiveClosure()
-		afnAvailable[newAfn.getId()] = newAfn
-		idAfnAvailable[newAfn.getId()] = newAfn.getId()
-		# Remove AFN1 
-		idAfnAvailable[int(afn1)] = -1
+    if request.method == 'POST':
+        nfaPosClosure = nfaDictionary[int(nfa)].positiveClosure()
+        nfaPosClosure.display()
+        nfaDictionary[nfaPosClosure.getId()] = nfaPosClosure
+        # Remove AFN
+        del nfaDictionary[int(nfa)]
+        return redirect(url_for('positiveClosure'))
 
-	return render_template('convertAFD/positiveClosure.html', idAfn=idAfnAvailable)
+    return render_template('nfas/positiveClosure.html', nfaDictionary=nfaDictionary)
 
 # ---------------------------------------------------------------------
-#						CONVERT TO AFD: *CLOSURE
+#                       NFA: *CLOSURE
 # ---------------------------------------------------------------------
 @app.route("/kleeneClosure", methods = ['GET', 'POST'])
-def starClosure():
-	afn1 = request.form.get('afn1')
-	afn2 = request.form.get('afn2')
+def kleeneClosure():
+    nfa = request.form.get('nfa')
 
-	if request.method == 'POST':
-		newAfn = afnAvailable[int(afn1)].kleeneClosure()
-		afnAvailable[newAfn.getId()] = newAfn
-		idAfnAvailable[newAfn.getId()] = newAfn.getId()
-		# Remove AFN1 
-		idAfnAvailable[int(afn1)] = -1
+    if request.method == 'POST':
+        nfaKleeneClosure = nfaDictionary[int(nfa)].kleeneClosure()
+        nfaKleeneClosure.display()
+        nfaDictionary[nfaKleeneClosure.getId()] = nfaKleeneClosure
+        # Remove AFN
+        del nfaDictionary[int(nfa)]
+        return redirect(url_for('kleeneClosure'))
 
-	return render_template('convertAFD/kleeneClosure.html', idAfn=idAfnAvailable)
+    return render_template('nfas/kleeneClosure.html', nfaDictionary=nfaDictionary)
 
 # ---------------------------------------------------------------------
-#						CONVERT TO AFD: OPTIONAL
+#                       NFA: OPTIONAL
 # ---------------------------------------------------------------------
 @app.route("/optional", methods = ['GET', 'POST'])
 def optional():
-	afn1 = request.form.get('afn1')
-	afn2 = request.form.get('afn2')
+    nfa = request.form.get('nfa')
 
-	if request.method == 'POST':
-		newAfn = afnAvailable[int(afn1)].optional()
-		afnAvailable[newAfn.getId()] = newAfn
-		idAfnAvailable[newAfn.getId()] = newAfn.getId()
-		# Remove AFN1
-		idAfnAvailable[int(afn1)] = -1
+    if request.method == 'POST':
+        nfaOptional = nfaDictionary[int(nfa)].optional()
+        nfaOptional.display()
+        nfaDictionary[nfaOptional.getId()] = nfaOptional
+        # Remove AFN
+        del nfaDictionary[int(nfa)]
+        return redirect(url_for('optional'))
 
-	return render_template('convertAFD/optional.html', idAfn=idAfnAvailable)
+    return render_template('nfas/optional.html', nfaDictionary=nfaDictionary)
 
 # ---------------------------------------------------------------------
-#						CONVERT TO AFD: SET TOKEN
+#                       NFA: SET TOKEN
 # ---------------------------------------------------------------------
 @app.route("/setToken", methods = ['GET', 'POST'])
 def setToken():
-	addToken = forms.AddToken(request.form)
-	afn1 = request.form.get('afn1')
+    addToken = forms.SetToken(request.form)
+    nfa = request.form.get('nfa')
 
-	if request.method == 'POST':		
-		number = addToken.token.data
-		print("Add toke to:", afn1)
-		print("Token:", number)
-		afnAvailable[int(afn1)].setToken(number)
-	return render_template('convertAFD/setToken.html', idAfn=idAfnAvailable, addT=addToken)
+    if request.method == 'POST':        
+        tok = addToken.token.data
+        nfaDictionary[int(nfa)].setToken(int(tok))
+        print("NFA Id: " + str(nfa) + " with token: " + str(tok))
+        return redirect(url_for('setToken'))
 
-# ---------------------------------------------------------------------
-#						CONVERT TO AFD: CONVERT TO AFD
-# ---------------------------------------------------------------------
-@app.route("/convertToAFD", methods = ['GET', 'POST'])
-def convertToAFD():
-	afn1 = request.form.get('afn1')
-	afdNew = 0 #Aux to save the new AFD
-	table = [[]] #Save the table
-	
-	if request.method == 'POST':
-		aux = CustomSet(afnAvailable[int(afn1)].getStates())
-		afdNew = afnAvailable[int(afn1)].convertToAFD(aux)
-		table = afdNew.getTable()
-		afdNew.displayTable()
-		
-	return render_template('convertAFD/convertToAFD.html', idAfn=idAfnAvailable, afd=afdNew, afdTable=table)
+    return render_template('nfas/setToken.html', nfaDictionary=nfaDictionary, addT=addToken)
 
 # ---------------------------------------------------------------------
-#						ANALYSIS: LL(1)
+#                       NFA: CONVERT TO AFD
+# ---------------------------------------------------------------------
+@app.route("/convertToDFA", methods = ['GET', 'POST'])
+def convertToDFA():
+    nfa = request.form.get('nfa')
+    dfa = None #Aux to save the new AFD
+    
+    if request.method == 'POST':
+        dfa = nfaDictionary[int(nfa)].convertToDFA()
+        dfa.displayTable()
+        del nfaDictionary[int(nfa)]
+
+    return render_template('nfas/convertToDFA.html', nfaDictionary=nfaDictionary, dfa=dfa)
+
+# ---------------------------------------------------------------------
+#                       ANALYSIS: LL(1)
 # ---------------------------------------------------------------------
 @app.route("/LL(1)", methods = ['GET', 'POST'])
 def ll1():
-	return render_template('analysis/ll1.html')
+    return render_template('analysis/ll1.html')
 
-@app.route("/lexico")
-def lexico():
-	return render_template('lexic.html')
+# ---------------------------------------------------------------------
+#                        LEXICAL ANALYSIS
+# ---------------------------------------------------------------------
+@app.route("/lexic")
+def lexic():
+    return render_template('lexic.html')
 
 if __name__ == '__main__':
-	app.run(debug = True, port = 5000)
+    app.run(debug = True, port = 5000)

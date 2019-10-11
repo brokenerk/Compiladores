@@ -1,0 +1,31 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+
+	<div class="container">
+		<!-- *Closure -->
+         <div id="*Closure">
+            <div class="col s12">
+               <div class="row">
+                  <form method="POST">
+                  <p style="text-align: center; font-size: 25px;"> Kleene Closure </p>
+                  <div class="input-field col s8 offset-s1">
+                     <select name="nfa">
+                        <option disabled selected>Choose 1st</option>
+                        {% if nfaDictionary %}
+                           {% for id, nfa in nfaDictionary.items() %}
+                              {% if id > 0 %}
+                                 <option value="{{ id }}"> {{ id }} </option>
+                              {% endif %}
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons left">stars</i>Closure</a>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+	</div>
+{% endblock %}

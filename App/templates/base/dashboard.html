@@ -2,8 +2,8 @@
 <html>
 <head>
    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/css/materialize.min.css">
    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
    <script>
       $(document).ready(function(){
@@ -38,12 +38,11 @@
       <li><a href="/optional">? Optional</a></li>
       <li><a href="/setToken">Set Token</a></li>
       <li><a href="/specialJoin">Special Join</a></li>  
-      <li><a href="/convertToAFD">Convert to DFA</a></li> 
+      <li><a href="/convertToDFA">Convert to DFA</a></li> 
    </ul>
 
    <ul id="dropdown-analysis" class="dropdown-content">
       <li><a href="#">NFA Syntactic</a></li>
-      <li><a href="#">Grammar Syntactic</a></li>
       <li><a href="/LL(1)">LL(1) Analysis</a></li>
    </ul>
   {% block content %}

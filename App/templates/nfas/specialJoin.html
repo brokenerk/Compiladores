@@ -1,0 +1,40 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+	<div class="container">
+		<!-- SpecialJoin -->
+         <div id="SpecialJoin">
+            <div class="col s12">
+               <div class="row">
+                  <form method="POST">
+                  <p style="text-align: center; font-size: 25px;"> Special Join </p>
+                  <div class="input-field col s8 offset-s1">
+                     <select multiple name="nfasList">
+                        <option disabled selected>Choose NFAs</option>
+                        {% if nfaDictionary %}
+                           {% for id, nfa in nfaDictionary.items() %}
+                              {% if id > 0 and nfa.getToken != -1 %}
+                                 <option value="{{ id }}"> {{ id }} </option>
+                              {% endif %}
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large">Join NFAs</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+	</div>
+
+  <script>
+    (function($){
+      $(function(){
+        // Plugin initialization
+        $('select').not('.disabled').formSelect();
+      }); 
+    })(jQuery); // end of jQuery name space
+  </script>
+
+{% endblock %}
