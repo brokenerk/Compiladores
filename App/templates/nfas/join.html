@@ -3,40 +3,43 @@
 	<div class="container">
 		<!-- Join -->
 	      <div id="Join">
-	         <div class="col s12">
-	            <div class="row">
-	               <form method="POST">
-	                  <p style="text-align: center; font-size: 25px;"> Join </p>
-	                  <div class="input-field col s4 offset-s1">
-	                     <select name="nfa1">
-	                        <option disabled selected>Choose 1st</option>
-	                        {% if nfaDictionary %}
-	                           {% for id, nfa in nfaDictionary.items() %}
-	                              {% if id > 0 %}
-	                                 <option value="{{ id }}"> {{ id }} </option>
-	                              {% endif %}
-	                           {% endfor %}
-	                        {% endif %}
-	                     </select>
-	                  </div>
-	                  <div class="input-field col s4">
-	                     <select name="nfa2">
-	                        <option disabled selected>Choose 2nd</option>
-	                        {% if nfaDictionary %}
-	                           {% for id, nfa in nfaDictionary.items() %}
-	                              {% if id > 0 %}
-	                                 <option value="{{ id }}"> {{ id }} </option>
-	                              {% endif %}
-	                           {% endfor %}
-	                        {% endif %}
-	                     </select>
-	                  </div>
-	                  <div class="input-field col s3">
-	                     <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">sync</i>Join</a>
-	                  </div>
-	               </form>
+            <div class="row">
+               <form method="POST">
+                  <p style="text-align: center; font-size: 25px;"> Join </p>
+                  <div class="input-field col s4 offset-s1">
+                     <select name="nfa1">
+                        <option disabled selected>Choose 1st</option>
+                        {% if nfaDictionary %}
+                           {% for id, nfa in nfaDictionary.items() %}
+                              {% if id > 0 %}
+                                 <option value="{{ id }}"> {{ id }} </option>
+                              {% endif %}
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s4">
+                     <select name="nfa2">
+                        <option disabled selected>Choose 2nd</option>
+                        {% if nfaDictionary %}
+                           {% for id, nfa in nfaDictionary.items() %}
+                              {% if id > 0 %}
+                                 <option value="{{ id }}"> {{ id }} </option>
+                              {% endif %}
+                           {% endfor %}
+                        {% endif %}
+                     </select>
+                  </div>
+                  <div class="input-field col s3">
+                     <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">sync</i>Join</a></button>
+                  </div>
+               </form>
+            </div>
+     	
+	      	<div class="row offset-s3">
+	            <div id="mynetwork">
 	            </div>
 	         </div>
-	      </div>
+     	</div>
 	</div>
 {% endblock %}

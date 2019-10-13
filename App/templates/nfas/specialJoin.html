@@ -3,7 +3,6 @@
 	<div class="container">
 		<!-- SpecialJoin -->
          <div id="SpecialJoin">
-            <div class="col s12">
                <div class="row">
                   <form method="POST">
                   <p style="text-align: center; font-size: 25px;"> Special Join </p>
@@ -24,17 +23,11 @@
                   </div>
                </form>
             </div>
-         </div>
+         <div class="row offset-s3">
+           <div id="mynetwork">
+           </div>
+        </div>
       </div>
 	</div>
-
-  <script>
-    (function($){
-      $(function(){
-        // Plugin initialization
-        $('select').not('.disabled').formSelect();
-      }); 
-    })(jQuery); // end of jQuery name space
-  </script>
 
 {% endblock %}

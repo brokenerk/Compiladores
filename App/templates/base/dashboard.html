@@ -1,17 +1,80 @@
 <!DOCTYPE html>
 <html>
 <head>
-   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js"></script>
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/css/materialize.min.css">
-   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-   <script>
-      $(document).ready(function(){
-         $('select').formSelect();
-         $('.dropdown-trigger').dropdown();
-      });
-   </script>
-   <title>Compiler</title>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/css/materialize.min.css"/>
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.css"/>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}" >
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"/></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-alpha.4/js/materialize.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.js"></script>
+	<script>
+	  $(document).ready(function(){
+
+     	$('select').formSelect();
+	 	$('.dropdown-trigger').dropdown();
+	 	$('select').not('.disabled').formSelect();
+
+		{% if nfa %}
+	        var nodesList = [];
+	        var edgesList = [];
+	        {% for e in nfa.getStates() %}
+	            var border = 0;
+	            {% if (e.getId() == nfa.getStart().getId()) %}
+	                border = 2;
+	            {% else %}
+	            	{% for s in nfa.getAccepts() %}
+	            		{% if (e.getId() == s.getId()) %}
+	            			border = 6;
+	            		{% endif %}
+	            	{% endfor %}
+	            {% endif %}
+
+	            nodesList.push({
+	                id: '{{e.getId()}}',
+	                shape: 'circle',
+	                borderWidth: border,
+	                label: 'State\n{{e.getId()}}'
+	            });
+
+	            {% for t in e.getTransitions() %}
+	                var symbol = "";
+	                {% if t.getEndSymbol() != None %}
+	                    symbol = '{{t.getSymbol()}} - {{t.getEndSymbol()}}';
+	                {% else %}
+	                    symbol = '{{t.getSymbol()}}';
+	                {% endif %}
+	                
+	                edgesList.push({
+	                    from: '{{e.getId()}}',
+	                    to: '{{t.getNext().getId()}}',
+	                    label: symbol,
+	                    arrows: {
+	                        to : {
+	                            enabled: true,
+	                            type: 'arrow'
+	                        }
+	                    },
+	                });
+	                
+	            {% endfor %}
+	        {% endfor %}
+
+	        var nodes = new vis.DataSet(nodesList);
+	        var edges = new vis.DataSet(edgesList);
+
+	        var container = $('#mynetwork')[0]; 
+
+	        var data = {
+	            nodes: nodes,
+	            edges: edges
+	        };
+
+	        var network = new vis.Network(container, data, {});
+	    {% endif %}
+	  });
+	</script>
+	<title>Compiler</title>
 </head>
 <body> 
    <nav>

@@ -33,6 +33,7 @@ def aboutUs():
 @app.route("/add", methods = ['GET', 'POST'])
 def add():
     addForm = forms.AddNFA(request.form)
+    nfa = None
 
     if request.method == 'POST':
         symbol = addForm.symbol.data
@@ -42,9 +43,9 @@ def add():
             nfa = NFA.createBasic(symbol)
         nfa.display()
         nfaDictionary[nfa.getId()] = nfa
-        return redirect(url_for('add'))
+        addForm.symbol.data = ""
 
-    return render_template('nfas/add.html', add=addForm)
+    return render_template('nfas/add.html', add=addForm, nfa=nfa)
 
 # ---------------------------------------------------------------------
 #                       NFA: JOIN
@@ -53,6 +54,7 @@ def add():
 def join():
     nfa1 = request.form.get('nfa1')
     nfa2 = request.form.get('nfa2')
+    nfaJoin = None
         
     if request.method == 'POST':
         nfaJoin = nfaDictionary[int(nfa1)].join(nfaDictionary[int(nfa2)])
@@ -61,9 +63,8 @@ def join():
         # Remove AFN1 and AFN2
         del nfaDictionary[int(nfa1)]
         del nfaDictionary[int(nfa2)]
-        return redirect(url_for('join'))
 
-    return render_template('nfas/join.html', nfaDictionary=nfaDictionary)
+    return render_template('nfas/join.html', nfaDictionary=nfaDictionary, nfa=nfaJoin)
 
 # ---------------------------------------------------------------------
 #                       NFA: SPECIAL JOIN
@@ -71,6 +72,7 @@ def join():
 @app.route("/specialJoin", methods = ['GET', 'POST'])
 def specialJoin():
     nfasList = request.form.getlist('nfasList')
+    automatota = None
     if request.method == 'POST':
         nfaSet = set([])
         for nfa in nfasList:
@@ -80,9 +82,8 @@ def specialJoin():
         automatota = NFA.specialJoin(nfaSet)
         automatota.display()
         nfaDictionary[automatota.getId()] = automatota
-        return redirect(url_for('specialJoin'))
 
-    return render_template('nfas/specialJoin.html', nfaDictionary=nfaDictionary)
+    return render_template('nfas/specialJoin.html', nfaDictionary=nfaDictionary, nfa=automatota)
 
 # ---------------------------------------------------------------------
 #                       NFA: CONCAT
@@ -91,6 +92,7 @@ def specialJoin():
 def concat():
     nfa1 = request.form.get('nfa1')
     nfa2 = request.form.get('nfa2')
+    nfaConcat = None
         
     if request.method == 'POST':
         nfaConcat = nfaDictionary[int(nfa1)].concat(nfaDictionary[int(nfa2)])
@@ -99,9 +101,8 @@ def concat():
         # Remove AFN1 and AFN2
         del nfaDictionary[int(nfa1)]
         del nfaDictionary[int(nfa2)]
-        return redirect(url_for('concat'))
 
-    return render_template('nfas/concat.html', nfaDictionary=nfaDictionary)
+    return render_template('nfas/concat.html', nfaDictionary=nfaDictionary, nfa=nfaConcat)
 
 # ---------------------------------------------------------------------
 #                       NFA: +CLOSURE
@@ -109,6 +110,7 @@ def concat():
 @app.route("/positiveClosure", methods = ['GET', 'POST'])
 def positiveClosure():
     nfa = request.form.get('nfa')
+    nfaPosClosure = None
 
     if request.method == 'POST':
         nfaPosClosure = nfaDictionary[int(nfa)].positiveClosure()
@@ -116,9 +118,8 @@ def positiveClosure():
         nfaDictionary[nfaPosClosure.getId()] = nfaPosClosure
         # Remove AFN
         del nfaDictionary[int(nfa)]
-        return redirect(url_for('positiveClosure'))
 
-    return render_template('nfas/positiveClosure.html', nfaDictionary=nfaDictionary)
+    return render_template('nfas/positiveClosure.html', nfaDictionary=nfaDictionary, nfa=nfaPosClosure)
 
 # ---------------------------------------------------------------------
 #                       NFA: *CLOSURE
@@ -126,6 +127,7 @@ def positiveClosure():
 @app.route("/kleeneClosure", methods = ['GET', 'POST'])
 def kleeneClosure():
     nfa = request.form.get('nfa')
+    nfaKleeneClosure = None
 
     if request.method == 'POST':
         nfaKleeneClosure = nfaDictionary[int(nfa)].kleeneClosure()
@@ -133,9 +135,8 @@ def kleeneClosure():
         nfaDictionary[nfaKleeneClosure.getId()] = nfaKleeneClosure
         # Remove AFN
         del nfaDictionary[int(nfa)]
-        return redirect(url_for('kleeneClosure'))
 
-    return render_template('nfas/kleeneClosure.html', nfaDictionary=nfaDictionary)
+    return render_template('nfas/kleeneClosure.html', nfaDictionary=nfaDictionary, nfa=nfaKleeneClosure)
 
 # ---------------------------------------------------------------------
 #                       NFA: OPTIONAL
@@ -143,6 +144,7 @@ def kleeneClosure():
 @app.route("/optional", methods = ['GET', 'POST'])
 def optional():
     nfa = request.form.get('nfa')
+    nfaOptional = None
 
     if request.method == 'POST':
         nfaOptional = nfaDictionary[int(nfa)].optional()
@@ -150,9 +152,8 @@ def optional():
         nfaDictionary[nfaOptional.getId()] = nfaOptional
         # Remove AFN
         del nfaDictionary[int(nfa)]
-        return redirect(url_for('optional'))
 
-    return render_template('nfas/optional.html', nfaDictionary=nfaDictionary)
+    return render_template('nfas/optional.html', nfaDictionary=nfaDictionary, nfa=nfaOptional)
 
 # ---------------------------------------------------------------------
 #                       NFA: SET TOKEN
@@ -161,14 +162,16 @@ def optional():
 def setToken():
     addToken = forms.SetToken(request.form)
     nfa = request.form.get('nfa')
+    nfaTok = None
 
     if request.method == 'POST':        
         tok = addToken.token.data
         nfaDictionary[int(nfa)].setToken(int(tok))
+        nfaTok = nfaDictionary[int(nfa)]
         print("NFA Id: " + str(nfa) + " with token: " + str(tok))
-        return redirect(url_for('setToken'))
+        addToken.token.data = ""
 
-    return render_template('nfas/setToken.html', nfaDictionary=nfaDictionary, addT=addToken)
+    return render_template('nfas/setToken.html', nfaDictionary=nfaDictionary, addT=addToken, nfa=nfaTok)
 
 # ---------------------------------------------------------------------
 #                       NFA: CONVERT TO AFD

@@ -1,26 +1,27 @@
 {% extends 'base/dashboard.html'%}
-{% block content %}	
+{% block content %}
 
-	<div class="container">
-      <!-- Add -->
-      <div id="Add">
+<div class="container">
+    <!-- Add -->
+    <div id="Add">
          <div class="row">
             <p style="text-align: center; font-size: 25px;"> Add new NFA </p>
             {% from "_macroInputs.html" import render_field %}
             <form method="POST">
-               <div class="input-field col s8 offset-s1">
-                  {{ render_field(add.symbol) }}
-               </div>
+                 <div class="input-field col s8 offset-s1">
+                    {{ render_field(add.symbol) }}
+                 </div>
 
-               <div class="input-field col s3">
-                  <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">add_circle</i>Add</button>
-               </div>
+                 <div class="input-field col s3">
+                    <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">add_circle</i>Add</button>
+                 </div>
             </form>
          </div>
-         <div class="row">
-            Aqui van los grafos con vis.js
+         <div class="row offset-s3">
+            <div id="mynetwork">
+            </div>
          </div>
-      </div>
     </div>
+</div>
 
 {% endblock %}
