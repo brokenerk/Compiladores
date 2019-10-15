@@ -3,21 +3,28 @@
 	<div class="container">
       <div id="ll1" class="col s12">
          <div class="row">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                {% from "_macroInputs.html" import render_field %}
                <p style="text-align: center; font-size: 25px;"> LL(1) Syntactic Analysis </p>
                <div class="input-field  col s6">
-                  {{ render_field(add.symbol) }}
+                  {{ render_field(ll1.grammar) }}
+                  <input type="file" name="file">
+               </div>
+               <div class="input-field  col s6">
+                  {{ render_field(ll1.string) }}
                </div>
                <div class="col s6">
-
-                  Aquí va lo de la llave 
+                  <!--Aquí va lo de la llave -->
                </div>
+               <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">add_circle</i>Analyze</button>
             </form>
          </div>
       </div>
    </div>
-
+   <div>
+      Tabla 
+   </div>
+   <!--
    <div id="principal" class="container">
       <br><br>
       <div id="showTable">
@@ -52,4 +59,5 @@
          {% endif %}
       </div>
    </div>
+   -->
 {% endblock %}

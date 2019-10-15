@@ -193,7 +193,8 @@ def convertToDFA():
 # ---------------------------------------------------------------------
 @app.route("/LL(1)", methods = ['GET', 'POST'])
 def ll1():
-    return render_template('analysis/ll1.html')
+    llForm = forms.LL1(request.form)
+    return render_template('analysis/ll1.html',ll1=llForm)
 
 # ---------------------------------------------------------------------
 #                        LEXICAL ANALYSIS
