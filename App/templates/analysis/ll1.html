@@ -2,62 +2,72 @@
 {% block content %}	
 	<div class="container">
       <div id="ll1" class="col s12">
-         <div class="row">
             <form method="POST" enctype="multipart/form-data">
                {% from "_macroInputs.html" import render_field %}
                <p style="text-align: center; font-size: 25px;"> LL(1) Syntactic Analysis </p>
-               <div class="input-field  col s6">
-                  {{ render_field(ll1.grammar) }}
-                  <input type="file" name="file">
-               </div>
-               <div class="input-field  col s6">
-                  {{ render_field(ll1.string) }}
-               </div>
-               <div class="col s6">
-                  <!--Aquí va lo de la llave -->
-               </div>
-               <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">add_circle</i>Analyze</button>
+               <div class="row">
+	               	<div class="input-field col s6">
+	               		{{ render_field(ll1.grammar) }}
+	               	</div>
+	               	<div class="input-field col s6">
+	               		{{ render_field(ll1.string) }}
+	               	</div>
+       			</div>
+
+       			<div class="row">
+	               	<div class="col s6">
+	               		<input type="file" name="fileGrammar">
+	               	</div>
+	               	<div class="col s6">
+	               		<input type="file" name="fileString">
+	               	</div>
+       			</div>
+
+       			<div class="row center">
+	               <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
+	           </div>
             </form>
-         </div>
+
       </div>
-   </div>
-   <div>
-      Tabla 
-   </div>
-   <!--
-   <div id="principal" class="container">
-      <br><br>
-      <div id="showTable">
-         {% if afd %}
-            <script type="text/javascript">
-               document.getElementById('convertToAFD').style.display = "none";
-            </script>
-            <br>
-            <p style="text-align: center; font-size: 25px;"> Table of the AFD</p>
-            <br> <br>
-            <table class="striped">
-               <thead>
-                  <tr>
-                     <th>Id</th>
-                     {% for a in afd.getAlphabet() %}
-                        <th>{{ a }}</th>
-                     {% endfor %}
-                     <th> Token </th> 
-                  </tr>
-               </thead>
-               <tbody>
-                  {% for i in afdTable %}
-                     <tr>
-                        <td> {{ loop.index - 1 }} </td>
-                        {% for j in i %}
-                           <td>{{ j }}</td>
-                        {% endfor %}
-                     </tr>
-                  {% endfor %}
-               </tbody>
-            </table>
-         {% endif %}
-      </div>
-   </div>
+
+	   <div class="row">
+	      Tabla 
+	   </div>
+	   <!--
+	   <div id="principal" class="container">
+	      <br><br>
+	      <div id="showTable">
+	         {% if afd %}
+	            <script type="text/javascript">
+	               document.getElementById('convertToAFD').style.display = "none";
+	            </script>
+	            <br>
+	            <p style="text-align: center; font-size: 25px;"> Table of the AFD</p>
+	            <br> <br>
+	            <table class="striped">
+	               <thead>
+	                  <tr>
+	                     <th>Id</th>
+	                     {% for a in afd.getAlphabet() %}
+	                        <th>{{ a }}</th>
+	                     {% endfor %}
+	                     <th> Token </th> 
+	                  </tr>
+	               </thead>
+	               <tbody>
+	                  {% for i in afdTable %}
+	                     <tr>
+	                        <td> {{ loop.index - 1 }} </td>
+	                        {% for j in i %}
+	                           <td>{{ j }}</td>
+	                        {% endfor %}
+	                     </tr>
+	                  {% endfor %}
+	               </tbody>
+	            </table>
+	         {% endif %}
+	      </div>
+	   </div>
    -->
+    </div>
 {% endblock %}
