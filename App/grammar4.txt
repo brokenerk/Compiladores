@@ -1,2 +1,2 @@
-S->aAa| ;
-A->abS|c;
+S->a A a|ξ;
+A->a b S|c;

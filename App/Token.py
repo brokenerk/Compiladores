@@ -34,6 +34,6 @@ class Token:
 	ARROW = 290
 	SEMICOLON = 300
 	OR = 310
-	#SPACE = 320
+	SPACE = 320
 
 	ERROR = 1000

@@ -17,19 +17,18 @@ if __name__ == "__main__":
     afn6 = NFA.createBasic('*')
     afn7 = NFA.createBasic('/')
     afn8 = NFA.createBasic('(')
-    afn9 = NFA.createBasic(' ') #El epsilon se representa como un espacio
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9)
+    afn9 = NFA.createBasic(')')
+    afn10 = NFA.createBasic('ξ') #El epsilon se representa como ξ
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10)
 
-    afn10 = NFA.createBasic('A', 'Z')
-    afn11 = NFA.createBasic('a', 'z')
-    afn12 = NFA.createBasic ("'")
-    afn13 = NFA.createBasic('_')
-    afnB = afn10.join(afn11).join(afn12).join(afn13)
+    afn11 = NFA.createBasic('A', 'Z')
+    afn12 = NFA.createBasic('a', 'z')
+    afn13 = NFA.createBasic ("'")
+    afn14 = NFA.createBasic('_')
+    afnB = afn11.join(afn12).join(afn13).join(afn14)
     afnC = afnB.kleeneClosure()
 
-    afn14 = NFA.createBasic(')').optional()
-
-    afnD = afnA.concat(afnC).concat(afn14)
+    afnD = afnA.concat(afnC)
     afnD.setToken(Token.SYMBOL)
 
     afn15 = NFA.createBasic('-')
@@ -43,7 +42,10 @@ if __name__ == "__main__":
     afn18 = NFA.createBasic('|')
     afn18.setToken(Token.OR)
 
-    automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18]))
+    afn19 = NFA.createBasic(' ')
+    afn19.setToken(Token.SPACE)
+
+    automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18, afn19]))
     afd = automatota.convertToDFA()
     #afd.displayTable()
 
@@ -72,11 +74,11 @@ if __name__ == "__main__":
             print("{} ".format(ruleNumber), end = '')
             r.displayRule()
             ruleNumber += 1
-    
+    '''
         #Analysis
         print("\nAnalisis LL(1)")
         ll1 = LL1(grammar)
-        c = "n*n+(n-n)"
+        c = "sfp"
         if(ll1.isLL1()):
             print("Gramatica compatible con LL(1)")
 
@@ -89,7 +91,7 @@ if __name__ == "__main__":
                 print("\n" + c + " no pertenece a la gramatica")
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
-    '''
+
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
     afn2 = NFA.createBasic('A', 'Z')

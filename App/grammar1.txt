@@ -1,6 +1,6 @@
-S->aAC|Bb;
-A->eD;
+S->a A C|B b;
+A->e D;
 B->f|g;
 C->h|i;
-D->bE| ;
-E->eD|dD;
+D->b E|ξ;
+E->e D|d D;

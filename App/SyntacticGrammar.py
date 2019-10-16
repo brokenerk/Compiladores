@@ -112,14 +112,27 @@ class SyntacticGrammar:
         N2 = (False, None)
         token = self.lex.getToken()
 
-        if(token == Token.SYMBOL):
-            N = (N[0], Node(self.lex.getLexem(), None))
-            N2 = self.SymbolsListP(N2) #Boolean - Node
+        if(token == Token.SPACE):
+            tok = self.lex.getToken()
+            if(tok == Token.SYMBOL):
+                N = (N[0], Node(self.lex.getLexem(), None))
+                N2 = self.SymbolsListP(N2) #Boolean - Node
 
-            if(N2[0]):
-                N[1].setNext(N2[1])
-                return (True, N[1])
-            return (False, N[1])
+                if(N2[0]):
+                    N[1].setNext(N2[1])
+                    return (True, N[1])
+                return (False, N[1])
+
+            self.lex.returnToken()
+        else:
+            if(token == Token.SYMBOL):
+                N = (N[0], Node(self.lex.getLexem(), None))
+                N2 = self.SymbolsListP(N2) #Boolean - Node
+
+                if(N2[0]):
+                    N[1].setNext(N2[1])
+                    return (True, N[1])
+                return (False, N[1])
 
         self.lex.returnToken()
         return (True, None)

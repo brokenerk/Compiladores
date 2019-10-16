@@ -1,5 +1,9 @@
-E->Te;
-e->+Te|-Te| ;
-T->Ft;
-t->*Ft|/Ft| ;
-F->(E)|n;
+G->ListaReglas;
+ListaReglas->Reglas PC ListaReglas';
+ListaReglas'->Reglas PC ListaReglas'|ξ;
+Regla->LadoIzquierdo FLECHA LadosDerechos;
+LadoIzquierdo->SIMBOLO;
+LadosDerechos->ListaSimbolos LadosDerechos';
+LadosDerechos'->OR ListaSimbolos LadosDerechos'|ξ;
+ListaSimbolos->SIMBOLO ListaSimbolos';
+ListaSimbolos'->SIMBOLO ListaSimbolos'|ξ;

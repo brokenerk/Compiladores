@@ -1,5 +1,5 @@
-S->aABC;
-A->a|bbD;
-B->a| ;
-C->b| ;
-D->c| ;
+E->T E';
+E'->+ T E'|- T E'|ξ;
+T->F T';
+T'->* F T'|/ F T'|ξ;
+F->( E )|num;
