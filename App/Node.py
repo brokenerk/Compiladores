@@ -36,6 +36,14 @@ class Node:
     def setSymbol(self, symbol):
         self.symbol = symbol
 
+    def size(self):
+        cont = 1
+        next = self.getNext()
+        while(next != None):
+            cont += 1
+            next = next.getNext()
+        return cont
+
     #Parameters: Nothing
     #Return: Nothing
     def displayRule(self):
