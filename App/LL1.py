@@ -22,20 +22,40 @@ class LL1:
 		self.setNoTerminal()
 		self.setTerminal()
 		self.setDPfirst()
+		for i in self.dpFirst:
+			print(i + ": " + str(self.dpFirst[i]))
+
 		self.setDPfollow()
+		print("")
+		for i in self.dpFollow:
+			print(i + ": " + str(self.dpFollow[i]))
+
 		self.initTable()
+		self.displayTable(0)
+		
 		for i in range(0, len(self.rules)):
-			srt = self.rules[i].next.getSymbol()
-			s = self.dpFirst[srt[0]]
-			if len(s) <= 1:
-				if " " in s or s == 0:
-					s = self.follow(self.rules[i].getSymbol()[0])
-			l = list(s)
-			for j in range(0, len(l)):
-				x = self.index[self.rules[i].getSymbol()[0]]
-				y = self.index[l[j]] - len(self.noTerminals)
+			
+			next = self.rules[i].getNext()
+			srt = next.getSymbol()
+			s = self.first(srt)
+			next = next.getNext()
+
+			while(next != None):
+				srt = srt + next.getSymbol()
+				next = next.getNext()
+
+			#if len(s) <= 1:
+			if "epsilon" in s:
+				s = self.follow(self.rules[i].getSymbol())
+
+			for elem in s:
+				x = self.index[self.rules[i].getSymbol()]
+				y = self.index[elem] - len(self.noTerminals)
+				print(self.rules[i].getSymbol() + " ---- " + str(x))
+				print(elem + " ---- " + str(y))
+				print(elem +": " + str(self.table[x][y]) + " - " + srt)
 				if self.table[x][y] == 0:
-					if srt == " ":
+					if srt == "epsilon":
 						self.table[x][y] = epsilon
 					else:
 						self.table[x][y] = srt
@@ -109,8 +129,8 @@ class LL1:
 	#Return: Nothing
 	#Note: Fill the grammar table with 0
 	def initTable(self):
-		t = list(self.terminals - {" "})
-		nt = list(self.noTerminals - {" "})
+		t = list(self.terminals - {"epsilon"})
+		nt = list(self.noTerminals - {"epsilon"})
 		t.sort()
 		nt.sort()
 		j = 0
@@ -129,7 +149,7 @@ class LL1:
 				if (i - len(nt)) == j:
 					self.table[i][j] = "pop"
 				else:
-					self.table[i][j] =0
+					self.table[i][j] = 0
 
 		self.table[0][0] = " "
 		self.table[len(self.terminals) + len(self.noTerminals) - 1][0] = "$"
@@ -160,7 +180,7 @@ class LL1:
 	#Parameters: Nothing
 	#Return: Initial symbol of the grammar
 	def getInitialSymbol(self):
-		return self.rules[0].getSymbol()[0]
+		return self.rules[0].getSymbol()
 
 	#Parameters: Nothing 
 	#Return: List<List>
@@ -193,7 +213,7 @@ class LL1:
 	#Note: Fill set of no terminals symbols
 	def setNoTerminal(self):
 		for i in range(0, len(self.rules)):
-			self.noTerminals.add(self.rules[i].getSymbol()[0]) 
+			self.noTerminals.add(self.rules[i].getSymbol()) 
 			
 	#Parameters: Nothing
 	#Return: Nothing 
@@ -201,10 +221,12 @@ class LL1:
 	def setTerminal(self):
 		#print("No terminals")
 		for i in range(0, len(self.rules)):
-			st = self.rules[i].next.getSymbol()
-			for k in range(0, len(st)):
-				if st[k] not in self.noTerminals:
-					self.terminals.add(st[k])
+			next = self.rules[i].getNext()
+			while(next != None):
+				st = next.getSymbol()
+				if st not in self.noTerminals:
+					self.terminals.add(st)
+				next = next.getNext()
 
 	#Parameters: Nothing
 	#Return: Nothing
@@ -225,14 +247,14 @@ class LL1:
 		if symbol in self.dpFirst:
 			return self.dpFirst[symbol]
 		c = set() 	#Set<>
-		if symbol == " ":
+		if symbol == epsilon:
 			c.add(symbol)
 		if symbol in self.terminals:
 			c.add(symbol)
 		else:
 			for j in range(0, len(self.rules)):
-				if symbol == self.rules[j].getSymbol()[0]:
-					c = c.union(self.first(self.rules[j].next.getSymbol()[0]))
+				if symbol == self.rules[j].getSymbol():
+					c = c.union(self.first(self.rules[j].getNext().getSymbol()))
 		self.dpFirst[symbol] = c
 		return  c
 
@@ -246,20 +268,25 @@ class LL1:
 		if symbol == self.getInitialSymbol():
 			c.add("$")
 		for i in range(0, len(self.rules)):
-			st = self.rules[i].next.getSymbol()
-			for k in range(0, len(st)):
-				if st[k] == symbol:
-					if k == (len(st) - 1):
-						if self.rules[i].getSymbol()[0] not in self.visited:
-							c = c.union(self.follow(self.rules[i].getSymbol()[0]))
-					else:				
-						for j in range(k + 1, len(st)):
-							aux = self.first(st[j])
-							if " " in aux:
-								if self.rules[i].getSymbol()[0] not in self.visited:
-									c = c.union(self.follow(self.rules[i].getSymbol()[0]))
-								aux = aux - {" "}
+			next = self.rules[i].getNext()
+			
+			while(next != None):
+				st = next.getSymbol()
+				n = next.getNext()
+				if st == symbol:
+					if n == None:
+						if self.rules[i].getSymbol() not in self.visited:
+							c = c.union(self.follow(self.rules[i].getSymbol()))
+					else:
+						while(n != None):			
+							aux = self.first(n.getSymbol())
+							if "epsilon" in aux:
+								if self.rules[i].getSymbol() not in self.visited:
+									c = c.union(self.follow(self.rules[i].getSymbol()))
+								aux = aux - {"epsilon"}
 							c = c.union(aux);
+							n = n.getNext()
+				next = next.getNext()
 		if len(c) > 0:
 			self.dpFollow[symbol] = c
 		return c

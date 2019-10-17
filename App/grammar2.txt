@@ -1,9 +1,10 @@
 G->ListaReglas;
-ListaReglas->Reglas PC ListaReglas';
-ListaReglas'->Reglas PC ListaReglas'|ξ;
-Regla->LadoIzquierdo FLECHA LadosDerechos;
+ListaReglas->Regla PC ListaReglas';
+ListaReglas'->Regla PC ListaReglas'|epsilon;
+Regla->LadoIzquierdo FLECHA ListaLadosDerechos;
 LadoIzquierdo->SIMBOLO;
-LadosDerechos->ListaSimbolos LadosDerechos';
-LadosDerechos'->OR ListaSimbolos LadosDerechos'|ξ;
+ListaLadosDerechos->LadoDerecho ListaLadosDerechos';
+ListaLadosDerechos'->OR LadoDerecho ListaLadosDerechos'|epsilon;
+LadoDerecho->ListaSimbolos;
 ListaSimbolos->SIMBOLO ListaSimbolos';
-ListaSimbolos'->SIMBOLO ListaSimbolos'|ξ;
+ListaSimbolos'->SIMBOLO ListaSimbolos'|epsilon;

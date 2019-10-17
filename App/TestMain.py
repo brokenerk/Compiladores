@@ -18,8 +18,7 @@ if __name__ == "__main__":
     afn7 = NFA.createBasic('/')
     afn8 = NFA.createBasic('(')
     afn9 = NFA.createBasic(')')
-    afn10 = NFA.createBasic('ξ') #El epsilon se representa como ξ
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10)
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9)
 
     afn11 = NFA.createBasic('A', 'Z')
     afn12 = NFA.createBasic('a', 'z')
@@ -74,7 +73,7 @@ if __name__ == "__main__":
             print("{} ".format(ruleNumber), end = '')
             r.displayRule()
             ruleNumber += 1
-    '''
+
         #Analysis
         print("\nAnalisis LL(1)")
         ll1 = LL1(grammar)
@@ -83,15 +82,15 @@ if __name__ == "__main__":
             print("Gramatica compatible con LL(1)")
 
             ll1.displayTable(0)
-            res = ll1.analyze(c)
-            ll1.displayTable(1)
-            if(res):
-                print("\n" + c + " pertenece a la gramatica")
-            else:
-                print("\n" + c + " no pertenece a la gramatica")
+            #res = ll1.analyze(c)
+            #ll1.displayTable(1)
+            #if(res):
+            #    print("\n" + c + " pertenece a la gramatica")
+            #else:
+            #    print("\n" + c + " no pertenece a la gramatica")
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
-
+    '''
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
     afn2 = NFA.createBasic('A', 'Z')

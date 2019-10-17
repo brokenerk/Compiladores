@@ -1,5 +1,5 @@
 E->T E';
-E'->+ T E'|- T E'|ξ;
+E'->+ T E'|- T E'|epsilon;
 T->F T';
-T'->* F T'|/ F T'|ξ;
+T'->* F T'|/ F T'|epsilon;
 F->( E )|num;

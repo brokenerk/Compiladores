@@ -2,5 +2,5 @@ S->a A C|B b;
 A->e D;
 B->f|g;
 C->h|i;
-D->b E|ξ;
+D->b E|epsilon;
 E->e D|d D;
