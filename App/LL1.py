@@ -31,8 +31,8 @@ class LL1:
 			print(i + ": " + str(self.dpFollow[i]))
 
 		self.initTable()
-		self.displayTable(0)
-		
+		#self.displayTable(0)
+		'''
 		for i in range(0, len(self.rules)):
 			
 			next = self.rules[i].getNext()
@@ -62,6 +62,7 @@ class LL1:
 				else:
 					return False
 		return True
+		'''
 
 	#Paamaters: String
 	#Return: True if is a correct string
@@ -206,7 +207,9 @@ class LL1:
 	def setDPfollow(self):
 		for i in self.noTerminals:
 			self.initVisited()
-			self.dpFollow[i] = self.follow(i)
+			c = self.follow(i)
+			if c != set():
+				self.dpFollow[i] = c
 	
 	#Parameters: Nothing
 	#Return: Nothing
@@ -269,16 +272,16 @@ class LL1:
 			c.add("$")
 		for i in range(0, len(self.rules)):
 			next = self.rules[i].getNext()
-			
-			while(next != None):
+
+			for k in range(1, self.rules[i].size()):
 				st = next.getSymbol()
-				n = next.getNext()
 				if st == symbol:
-					if n == None:
+					if k == self.rules[i].size() - 1:
 						if self.rules[i].getSymbol() not in self.visited:
 							c = c.union(self.follow(self.rules[i].getSymbol()))
 					else:
-						while(n != None):			
+						n = next.getNext()
+						for j in range(k + 2, self.rules[i].size()):	
 							aux = self.first(n.getSymbol())
 							if "epsilon" in aux:
 								if self.rules[i].getSymbol() not in self.visited:
@@ -287,6 +290,8 @@ class LL1:
 							c = c.union(aux);
 							n = n.getNext()
 				next = next.getNext()
-		if len(c) > 0:
+		if c != set():
 			self.dpFollow[symbol] = c
+		else:
+			print(str(c) + " es vacio")
 		return c
