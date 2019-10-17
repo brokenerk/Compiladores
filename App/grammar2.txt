@@ -1,10 +1,9 @@
 G->ListaReglas;
 ListaReglas->Regla PC ListaReglasP;
 ListaReglasP->Regla PC ListaReglasP|epsilon;
-Regla->LadoIzquierdo FLECHA ListaLadosDerechos;
+Regla->LadoIzquierdo FLECHA LadosDerechos;
 LadoIzquierdo->SIMBOLO;
-ListaLadosDerechos->LadoDerecho ListaLadosDerechosP;
-ListaLadosDerechosP->OR LadoDerecho ListaLadosDerechosP|epsilon;
-LadoDerecho->ListaSimbolos;
+LadosDerechos->ListaSimbolos LadosDerechosP;
+LadosDerechosP->OR ListaSimbolos LadosDerechosP|epsilon;
 ListaSimbolos->SIMBOLO ListaSimbolosP;
 ListaSimbolosP->SIMBOLO ListaSimbolosP|epsilon;

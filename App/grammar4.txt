@@ -1,2 +1,2 @@
-S->a A a|ξ;
+S->a A a|epsilon;
 A->a b S|c;

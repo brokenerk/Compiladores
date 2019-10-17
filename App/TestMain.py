@@ -77,7 +77,7 @@ if __name__ == "__main__":
         #Analysis
         print("\nAnalisis LL(1)")
         ll1 = LL1(grammar)
-        c = "SIMBOLO FLECHA SIMBOLO PC"
+        c = "SIMBOLO FLECHA SIMBOLO SIMBOLO OR SIMBOLO PC"
         if(ll1.isLL1()):
             print("Gramatica compatible con LL(1)")
 

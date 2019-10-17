@@ -1,5 +1,5 @@
 #!python3
-
+#Each Node object is a Grammar Rule!
 class Node:
     def __init__(self, symbol, next):
         self.symbol = symbol    #String
@@ -36,13 +36,17 @@ class Node:
     def setSymbol(self, symbol):
         self.symbol = symbol
 
-    def size(self):
-        cont = 1
+    def getRule(self):
+        rule = []
+        rule.append(self.symbol)
+        rule.append("--->")
+
         next = self.getNext()
+
         while(next != None):
-            cont += 1
+            rule.append(next.getSymbol())
             next = next.getNext()
-        return cont
+        return rule
 
     #Parameters: Nothing
     #Return: Nothing
