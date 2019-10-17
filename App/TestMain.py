@@ -77,17 +77,17 @@ if __name__ == "__main__":
         #Analysis
         print("\nAnalisis LL(1)")
         ll1 = LL1(grammar)
-        c = "sfp"
+        c = "SIMBOLO FLECHA SIMBOLO PC"
         if(ll1.isLL1()):
             print("Gramatica compatible con LL(1)")
 
             ll1.displayTable(0)
-            #res = ll1.analyze(c)
-            #ll1.displayTable(1)
-            #if(res):
-            #    print("\n" + c + " pertenece a la gramatica")
-            #else:
-            #    print("\n" + c + " no pertenece a la gramatica")
+            res = ll1.analyze(c)
+            ll1.displayTable(1)
+            if(res):
+                print("\n" + c + " pertenece a la gramatica")
+            else:
+                print("\n" + c + " no pertenece a la gramatica")
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
     '''

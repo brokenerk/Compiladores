@@ -22,47 +22,49 @@ class LL1:
 		self.setNoTerminal()
 		self.setTerminal()
 		self.setDPfirst()
+		print("FIRST")
 		for i in self.dpFirst:
 			print(i + ": " + str(self.dpFirst[i]))
 
-		self.setDPfollow()
+		
 		print("")
+		print("FOLLOW")
+		self.setDPfollow()
 		for i in self.dpFollow:
 			print(i + ": " + str(self.dpFollow[i]))
 
 		self.initTable()
-		#self.displayTable(0)
-		'''
+
 		for i in range(0, len(self.rules)):
 			
 			next = self.rules[i].getNext()
 			srt = next.getSymbol()
-			s = self.first(srt)
+			s = self.dpFirst[srt]
 			next = next.getNext()
 
 			while(next != None):
 				srt = srt + next.getSymbol()
 				next = next.getNext()
 
+			#print("Analizando " + str(i) + ": " + self.rules[i].getSymbol() + "--->" + srt, end='')
+
 			#if len(s) <= 1:
-			if "epsilon" in s:
-				s = self.follow(self.rules[i].getSymbol())
+			if "epsilon" in s or s == set():
+				#print("-------------- HAGO FOLLOW PORQUE DIO Epsilon")
+				s = self.dpFollow[self.rules[i].getSymbol()]
+			#print(str(s))
 
 			for elem in s:
 				x = self.index[self.rules[i].getSymbol()]
 				y = self.index[elem] - len(self.noTerminals)
-				print(self.rules[i].getSymbol() + " ---- " + str(x))
-				print(elem + " ---- " + str(y))
-				print(elem +": " + str(self.table[x][y]) + " - " + srt)
 				if self.table[x][y] == 0:
 					if srt == "epsilon":
 						self.table[x][y] = epsilon
 					else:
 						self.table[x][y] = srt
 				else:
-					return False
+					continue
 		return True
-		'''
 
 	#Paamaters: String
 	#Return: True if is a correct string
@@ -70,23 +72,24 @@ class LL1:
 	def analyze(self, c):
 		self.initAnalysisTable()
 		p = []
-		srt = []
+		srt = c.split(" ")
+		print(srt)
 		p.append("$")
 		p.append(self.getInitialSymbol())
 		srt.append("$")
-		c = c[::-1]
-		for i in range(0, len(c)):
-			srt.append(c[i])
+		print(srt)
+		
 		aux = []
 		i = 0
 		while len(p) > 0:
 			if len(srt) == 0:
 				return 0
 			aux = srt[:]
-			aux.reverse()
+			#aux.reverse()
 			values = []
 			lastP = p[len(p) - 1]
 			lastC = srt[len(srt) - 1]
+
 			if lastC in self.terminals or lastC == "$":
 				x = self.index[lastP]
 				y = self.index[lastC] - len(self.noTerminals)
@@ -264,6 +267,7 @@ class LL1:
 	#Parameters: No terminal symbol
 	#Return: Set or terminals or $
 	def follow(self, symbol):
+		#print("Hago follow: ", symbol)
 		if symbol in self.dpFollow:
 			return self.dpFollow[symbol]
 		c = set()
@@ -272,17 +276,26 @@ class LL1:
 			c.add("$")
 		for i in range(0, len(self.rules)):
 			next = self.rules[i].getNext()
-
-			for k in range(1, self.rules[i].size()):
+			
+			while(next != None):
 				st = next.getSymbol()
+				#print("REGLA " + str(i))
+				#print("REGLA " + str(i) + ": " + self.rules[i].getSymbol() + " ----- " + st)
+
 				if st == symbol:
-					if k == self.rules[i].size() - 1:
+					n = next.getNext()
+					if n == None:
+						#print("Lo encontre al final")
 						if self.rules[i].getSymbol() not in self.visited:
 							c = c.union(self.follow(self.rules[i].getSymbol()))
 					else:
 						n = next.getNext()
-						for j in range(k + 2, self.rules[i].size()):	
+						while(n != None):
+							#print(" __ "+ n.getSymbol())
+							#print("Lo encontre pero quedan nodos")
+							#print("Hago first de: ", n.getSymbol())
 							aux = self.first(n.getSymbol())
+							#print("FIRST OBTENIDO EN FOLLOW: " + str(aux))
 							if "epsilon" in aux:
 								if self.rules[i].getSymbol() not in self.visited:
 									c = c.union(self.follow(self.rules[i].getSymbol()))
@@ -290,8 +303,7 @@ class LL1:
 							c = c.union(aux);
 							n = n.getNext()
 				next = next.getNext()
+
 		if c != set():
 			self.dpFollow[symbol] = c
-		else:
-			print(str(c) + " es vacio")
 		return c
