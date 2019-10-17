@@ -36,5 +36,35 @@
 				</form>
 		
 		</div>
+		<div id="showTable" class="row">
+			{% if lexic %}
+			   	<script type="text/javascript">
+				  document.getElementById('ConvertToDFA').style.display = "none";
+			   	</script>
+	   
+			   	<p style="text-align: center; font-size: 25px;"> Table of Lexems</p>
+		</div>
+		<div class="row">
+		   <table class="striped centered responsive-table">
+				<thead class="#0288d1 light-blue darken-2">
+			 		<tr>
+						<th class="white-text">Lexem</th>
+						<th class="white-text">Token</th> 
+					</tr>
+				</thead>
+					<!--<x>  <tbody>
+						{% for i in lexic.display() %}
+							<tr>
+							   <td> {{ loop.index - 1 }} </td>
+							   {% for j in i %}
+								  <td>{{ j }}</td>
+							   {% endfor %}
+							</tr>
+						 {% endfor %}
+					  </tbody>-->
+				   </table>
+				</div>
+				{% endif %}
+			 </div>
 	</div>
 {% endblock %}
