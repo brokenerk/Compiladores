@@ -25,8 +25,41 @@
 	           </div>
             </form>
       	</div>
-	   <div class="row">
-	      Tabla 
-	   </div>
-    </div>
+	</div>
+	<div id="principal" class="container">
+			<div id="showTable" class="row">
+			   {% if afdER %}
+				  <script type="text/javascript">
+					 document.getElementById('ConvertToDFA').style.display = "none";
+				  </script>
+	  
+				  <p style="text-align: center; font-size: 25px;">DFA Id: {{ afdER.getId() }} Table</p>
+			   </div>
+			   <div class="row">
+				  <table class="striped centered responsive-table">
+					 <thead class="#0288d1 light-blue darken-2">
+						<tr>
+						   <th class="white-text">State</th>
+	  
+						   {% for a in afdER.getAlphabet() %}
+							  <th class="white-text">{{ a }}</th>
+						   {% endfor %}
+						   <th class="white-text">Token</th> 
+						</tr>
+					 </thead>
+					 <tbody>
+						{% for i in afdER.getTable() %}
+						   <tr>
+							  <td> {{ loop.index - 1 }} </td>
+							  {% for j in i %}
+								 <td>{{ j }}</td>
+							  {% endfor %}
+						   </tr>
+						{% endfor %}
+					 </tbody>
+				  </table>
+			   </div>
+			   {% endif %}
+			</div>
+		 </div>
 {% endblock %}

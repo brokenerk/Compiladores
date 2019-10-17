@@ -269,11 +269,66 @@ def makeAfd():
 @app.route("/nfaSyn", methods = ['GET', 'POST'])
 def nfaSyntactic():
     nfaForm = forms.NFASyn(request.form)
-    #if request.method == 'POST':
-        #string = nfaForm..data
-        #grammarForm = llForm.grammar.data
+    afns = set([])
+    if request.method == 'POST':
+        patterns = nfaForm.pattern.data
+        afd = dfaSyntactic()
+        pattern = patterns.split('\r\n')
+        print(pattern)
+        for p in pattern:
+            auxPattern = p.split(' ')
+            lex = Lexer(afd, auxPattern[0])
+            syn = SyntacticNFA(lex)
+            afnAux = syn.start()
+            if(afnAux == False):
+                print('Error')                
+            afnAux.setToken(int(auxPattern[1]))
+            afns.add(afnAux)
+        afnER = NFA.specialJoin(afns)
+        afdER = afnER.convertToDFA()
+    
+    return render_template('analysis/nfa.html', nfaF = nfaForm, afdER = afdER )
 
-    return render_template('analysis/nfa.html', nfaF = nfaForm )
+def dfaSyntactic():
+    afn1 = NFA.createBasic('a', 'z')
+    afn1.setToken(Token.SYMBOL_LOWER)
+    afn2 = NFA.createBasic('A', 'Z')
+    afn2.setToken(Token.SYMBOL_UPPER)
+    afn3 = NFA.createBasic('0', '9')
+    afn3.setToken(Token.NUM)
+    afn4 = NFA.createBasic('|')
+    afn4.setToken(Token.JOIN)
+    afn5 = NFA.createBasic('&')
+    afn5.setToken(Token.CONCAT)
+    afn6 = NFA.createBasic('+')
+    afn6.setToken(Token.POSCLO)
+    afn7 = NFA.createBasic('-')
+    afn7.setToken(Token.DASH)
+    afn8 = NFA.createBasic('.')
+    afn8.setToken(Token.POINT)
+    afn9 = NFA.createBasic('?')
+    afn9.setToken(Token.OPTIONAL)
+    afn10 = NFA.createBasic('*')
+    afn10.setToken(Token.KLEEN)
+    afn11 = NFA.createBasic('(')
+    afn11.setToken(Token.PAR_L)
+    afn12 = NFA.createBasic(')')
+    afn12.setToken(Token.PAR_R)
+    afn13 = NFA.createBasic ('[')
+    afn13.setToken(Token.SQUBRACK_L)
+    afn14 = NFA.createBasic (']')
+    afn14.setToken(Token.SQUBRACK_R)
+    afnp = NFA.createBasic('"')
+    afnq = NFA.createBasic('+')
+    afn15 = afnp.concat(afnq)
+    afn15.setToken(Token.PLUS)
+    afnp3 = NFA.createBasic('"')
+    afnq3 = NFA.createBasic('-')
+    afn16 = afnp3.concat(afnq3)
+    afn16.setToken(Token.MINUS)
+    automatota = NFA.specialJoin(set([afn1, afn2, afn3, afn4, afn5, afn6, afn7, afn8, afn9, afn10, afn11, afn12, afn13, afn14, afn15, afn16]))
+    afd = automatota.convertToDFA()
+    return afd
 
 # ---------------------------------------------------------------------
 #                        LEXICAL ANALYSIS
