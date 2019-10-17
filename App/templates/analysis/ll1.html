@@ -27,31 +27,43 @@
 	               <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
 	           </div>
             </form>
+		</div>
+	</div>
 
-      	</div>
+	<div id=messages>
+ 		{% with messages = get_flashed_messages() %}
+  		{% if messages %}
+    		<ul class=flashes>
+    		{% for message in messages %}
+      			<li>{{ message }}</li>
+    		{% endfor %}
+			</ul>
+			<div class="msg msg-info z-depth-3">Analizando</div>
+  		{% endif %}
+		{% endwith %} 
+	</div>
 
-	   	<div id="principal" class="container">
-	    	<br><br>
-	      	<div id="showTable">
-	        	{% if grammar %}
-	            	<script type="text/javascript">
-	               		document.getElementById('convertToAFD').style.display = "none";
-	            	</script>
-	            	<br>
-	            	<p style="text-align: center; font-size: 25px;"> Table of the Grammar</p>
-	            	<br> <br>
-	            	<table class="striped">
-	               		<tbody>
-	                		{% for rule in grammar %}
-	                    		<tr>
-									<td> {{ rule.symbol }} </td>
-									<td>{{ rule.getNext().getSymbol() }}</td>
-	                     		</tr>
-	                  		{% endfor %}
-	               		</tbody>
-	            	</table>
-	        	{% endif %}
-	      	</div>
-	   </div>
-    </div>
+	<div id="principal" class="container">
+	  	<br><br>
+	   	<div id="showTable">
+	       	{% if grammar %}
+	         	<script type="text/javascript">
+	          		document.getElementById('convertToAFD').style.display = "none";
+	           	</script>
+	           	<br>
+	           	<p style="text-align: center; font-size: 25px;"> Table of the Grammar</p>
+	           	<br> <br>
+	           	<table class="striped">
+	           		<tbody>
+	               		{% for rule in grammar %}
+	                		<tr>
+								<td> {{ rule.symbol }} </td>
+								<td>{{ rule.getNext().getSymbol() }}</td>
+	                    	</tr>
+	                  	{% endfor %}
+	               	</tbody>
+	            </table>
+	        {% endif %}
+	    </div>
+	</div>
 {% endblock %}

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect,flash
 from NFA import NFA
 from DFA import DFA
 from Token import Token
@@ -13,6 +13,7 @@ epsilon = '\u03B5'
 #UPLOAD_FOLDER = os.path.abspath(' /uploads/')
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app_root = os.path.dirname(os.path.abspath(__file__))
 # Manage every AFN that has been created
@@ -202,15 +203,19 @@ def convertToDFA():
 def ll1():
     llForm = forms.LL1(request.form)
     afd = makeAfd()
+    grammar=None
     if request.method == 'POST':
         string = llForm.string.data
         grammarForm = llForm.grammar.data
 
         print("\nAnalizando cadena: " + grammarForm)
         lex = Lexer(afd, grammarForm)
+        flash('Analizando cadena ')
+        
         print("Lexico OK. Analizando sintacticamente...")
         syn = SyntacticGrammar(lex)
-
+        flash("Lexico OK. Analizando sintacticamente...")
+        flash('Gramatica Valida')
         print("\nGramatica construida: ")
         grammar = syn.start()
         if(grammar):
@@ -270,6 +275,7 @@ def makeAfd():
 def nfaSyntactic():
     nfaForm = forms.NFASyn(request.form)
     afns = set([])
+    afdER = None
     if request.method == 'POST':
         patterns = nfaForm.pattern.data
         afd = dfaSyntactic()
