@@ -179,14 +179,14 @@ def setToken():
 # ---------------------------------------------------------------------
 @app.route("/convertToDFA", methods = ['GET', 'POST'])
 def convertToDFA():
-    nfa = request.form.get('nfa')
+    dfa = request.form.get('dfa')
     dfa = None #Aux to save the new AFD
     
     if request.method == 'POST':
         dfa = nfaDictionary[int(nfa)].convertToDFA()
         dfa.displayTable()
         dfaDictionary[dfa.getId()] = dfa
-        del dfa
+        del nfaDictionary[int(nfa)]
 
     return render_template('nfas/convertToDFA.html', nfaDictionary=nfaDictionary, dfa=dfa)
 
@@ -199,11 +199,21 @@ def ll1():
     return render_template('analysis/ll1.html',ll1=llForm)
 
 # ---------------------------------------------------------------------
+#                        NFA Syntactic
+# ---------------------------------------------------------------------
+@app.route("/nfaSyn", methods = ['GET', 'POST'])
+def nfaSyntactic():
+    nfaForm = forms.NFASyn(request.form)
+
+    return render_template('analysis/nfa.html', nfaF = nfaForm )
+
+# ---------------------------------------------------------------------
 #                        LEXICAL ANALYSIS
 # ---------------------------------------------------------------------
-@app.route("/lexic")
+@app.route("/lexic", methods = ['GET', 'POST'])
 def lexic():
     lexicForm = forms.Lexic(request.form)
+
     return render_template('lexic.html',lex = lexicForm, dfaDictionary=dfaDictionary )
 
 if __name__ == '__main__':
