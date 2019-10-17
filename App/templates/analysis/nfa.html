@@ -1,0 +1,32 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+	<div class="container">
+      	<div id="nfa" class="col s12">
+            <form method="POST" enctype="multipart/form-data">
+               {% from "_macroInputs.html" import render_field %}
+               <p style="text-align: center; font-size: 25px;"> NFA Analysis </p>
+               <div class="row">
+	               	<div class="input-field col s7">
+	               		{{ render_field(nfaF.pattern) }}
+	               	</div>
+	               	<!--<div class="input-field col s6">
+	               		{{ render_field(nfaF.token) }}
+	               	</div>-->
+       			</div>
+
+       			<div class="row">
+	               	<div class="col s6">
+	               		<input type="file" name="fileGrammar">
+	               	</div>
+       			</div>
+
+       			<div class="row center">
+	               <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
+	           </div>
+            </form>
+      	</div>
+	   <div class="row">
+	      Tabla 
+	   </div>
+    </div>
+{% endblock %}

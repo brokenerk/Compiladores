@@ -7,11 +7,17 @@ from LL1 import LL1
 from SyntacticNFA import SyntacticNFA
 from SyntacticGrammar import SyntacticGrammar
 import WTForms as forms
+import os
 epsilon = '\u03B5'
 
+#UPLOAD_FOLDER = os.path.abspath(' /uploads/')
+
 app = Flask(__name__)
+#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app_root = os.path.dirname(os.path.abspath(__file__))
 # Manage every AFN that has been created
 nfaDictionary = {}
+dfaDictionary = {}
 
 # ---------------------------------------------------------------------
 #                               INDEX
@@ -184,6 +190,7 @@ def convertToDFA():
     if request.method == 'POST':
         dfa = nfaDictionary[int(nfa)].convertToDFA()
         dfa.displayTable()
+        dfaDictionary[dfa.getId()] = dfa
         del nfaDictionary[int(nfa)]
 
     return render_template('nfas/convertToDFA.html', nfaDictionary=nfaDictionary, dfa=dfa)
@@ -194,14 +201,95 @@ def convertToDFA():
 @app.route("/LL(1)", methods = ['GET', 'POST'])
 def ll1():
     llForm = forms.LL1(request.form)
-    return render_template('analysis/ll1.html',ll1=llForm)
+    afd = makeAfd()
+    if request.method == 'POST':
+        string = llForm.string.data
+        grammarForm = llForm.grammar.data
+
+        print("\nAnalizando cadena: " + grammarForm)
+        lex = Lexer(afd, grammarForm)
+        print("Lexico OK. Analizando sintacticamente...")
+        syn = SyntacticGrammar(lex)
+
+        print("\nGramatica construida: ")
+        grammar = syn.start()
+        if(grammar):
+            ruleNumber = 1
+        for r in grammar:
+            print("{} ".format(ruleNumber), end = '')
+            r.displayRule()
+            ruleNumber += 1
+
+    return render_template('analysis/ll1.html',ll1=llForm, grammar = grammar)
+
+def makeAfd():
+    afn1 = NFA.createBasic('a', 'z')
+    afn2 = NFA.createBasic('A', 'Z')
+    afn3 = NFA.createBasic('0', '9')
+    afn4 = NFA.createBasic('+')
+    afn5 = NFA.createBasic('-')
+    afn6 = NFA.createBasic('*')
+    afn7 = NFA.createBasic('/')
+    afn8 = NFA.createBasic('(')
+    afn9 = NFA.createBasic(')')
+    afn10 = NFA.createBasic('ξ') #El epsilon se representa como ξ
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10)
+
+    afn11 = NFA.createBasic('A', 'Z')
+    afn12 = NFA.createBasic('a', 'z')
+    afn13 = NFA.createBasic ("'")
+    afn14 = NFA.createBasic('_')
+    afnB = afn11.join(afn12).join(afn13).join(afn14)
+    afnC = afnB.kleeneClosure()
+
+    afnD = afnA.concat(afnC)
+    afnD.setToken(Token.SYMBOL)
+
+    afn15 = NFA.createBasic('-')
+    afn16 = NFA.createBasic('>')
+    afnE = afn15.concat(afn16)
+    afnE.setToken(Token.ARROW)
+
+    afn17 = NFA.createBasic(';')
+    afn17.setToken(Token.SEMICOLON)
+
+    afn18 = NFA.createBasic('|')
+    afn18.setToken(Token.OR)
+
+    afn19 = NFA.createBasic(' ')
+    afn19.setToken(Token.SPACE)
+
+    automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18, afn19]))
+    afd = automatota.convertToDFA()
+    return afd
+
+# ---------------------------------------------------------------------
+#                        NFA Syntactic
+# ---------------------------------------------------------------------
+@app.route("/nfaSyn", methods = ['GET', 'POST'])
+def nfaSyntactic():
+    nfaForm = forms.NFASyn(request.form)
+    #if request.method == 'POST':
+        #string = nfaForm..data
+        #grammarForm = llForm.grammar.data
+
+    return render_template('analysis/nfa.html', nfaF = nfaForm )
 
 # ---------------------------------------------------------------------
 #                        LEXICAL ANALYSIS
 # ---------------------------------------------------------------------
-@app.route("/lexic")
+@app.route("/lexic", methods = ['GET', 'POST'])
 def lexic():
-    return render_template('lexic.html')
+    lexicForm = forms.Lexic(request.form)
+    lexem = None
+    auxdfa = request.form.get('dfa')
+    
+    if request.method == 'POST':
+        string = lexicForm.string.data
+        dfa = dfaDictionary[int(auxdfa)]
+        lexem = Lexer(dfa, string)
+        
+    return render_template('lexic.html',lex = lexicForm, dfaDictionary=dfaDictionary,lexic=lexem )
 
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)
