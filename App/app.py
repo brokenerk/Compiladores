@@ -12,6 +12,7 @@ epsilon = '\u03B5'
 app = Flask(__name__)
 # Manage every AFN that has been created
 nfaDictionary = {}
+dfaDictionary = {}
 
 # ---------------------------------------------------------------------
 #                               INDEX
@@ -184,7 +185,8 @@ def convertToDFA():
     if request.method == 'POST':
         dfa = nfaDictionary[int(nfa)].convertToDFA()
         dfa.displayTable()
-        del nfaDictionary[int(nfa)]
+        dfaDictionary[dfa.getId()] = dfa
+        del dfa
 
     return render_template('nfas/convertToDFA.html', nfaDictionary=nfaDictionary, dfa=dfa)
 
@@ -201,7 +203,8 @@ def ll1():
 # ---------------------------------------------------------------------
 @app.route("/lexic")
 def lexic():
-    return render_template('lexic.html')
+    lexicForm = forms.Lexic(request.form)
+    return render_template('lexic.html',lex = lexicForm, dfaDictionary=dfaDictionary )
 
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)
