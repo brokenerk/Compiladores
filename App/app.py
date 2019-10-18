@@ -203,6 +203,8 @@ def convertToDFA():
 def ll1():
     llForm = forms.LL1(request.form)
     afd = makeAfd()
+    tableRelations = None
+    tableAnalysis = None
     grammar=None
     rules=''
     if request.method == 'POST':
@@ -211,11 +213,7 @@ def ll1():
 
         stringAux = grammarForm.split('\r\n')
         for s in stringAux:
-            print(s)
             rules += s
-
-        print('**********************************')
-        print(rules)
 
         print("\nAnalizando cadena: " + string)
         lex = Lexer(afd, rules)
@@ -232,7 +230,36 @@ def ll1():
             r.displayRule()
             ruleNumber += 1
 
-    return render_template('analysis/ll1.html',ll1=llForm, grammar = grammar)
+        #Analysis
+        print("\nAnalisis LL(1)")
+        ll1 = LL1(grammar)
+        if(ll1.isLL1()):
+            print("Gramatica compatible con LL(1)")
+
+            ll1.displayTable(0)
+            res = ll1.analyze(string)
+            ll1.displayTable(1)
+
+            tableRelations = ll1.getTable()
+            tableAnalysis = ll1.getAnalysisTable()
+            print('''
+            Relaciones 
+            {}
+            '''.format(tableRelations))
+
+            print('''
+            Analisis 
+            {}
+            '''.format(tableAnalysis))
+
+            if(res):
+                print("\n" + string + " pertenece a la gramatica")
+            else:
+                print("\n" + string + " no pertenece a la gramatica")
+        else:
+            print("\nERROR. La gramatica no es compatible con LL(1)")
+
+    return render_template('analysis/ll1.html',ll1=llForm, grammar = grammar,tableRelations=tableRelations,tableAnalysis=tableAnalysis)
 
 def makeAfd():
     afn1 = NFA.createBasic('a', 'z')
