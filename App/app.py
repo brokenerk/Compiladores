@@ -204,14 +204,21 @@ def ll1():
     llForm = forms.LL1(request.form)
     afd = makeAfd()
     grammar=None
+    rules=''
     if request.method == 'POST':
         string = llForm.string.data
         grammarForm = llForm.grammar.data
 
-        print("\nAnalizando cadena: " + grammarForm)
-        lex = Lexer(afd, grammarForm)
-        flash('Analizando cadena ')
-        
+        stringAux = grammarForm.split('\r\n')
+        for s in stringAux:
+            print(s)
+            rules += s
+
+        print('**********************************')
+        print(rules)
+
+        print("\nAnalizando cadena: " + string)
+        lex = Lexer(afd, rules)
         print("Lexico OK. Analizando sintacticamente...")
         syn = SyntacticGrammar(lex)
         flash("Lexico OK. Analizando sintacticamente...")

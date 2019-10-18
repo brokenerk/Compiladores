@@ -57,8 +57,9 @@
 	           		<tbody>
 	               		{% for rule in grammar %}
 	                		<tr>
-								<td> {{ rule.symbol }} </td>
-								<td>{{ rule.getNext().getSymbol() }}</td>
+								{% for r in rule.getRule() %}
+								<td> {{r}} </td>
+								{% endfor %}
 	                    	</tr>
 	                  	{% endfor %}
 	               	</tbody>
