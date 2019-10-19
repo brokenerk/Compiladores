@@ -51,7 +51,7 @@ class Node:
     #Parameters: Nothing
     #Return: Nothing
     def displayRule(self):
-        print("{} --->".format(self.symbol), end = '')
+        print("{} -->".format(self.symbol), end = '')
         next = self.getNext()
 
         while(next != None):

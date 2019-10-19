@@ -30,89 +30,92 @@
 		</div>
 	</div>
 
-	<div id="principal" class="container">
-	  	<br><br>
-	   	<div id="showTable">
+	<div id="grammarTable" class="container">
+	   	<div id="showGrammarTable" class ="row">
 	       	{% if grammar %}
-	         	<script type="text/javascript">
-	          		document.getElementById('convertToAFD').style.display = "none";
-	           	</script>
-	           	<br>
 	           	<p style="text-align: center; font-size: 25px;"> Grammar Table </p>
-	           	<br> <br>
-	           	<table class="striped">
-	           		<tbody>
-	               		{% for rule in grammar %}
-	                		<tr>
-								{% for r in rule.getRule() %}
-								<td> {{r}} </td>
-								{% endfor %}
-	                    	</tr>
-	                  	{% endfor %}
-	               	</tbody>
-	            </table>
+	           	<div class="row">
+		           	<table class="striped centered responsive-table highlight">
+		           		<tbody>
+		               		{% for rule in grammar %}
+		                		<tr>
+									{% for r in rule.getRule() %}
+										<td> {{r}} </td>
+									{% endfor %}
+		                    	</tr>
+		                  	{% endfor %}
+		               	</tbody>
+		            </table>
+		        </div>
 	        {% endif %}
 	    </div>
 	</div>
 
-	<div id="principal" class="container">
-			<div id="showTable" class="row">
-			   {% if tableRelations %}
-				  <script type="text/javascript">
-					 document.getElementById('ConvertToDFA').style.display = "none";
-				  </script>
-	  
-				  <p style="text-align: center; font-size: 25px;"> Rules relations Table</p>
-			   </div>
-			   <div class="row">
-				  <table class="striped centered responsive-table">
-					<thead class="#0288d1 light-blue darken-2">
-						<tr>		
-							{% for row in tableRelations[0] %}
-								  <th class="white-text">{{ row }}</th>
+	<div id="ll1Table" class="container">
+		<div id="showLL1Table" class="row">
+		   {% if tableRelations %}
+		 	 	<p style="text-align: center; font-size: 25px;"> Rule Relations Table</p>
+	   			<div class="row">
+			  		<table class="striped centered responsive-table highlight">
+						<thead class="#0288d1 light-blue darken-2">
+							<tr>		
+								{% for row in tableRelations[0] %}
+							  		<th class="white-text">{{ row }}</th>
+								{% endfor %}
+							</tr>
+						</thead>
+						<tbody>
+							{% for row in tableRelations %}
+								{% if loop.index > 1 %}
+									<tr>
+										{% for r in row %}
+											<td>
+											{% if r != 0 %}
+												<b>{{ r }}</b>
+											{% else %}
+												{{ r }}
+											{% endif %}
+											</td>
+										{% endfor %}	
+									</tr>
+								{% endif %}				   
 							{% endfor %}
-						</tr>
-					</thead>
-					<tbody>
-						
-						{% for row in tableRelations %}
-						<tr>
-							{% for r in row %}
-								 <td>{{ r }}</td>
-							{% endfor %}	
-						</tr>					   
-						{% endfor %}
-						
-					 </tbody>
-				  </table>
-			   </div>
-			   {% endif %}
-			</div>
+						 </tbody>
+			  		</table>
+		   		</div>
+		   {% endif %}
+		</div>
 	</div>
 
-	<div id="principal" class="container">
-				<div id="showTable" class="row">
-				   {% if tableAnalysis %}
-					  <script type="text/javascript">
-						 document.getElementById('ConvertToDFA').style.display = "none";
-					  </script>
-		  
-					<p style="text-align: center; font-size: 25px;">Analysis Table</p>
-				   	</div>
-				   	<div class="row">
-						<table class="striped centered responsive-table">
+	<div id="analysisTable" class="container">
+		<div id="showAnalysisTable" class="row">
+		   {% if tableAnalysis %}
+				<p style="text-align: center; font-size: 25px;">LL(1) Analysis Table</p>
+
+			   	<div class="row">
+					<table class="striped centered responsive-table highlight">
+						<thead class="#0288d1 light-blue darken-2">
+							<tr>		
+								{% for row in tableAnalysis[0] %}
+							  		<th class="white-text">{{ row }}</th>
+								{% endfor %}
+							</tr>
+						</thead>
 						<tbody>
-								{% for row in tableAnalysis %}
-								<tr>
-									{% for r in row %}
-									<td>{{ r }}</td>
-									{% endfor %}	
-								</tr>
-								{% endfor %}	
-						 </tbody>
-					  </table>
-				   </div>
-				   {% endif %}
-				</div>
+
+							{% for row in tableAnalysis %}
+								{% if loop.index > 1 %}
+									<tr>
+										{% for r in row %}
+											<td>{{ r }}</td>
+										{% endfor %}	
+									</tr>
+								{% endif %}
+							{% endfor %}	
+					 	</tbody>
+				  </table>
+			   	</div>
+		   {% endif %}
+		</div>
 	</div>
 {% endblock %}
