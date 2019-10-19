@@ -60,7 +60,17 @@ class Lexer:
         while(res != Token.END):
             print(str(self.token) + ": " + self.lexem)
             res = self.yylex()
-            
+
+    #Parameters: Nothing
+    #Return: List
+    def getLexem(self):
+        lexem = []
+        res = self.yylex()
+        while(res != Token.END):
+            lexem.append( (self.token,self.lexem) )
+            res = self.yylex()
+        return lexem
+
     #Parameters: Nothing
     #Return: Integer
     def yylex(self):

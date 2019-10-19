@@ -2,69 +2,65 @@
 {% block content %}
 	<div class="container">
 		<div id="lexic" class="col s12">
-				<form method="POST" enctype="multipart/form-data">
-				   	{% from "_macroInputs.html" import render_field %}
-					<p style="text-align: center; font-size: 25px;"> Lexic Analysis </p>
-				   	<div class="row">
-						<div class="input-field col s6">
-							{{ render_field(lex.string) }}
-						</div>
-						<div class="input-field col s4 offset-s1">
-								<select name="dfa">
-									<option disabled selected>Choose 1st</option>
-										{% if dfaDictionary %}
-											{% for id, nfa in dfaDictionary.items() %}
-												{% if id > 0 %}
-													<option value="{{ id }}"> {{ id }} </option>
-												{% endif %}
-											{% endfor %}
-									   {% endif %}
-								</select>
-						</div>
+			<form method="POST" enctype="multipart/form-data">
+				{% from "_macroInputs.html" import render_field %}
+				<p style="text-align: center; font-size: 25px;"> Lexic Analysis </p>
+				<div class="row">
+					<div class="input-field col s6">
+						{{ render_field(lex.string) }}
 					</div>
-					<div class="row">
-							
+					<div class="input-field col s4 offset-s1">
+						<select name="dfa">
+							<option disabled sele<p style="text-align: center; font-size: 25px;"> Lexic Analysis </p>cted>Choose 1st</option>
+								{% if dfaDictionary %}
+									{% for id, nfa in dfaDictionary.items() %}
+										{% if id > 0 %}
+											<option value="{{ id }}"> {{ id }} </option>
+										{% endif %}
+									{% endfor %}
+							   {% endif %}
+						</select>
 					</div>
-					<div class="row">
-						<div class="col s6">
-							<input type="file" name="fileString">
-						</div>
+				</div>
+				<div class="row">
+					<div class="col s6">
+						<input type="file" name="fileString">
 					</div>
-					<div class="row center">
-						<button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
-					</div>
-				</form>
-		
+				</div>
+				<div class="row center">
+					<button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
+				</div>
+			</form>
 		</div>
+	</div>
+
+	{% if lexemas %}
+	<div id="principal" class="container">
 		<div id="showTable" class="row">
-			{% if lexic %}
-			   	<script type="text/javascript">
-				  document.getElementById('ConvertToDFA').style.display = "none";
-			   	</script>
-	   
-			   	<p style="text-align: center; font-size: 25px;"> Table of Lexems</p>
+			<script type="text/javascript">
+				document.getElementById('ConvertToDFA').style.display = "none";
+			</script>
 		</div>
 		<div class="row">
-		   <table class="striped centered responsive-table">
+			<table class="striped centered responsive-table">
 				<thead class="#0288d1 light-blue darken-2">
-			 		<tr>
+					<tr>		
+						<th class="white-text">Token</th>
 						<th class="white-text">Lexem</th>
-						<th class="white-text">Token</th> 
 					</tr>
 				</thead>
-					<!--<x>  <tbody>
-						{% for i in lexic.display() %}
-							<tr>
-							   <td> {{ loop.index - 1 }} </td>
-							   {% for j in i %}
-								  <td>{{ j }}</td>
-							   {% endfor %}
-							</tr>
-						 {% endfor %}
-					  </tbody>-->
-				   </table>
-				</div>
-				{% endif %}
-			 </div>
+				<tbody>
+					{% for lex in lexemas %}
+					<tr>
+						{% for l in lex %}
+							 <td>{{ l }}</td>
+						{% endfor %}	
+					</tr>					   
+					{% endfor %}
+				 </tbody>
+			  </table>
+		   </div>
+		</div>
 	</div>
+	{% endif %}
 {% endblock %}
