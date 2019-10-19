@@ -34,9 +34,10 @@
 		</div>
 	</div>
 
-	{% if lexemas %}
+	{% if lexemes %}
 	<div id="principal" class="container">
 		<div id="showTable" class="row">
+			<p style="text-align: center; font-size: 25px;"> Lexemes </p>
 			<script type="text/javascript">
 				document.getElementById('ConvertToDFA').style.display = "none";
 			</script>
@@ -50,7 +51,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for lex in lexemas %}
+					{% for lex in lexemes %}
 					<tr>
 						{% for l in lex %}
 							 <td>{{ l }}</td>

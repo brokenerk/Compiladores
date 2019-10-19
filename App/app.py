@@ -370,18 +370,16 @@ def dfaSyntactic():
 def lexic():
     lexicForm = forms.Lexic(request.form)
     lexem = None
-    lexemas = None
+    lexemes = None
     auxdfa = request.form.get('dfa')
     
     if request.method == 'POST':
         string = lexicForm.string.data
         dfa = dfaDictionary[int(auxdfa)]
         lexem = Lexer(dfa, string)
-        lexemas = lexem.getLexem()
-
-        print('lexemas: {}'.format(lexemas))
+        lexemes = lexem.getLexemList()
         
-    return render_template('lexic.html',lex = lexicForm, dfaDictionary=dfaDictionary,lexic=lexem,lexemas=lexemas)
+    return render_template('lexic.html',lex = lexicForm, dfaDictionary=dfaDictionary,lexic=lexem,lexemes=lexemes)
 
 if __name__ == '__main__':
     app.run(debug = True, port = 5000)
