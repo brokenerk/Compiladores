@@ -271,33 +271,25 @@ def makeAfd():
     afn7 = NFA.createBasic('/')
     afn8 = NFA.createBasic('(')
     afn9 = NFA.createBasic(')')
-    afn10 = NFA.createBasic('ξ') #El epsilon se representa como ξ
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10)
-
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9)
     afn11 = NFA.createBasic('A', 'Z')
     afn12 = NFA.createBasic('a', 'z')
     afn13 = NFA.createBasic ("'")
     afn14 = NFA.createBasic('_')
     afnB = afn11.join(afn12).join(afn13).join(afn14)
     afnC = afnB.kleeneClosure()
-
     afnD = afnA.concat(afnC)
     afnD.setToken(Token.SYMBOL)
-
     afn15 = NFA.createBasic('-')
     afn16 = NFA.createBasic('>')
     afnE = afn15.concat(afn16)
     afnE.setToken(Token.ARROW)
-
     afn17 = NFA.createBasic(';')
     afn17.setToken(Token.SEMICOLON)
-
     afn18 = NFA.createBasic('|')
     afn18.setToken(Token.OR)
-
     afn19 = NFA.createBasic(' ')
     afn19.setToken(Token.SPACE)
-
     automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18, afn19]))
     afd = automatota.convertToDFA()
     return afd
@@ -311,21 +303,22 @@ def nfaSyntactic():
     afns = set([])
     afdER = None
     if request.method == 'POST':
-        patterns = nfaForm.pattern.data
+        regularExpressions = nfaForm.regularExpressions.data
         afd = dfaSyntactic()
-        pattern = patterns.split('\r\n')
-        print(pattern)
-        for p in pattern:
-            auxPattern = p.split(' ')
-            lex = Lexer(afd, auxPattern[0])
+        regularExpressions = regularExpressions.split('\r\n')
+        print(regularExpressions)
+        for re in regularExpressions:
+            auxRE = re.split(' ')
+            lex = Lexer(afd, auxRE[0])
             syn = SyntacticNFA(lex)
             afnAux = syn.start()
             if(afnAux == False):
                 print('Error')                
-            afnAux.setToken(int(auxPattern[1]))
+            afnAux.setToken(int(auxRE[1]))
             afns.add(afnAux)
         afnER = NFA.specialJoin(afns)
         afdER = afnER.convertToDFA()
+        dfaDictionary[afdER.getId()] = afdER
     
     return render_template('analysis/nfa.html', nfaF = nfaForm, afdER = afdER )
 

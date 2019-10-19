@@ -16,24 +16,6 @@ class LL1:
 		self.index = {}				#Dictionary
 
 	#Parameters: Nothing
-	#Return: List<List>
-	def getTable(self):
-	    return self.table  
-	#Parameters: List<List>
-	#Return: Nothing
-	def setTable(self, table):
-	    self.table = table 
-
-	#Parameters: Nothing
-	#Return: List<List>
-	def getTableAnalysis(self):
-	    return self.table  
-	#Parameters: List<List>
-	#Return: Nothing
-	def setTableAnalysis(self, table):
-	    self.table = table 
-	
-	#Parameters: Nothing
 	#Return: True if is possible create a Table
 	#		 False if not
 	def isLL1(self):             
@@ -73,7 +55,7 @@ class LL1:
 					else:
 						self.table[x][y] = srt
 				else:
-					continue
+					return False
 		return True
 
 	#Paamaters: String

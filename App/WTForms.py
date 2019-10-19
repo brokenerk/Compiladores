@@ -15,5 +15,5 @@ class Lexic(Form):
 	string = StringField('String: ', [validators.required(), validators.length(min=1)])
 
 class NFASyn(Form):
-	pattern = TextAreaField('Pattern: ', [validators.required(), validators.length(min=1)])
+	regularExpressions = TextAreaField('Regular Expressions: ', [validators.required(), validators.length(min=1)])
 	token = StringField('Token: ', [validators.required(), validators.length(min=1)])
