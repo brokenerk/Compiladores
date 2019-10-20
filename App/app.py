@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect,flash
+from flask import Flask, render_template, request, url_for, redirect
 from NFA import NFA
 from DFA import DFA
 from Token import Token
@@ -205,7 +205,9 @@ def ll1():
     afd = makeAfd()
     tableRelations = None
     tableAnalysis = None
-    grammar=None
+    grammar = None
+    msg = None
+    msgS = None
     rules=''
     if request.method == 'POST':
         string = llForm.string.data
@@ -219,8 +221,6 @@ def ll1():
         lex = Lexer(afd, rules)
         print("Lexico OK. Analizando sintacticamente...")
         syn = SyntacticGrammar(lex)
-        flash("Lexico OK. Analizando sintacticamente...")
-        flash('Gramatica Valida')
         print("\nGramatica construida: ")
         grammar = syn.start()
         if(grammar):
@@ -235,31 +235,25 @@ def ll1():
         ll1 = LL1(grammar)
         if(ll1.isLL1()):
             print("Gramatica compatible con LL(1)")
-
+            msg = 1
             ll1.displayTable(0)
             res = ll1.analyze(string)
             ll1.displayTable(1)
 
             tableRelations = ll1.getTable()
             tableAnalysis = ll1.getAnalysisTable()
-            print('''
-            Relaciones 
-            {}
-            '''.format(tableRelations))
-
-            print('''
-            Analisis 
-            {}
-            '''.format(tableAnalysis))
 
             if(res):
                 print("\n" + string + " pertenece a la gramatica")
+                msgS=1
             else:
                 print("\n" + string + " no pertenece a la gramatica")
+                msgS=2
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
+            msg=2
 
-    return render_template('analysis/ll1.html',ll1=llForm, grammar = grammar,tableRelations=tableRelations,tableAnalysis=tableAnalysis)
+    return render_template('analysis/ll1.html',ll1=llForm, grammar = grammar,tableRelations=tableRelations,tableAnalysis=tableAnalysis,msg=msg,msgS=msgS)
 
 def makeAfd():
     afn1 = NFA.createBasic('a', 'z')
@@ -302,6 +296,7 @@ def nfaSyntactic():
     nfaForm = forms.NFASyn(request.form)
     afns = set([])
     afdER = None
+    msg = None
     if request.method == 'POST':
         regularExpressions = nfaForm.regularExpressions.data
         afd = dfaSyntactic()
@@ -313,14 +308,16 @@ def nfaSyntactic():
             syn = SyntacticNFA(lex)
             afnAux = syn.start()
             if(afnAux == False):
-                print('Error')                
+                print('Error')
+                msg = 2           
             afnAux.setToken(int(auxRE[1]))
             afns.add(afnAux)
         afnER = NFA.specialJoin(afns)
         afdER = afnER.convertToDFA()
         dfaDictionary[afdER.getId()] = afdER
+        msg = 1
     
-    return render_template('analysis/nfa.html', nfaF = nfaForm, afdER = afdER )
+    return render_template('analysis/nfa.html', nfaF = nfaForm, afdER = afdER ,msg = msg)
 
 def dfaSyntactic():
     afn1 = NFA.createBasic('a', 'z')

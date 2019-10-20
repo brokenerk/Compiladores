@@ -1,5 +1,40 @@
 {% extends 'base/dashboard.html'%}
 {% block content %}	
+	{% if msg == 1 %}
+		<script>
+			M.toast({
+				html: 'Grammar is valid with LL(1)',
+				classes: 'green',
+				inDuration: 3000
+			})
+		</script>
+		{% if msgS == 1 %}
+		<script>
+			M.toast({
+				html: 'String belongs to the grammar',
+				classes: 'green',
+				inDuration: 3000
+			})
+		</script>
+		{% elif msgS ==2 %}
+		<script>
+			M.toast({
+				html: "String dosn't belongs to the grammar",
+				classes: 'red',
+				inDuration: 2000
+			})
+		</script>
+		{% endif %}
+	{% elif msg ==2 %}
+		<script>
+			M.toast({
+				html: 'Grammar is invalid with LL(1)',
+				classes: 'red',
+				inDuration: 2000
+			})
+		</script>
+	{% endif %}
+
 	<div class="container">
       	<div id="ll1" class="col s12">
             <form method="POST" enctype="multipart/form-data">
@@ -29,7 +64,6 @@
             </form>
 		</div>
 	</div>
-
 	<div id="grammarTable" class="container">
 	   	<div id="showGrammarTable" class ="row">
 	       	{% if grammar %}

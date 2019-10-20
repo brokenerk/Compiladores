@@ -1,5 +1,23 @@
 {% extends 'base/dashboard.html'%}
-{% block content %}	
+{% block content %}
+	{% if msg == 1 %}
+		<script>
+			M.toast({
+				html: 'ADF successfully',
+				classes: 'green',
+				inDuration: 2000
+			})
+		</script>
+	{% elif msg ==2 %}
+		<script>
+			M.toast({
+				html: 'Error with Regex',
+				classes: 'red',
+				inDuration: 2000
+			})
+		</script>
+	{% endif %}
+
 	<div class="container">
       	<div id="nfa" class="col s12">
             <form method="POST" enctype="multipart/form-data">
