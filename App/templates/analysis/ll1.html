@@ -3,7 +3,7 @@
 	{% if msg == 1 %}
 		<script>
 			M.toast({
-				html: 'Grammar is valid with LL(1)',
+				html: 'Grammar is valid with LL(1) analysis',
 				classes: 'green',
 				inDuration: 3000
 			})
@@ -19,7 +19,7 @@
 		{% elif msgS ==2 %}
 		<script>
 			M.toast({
-				html: "String dosn't belongs to the grammar",
+				html: "String doesn't belongs to the grammar",
 				classes: 'red',
 				inDuration: 2000
 			})
@@ -28,7 +28,7 @@
 	{% elif msg ==2 %}
 		<script>
 			M.toast({
-				html: 'Grammar is invalid with LL(1)',
+				html: 'Grammar is invalid with LL(1) analysis',
 				classes: 'red',
 				inDuration: 2000
 			})
