@@ -9,6 +9,7 @@ from SyntacticGrammar import SyntacticGrammar
 epsilon = '\u03B5'
 
 if __name__ == "__main__":
+	#DFA for grammars
     afn1 = NFA.createBasic('a', 'z')
     afn2 = NFA.createBasic('A', 'Z')
     afn3 = NFA.createBasic('0', '9')
@@ -48,8 +49,18 @@ if __name__ == "__main__":
     afd = automatota.convertToDFA()
     #afd.displayTable()
 
+    #DFA for the string
+    afn20 = NFA.createBasic('0', '9')
+    afn21 = NFA.createBasic('.')
+    afn22 = NFA.createBasic('0', '9')
+    afn21 = afn21.concat(afn22.positiveClosure()).optional()
+    afn20 = afn20.positiveClosure().concat(afn21)
+    afn20.setToken(Token.NUM)
+    afd2 = afn20.convertToDFA()
+    #afd2.displayTable()
+
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar2.txt", "r")
+    archivo = open("grammar3.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -76,8 +87,10 @@ if __name__ == "__main__":
 
         #Analysis
         print("\nAnalisis LL(1)")
-        ll1 = LL1(grammar)
-        c = "SIMBOLO FLECHA SIMBOLO SIMBOLO OR SIMBOLO PC"
+        c = "435.3453 + 3453 * ( 23.3 - 550 )"
+        lex2 = Lexer(afd2, c)
+        ll1 = LL1(grammar, lex2)
+       
         if(ll1.isLL1()):
             print("Gramatica compatible con LL(1)")
 

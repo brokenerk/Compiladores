@@ -16,7 +16,7 @@ class SyntacticNFA:
             return f[1]
         else:
             print('... ER No valida, saliendo.')
-            return False
+            return None
 
     def E(self, f):
         f = self.T(f)

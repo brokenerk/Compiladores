@@ -1,19 +1,22 @@
 #!python3
 from Node import Node
+from Lexer import Lexer
+from Token import Token
 epsilon = '\u03B5'
 
 class LL1:
 	#Constructor
-	def __init__(self, rules):
-		self.rules = rules 			#List<Nodes>
+	def __init__(self, rules, stringLex):
+		self.rules = rules 			#List<Node>
 		self.table = []  			#List<List>
 		self.analysisTable = []		#List<List>
 		self.dpFirst = {}			#Dictionary
 		self.dpFollow = {}			#Dictionary
-		self.terminals = set()		#Set<>
-		self.noTerminals = set()	#Set<>
-		self.visited = set()		#Set<>
+		self.terminals = set()		#Set<String>
+		self.noTerminals = set()	#Set<String>
+		self.visited = set()		#Set<String>
 		self.index = {}				#Dictionary
+		self.stringLex = stringLex	#Lexer
 
 	#Parameters: Nothing
 	#Return: True if is possible create a Table
@@ -58,7 +61,7 @@ class LL1:
 					return False
 		return True
 
-	#Paamaters: String
+	#Paramaters: String
 	#Return: True if is a correct string
 	#		 False if not
 	def analyze(self, c):
@@ -74,6 +77,7 @@ class LL1:
 		for i in range(0, len(cAux)):
 			srt.append(cAux[i])
 		aux = []
+		token = self.stringLex.getToken()
 
 		while p:
 			if len(srt) == 0:
@@ -84,16 +88,22 @@ class LL1:
 			lastP = p[len(p) - 1]
 			lastC = srt[len(srt) - 1]
 
-			if lastC in self.terminals or lastC == "$":
+			if lastC in self.terminals or lastC == "$" or token != Token.END:
 				x = self.index[lastP]
-				y = self.index[lastC] - len(self.noTerminals)
+				#Here we put all the necessary Tokens
+				if(token == Token.NUM):
+				#Here we need to put manually the index of the terminal
+					y = self.index["num"] - len(self.noTerminals)
+				else:
+					y = self.index[lastC] - len(self.noTerminals)
+				
 				action = self.table[x][y]
 
 				values.append(self.convertToString(p))
 				values.append(self.convertToString(aux))
 
 				if action != 0:
-					values.append(action.replace(" ",""))
+					values.append(action.replace(" ", ""))
 				else:
 					values.append(action)
 				self.analysisTable.append(values)
@@ -105,6 +115,8 @@ class LL1:
 				elif action == "pop":
 					p.pop()
 					srt.pop()
+					token = self.stringLex.getToken()
+					token = self.stringLex.getToken()
 				elif action == epsilon:
 					p.pop()
 				elif action != 0:

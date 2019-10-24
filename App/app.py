@@ -9,14 +9,13 @@ from SyntacticGrammar import SyntacticGrammar
 import WTForms as forms
 import os
 epsilon = '\u03B5'
-
 #UPLOAD_FOLDER = os.path.abspath(' /uploads/')
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 #app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app_root = os.path.dirname(os.path.abspath(__file__))
-# Manage every AFN that has been created
+# Manage every NFA that has been created
 nfaDictionary = {}
 dfaDictionary = {}
 
@@ -52,7 +51,7 @@ def add():
         nfaDictionary[nfa.getId()] = nfa
         addForm.symbol.data = ""
 
-    return render_template('nfas/add.html', add=addForm, nfa=nfa)
+    return render_template('nfas/add.html', add = addForm, nfa = nfa)
 
 # ---------------------------------------------------------------------
 #                       NFA: JOIN
@@ -71,7 +70,7 @@ def join():
         del nfaDictionary[int(nfa1)]
         del nfaDictionary[int(nfa2)]
 
-    return render_template('nfas/join.html', nfaDictionary=nfaDictionary, nfa=nfaJoin)
+    return render_template('nfas/join.html', nfaDictionary = nfaDictionary, nfa = nfaJoin)
 
 # ---------------------------------------------------------------------
 #                       NFA: SPECIAL JOIN
@@ -90,7 +89,7 @@ def specialJoin():
         automatota.display()
         nfaDictionary[automatota.getId()] = automatota
 
-    return render_template('nfas/specialJoin.html', nfaDictionary=nfaDictionary, nfa=automatota)
+    return render_template('nfas/specialJoin.html', nfaDictionary = nfaDictionary, nfa = automatota)
 
 # ---------------------------------------------------------------------
 #                       NFA: CONCAT
@@ -109,7 +108,7 @@ def concat():
         del nfaDictionary[int(nfa1)]
         del nfaDictionary[int(nfa2)]
 
-    return render_template('nfas/concat.html', nfaDictionary=nfaDictionary, nfa=nfaConcat)
+    return render_template('nfas/concat.html', nfaDictionary = nfaDictionary, nfa = nfaConcat)
 
 # ---------------------------------------------------------------------
 #                       NFA: +CLOSURE
@@ -126,7 +125,7 @@ def positiveClosure():
         # Remove AFN
         del nfaDictionary[int(nfa)]
 
-    return render_template('nfas/positiveClosure.html', nfaDictionary=nfaDictionary, nfa=nfaPosClosure)
+    return render_template('nfas/positiveClosure.html', nfaDictionary = nfaDictionary, nfa = nfaPosClosure)
 
 # ---------------------------------------------------------------------
 #                       NFA: *CLOSURE
@@ -143,7 +142,7 @@ def kleeneClosure():
         # Remove AFN
         del nfaDictionary[int(nfa)]
 
-    return render_template('nfas/kleeneClosure.html', nfaDictionary=nfaDictionary, nfa=nfaKleeneClosure)
+    return render_template('nfas/kleeneClosure.html', nfaDictionary = nfaDictionary, nfa = nfaKleeneClosure)
 
 # ---------------------------------------------------------------------
 #                       NFA: OPTIONAL
@@ -160,7 +159,7 @@ def optional():
         # Remove AFN
         del nfaDictionary[int(nfa)]
 
-    return render_template('nfas/optional.html', nfaDictionary=nfaDictionary, nfa=nfaOptional)
+    return render_template('nfas/optional.html', nfaDictionary = nfaDictionary, nfa = nfaOptional)
 
 # ---------------------------------------------------------------------
 #                       NFA: SET TOKEN
@@ -178,7 +177,7 @@ def setToken():
         print("NFA Id: " + str(nfa) + " with token: " + str(tok))
         addToken.token.data = ""
 
-    return render_template('nfas/setToken.html', nfaDictionary=nfaDictionary, addT=addToken, nfa=nfaTok)
+    return render_template('nfas/setToken.html', nfaDictionary = nfaDictionary, addT = addToken, nfa = nfaTok)
 
 # ---------------------------------------------------------------------
 #                       NFA: CONVERT TO AFD
@@ -194,7 +193,7 @@ def convertToDFA():
         dfaDictionary[dfa.getId()] = dfa
         del nfaDictionary[int(nfa)]
 
-    return render_template('nfas/convertToDFA.html', nfaDictionary=nfaDictionary, dfa=dfa)
+    return render_template('nfas/convertToDFA.html', nfaDictionary = nfaDictionary, dfa = dfa)
 
 # ---------------------------------------------------------------------
 #                       ANALYSIS: LL(1)
@@ -202,13 +201,13 @@ def convertToDFA():
 @app.route("/LL(1)", methods = ['GET', 'POST'])
 def ll1():
     llForm = forms.LL1(request.form)
-    afd = makeAfd()
-    tableRelations = None
-    tableAnalysis = None
+    dfa = grammarDFA()
+    relationsTable = None
+    analysisTable = None
     grammar = None
     msg = None
     msgS = None
-    rules=''
+    rules = ""
     if request.method == 'POST':
         string = llForm.string.data
         grammarForm = llForm.grammar.data
@@ -218,44 +217,59 @@ def ll1():
             rules += s
 
         print("\nAnalizando cadena: " + string)
-        lex = Lexer(afd, rules)
+        lex = Lexer(dfa, rules)
         print("Lexico OK. Analizando sintacticamente...")
+        
         syn = SyntacticGrammar(lex)
         print("\nGramatica construida: ")
+        
         grammar = syn.start()
         if(grammar):
             ruleNumber = 1
-        for r in grammar:
-            print("{} ".format(ruleNumber), end = '')
-            r.displayRule()
-            ruleNumber += 1
+            for r in grammar:
+                print("{} ".format(ruleNumber), end = '')
+                r.displayRule()
+                ruleNumber += 1
 
-        #Analysis
-        print("\nAnalisis LL(1)")
-        ll1 = LL1(grammar)
-        if(ll1.isLL1()):
-            print("Gramatica compatible con LL(1)")
-            msg = 1
-            ll1.displayTable(0)
-            res = ll1.analyze(string)
-            ll1.displayTable(1)
+            #Analysis
+            print("\nAnalisis LL(1)")
 
-            tableRelations = ll1.getTable()
-            tableAnalysis = ll1.getAnalysisTable()
+            ll1 = LL1(grammar, Lexer(numberDFA(), string))
+            if(ll1.isLL1()):
+                print("Gramatica compatible con LL(1)")
+                msg = 1
+                ll1.displayTable(0)
+                res = ll1.analyze(string)
+                ll1.displayTable(1)
 
-            if(res):
-                print("\n" + string + " pertenece a la gramatica")
-                msgS=1
+                relationsTable = ll1.getTable()
+                analysisTable = ll1.getAnalysisTable()
+
+                if(res):
+                    print("\n" + string + " pertenece a la gramatica")
+                    msgS = 1
+                else:
+                    print("\n" + string + " no pertenece a la gramatica")
+                    msgS = 2
             else:
-                print("\n" + string + " no pertenece a la gramatica")
-                msgS=2
+                print("\nERROR. La gramatica no es compatible con LL(1)")
+                msg = 2
         else:
-            print("\nERROR. La gramatica no es compatible con LL(1)")
-            msg=2
+            print("Gramatica no valida")
+            msg = 3
 
-    return render_template('analysis/ll1.html',ll1=llForm, grammar = grammar,tableRelations=tableRelations,tableAnalysis=tableAnalysis,msg=msg,msgS=msgS)
+    return render_template('analysis/ll1.html',ll1 = llForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg,msgS = msgS)
 
-def makeAfd():
+def numberDFA():
+    afn20 = NFA.createBasic('0', '9')
+    afn21 = NFA.createBasic('.')
+    afn22 = NFA.createBasic('0', '9')
+    afn21 = afn21.concat(afn22.positiveClosure()).optional()
+    afn20 = afn20.positiveClosure().concat(afn21)
+    afn20.setToken(Token.NUM)
+    return afn20.convertToDFA()
+
+def grammarDFA():
     afn1 = NFA.createBasic('a', 'z')
     afn2 = NFA.createBasic('A', 'Z')
     afn3 = NFA.createBasic('0', '9')
@@ -285,8 +299,7 @@ def makeAfd():
     afn19 = NFA.createBasic(' ')
     afn19.setToken(Token.SPACE)
     automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18, afn19]))
-    afd = automatota.convertToDFA()
-    return afd
+    return automatota.convertToDFA()
 
 # ---------------------------------------------------------------------
 #                        NFA Syntactic
@@ -307,7 +320,7 @@ def nfaSyntactic():
             lex = Lexer(afd, auxRE[0])
             syn = SyntacticNFA(lex)
             afnAux = syn.start()
-            if(afnAux == False):
+            if(afnAux == None):
                 print('Error')
                 msg = 2           
             afnAux.setToken(int(auxRE[1]))
@@ -357,8 +370,7 @@ def dfaSyntactic():
     afn16 = afnp3.concat(afnq3)
     afn16.setToken(Token.MINUS)
     automatota = NFA.specialJoin(set([afn1, afn2, afn3, afn4, afn5, afn6, afn7, afn8, afn9, afn10, afn11, afn12, afn13, afn14, afn15, afn16]))
-    afd = automatota.convertToDFA()
-    return afd
+    return automatota.convertToDFA()
 
 # ---------------------------------------------------------------------
 #                        LEXICAL ANALYSIS
