@@ -1,28 +1,26 @@
 {% extends 'base/dashboard.html'%}
 {% block content %}
-	{% if msg == 1 %}
-		<script>
+	<script>
+		{% if msg == 1 %}
 			M.toast({
-				html: 'ADF successfully',
+				html: 'DFA created successfully',
 				classes: 'green',
-				inDuration: 2000
+				displayLength: 10000
 			})
-		</script>
-	{% elif msg ==2 %}
-		<script>
+		{% elif msg == 2 %}
 			M.toast({
 				html: 'Error with Regex',
 				classes: 'red',
-				inDuration: 2000
+				displayLength: 10000
 			})
-		</script>
-	{% endif %}
+		{% endif %}
+	</script>
 
 	<div class="container">
       	<div id="nfa" class="col s12">
             <form method="POST" enctype="multipart/form-data">
                {% from "_macroInputs.html" import render_field %}
-               <p style="text-align: center; font-size: 25px;"> NFA Analysis </p>
+               <p style="text-align: center; font-size: 25px;"> NFA Syntactic Analysis </p>
                <div class="row">
 	               	<div class="input-field col s7">
 	               		{{ render_field(nfaF.regularExpressions) }}
@@ -41,10 +39,13 @@
             </form>
       	</div>
 	</div>
+	
+	<!-- Aqui falta dibujar el DFA con vis.js-->
+
 	<div id="principal" class="container">
 		<div id="showTable" class="row">
-		   {% if afdER %}
-		  		<p style="text-align: center; font-size: 25px;">DFA Id: {{ afdER.getId() }} Table</p>
+		   {% if dfaER %}
+		  		<p style="text-align: center; font-size: 25px;">DFA Id: {{ dfaER.getId() }} Tabular Form</p>
 
 	   			<div class="row">
 			  		<table class="striped centered responsive-table">
@@ -52,14 +53,14 @@
 							<tr>
 					   			<th class="white-text">State</th>
   
-					   			{% for a in afdER.getAlphabet() %}
+					   			{% for a in dfaER.getAlphabet() %}
 						  			<th class="white-text">{{ a }}</th>
 					   			{% endfor %}
 					   			<th class="white-text">Token</th> 
 							</tr>
 				 		</thead>
 				 		<tbody>
-							{% for i in afdER.getTable() %}
+							{% for i in dfaER.getTable() %}
 					   			<tr>
 						  			<td><b> {{ loop.index - 1 }} </b></td>
 					  				{% for j in i %}

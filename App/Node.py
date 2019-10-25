@@ -2,9 +2,10 @@
 #Each Node object is a Grammar Rule!
 class Node:
     def __init__(self, symbol, next):
-        self.symbol = symbol    #String
-        self.next = next        #Node
-        self.terminal = False   #Boolean
+        self.symbol = symbol        #String
+        self.next = next            #Node
+        self.pointBefore = False    #Boolean
+        self.pointAfter = False      #Boolean
 
     #Parameters: Nothing
     #Return: Node
@@ -17,16 +18,6 @@ class Node:
         self.next = next
     
     #Parameters: Nothing
-    #Return: Boolean
-    def getTerminal(self):
-        return self.terminal
-
-    #Parameters: Integer
-    #Return: Boolean
-    def setTerminal(self, terminal):
-        self.terminal = terminal
-            
-    #Parameters: Nothing
     #Return: String
     def getSymbol(self):
         return self.symbol
@@ -36,11 +27,28 @@ class Node:
     def setSymbol(self, symbol):
         self.symbol = symbol
 
-    def getRule(self):
-        rule = []
-        rule.append(self.symbol)
-        rule.append("--->")
+    #Parameters: Nothing
+    #Return: Boolean
+    def getPointBefore(self):
+        return self.pointBefore
 
+    #Parameters: Boolean
+    #Return: Nothing
+    def setPointBefore(self, pointBefore):
+        self.pointBefore = pointBefore
+
+    #Parameters: Nothing
+    #Return: Boolean
+    def getPointAfter(self):
+        return self.pointAfter
+
+    #Parameters: Boolean
+    #Return: Nothing
+    def setPointAfter(self, pointAfter):
+        self.pointAfter = pointAfter
+
+    def getRule(self):
+        rule = [self.symbol, "--->"]
         next = self.getNext()
 
         while(next != None):
@@ -56,5 +64,21 @@ class Node:
 
         while(next != None):
             print(" {}".format(next.getSymbol()), end = '')
+            next = next.getNext()
+        print("")
+
+    #Parameters: Nothing
+    #Return: Nothing
+    def displayItems(self):
+        print("{} -->".format(self.symbol), end = '')
+        next = self.getNext()
+
+        while(next != None):
+            if(next.getPointBefore()):
+                print(" °{}".format(next.getSymbol()), end = '')
+            elif(next.getPointAfter()):
+                print(" {}°".format(next.getSymbol()), end = '')
+            else:
+                print(" {}".format(next.getSymbol()), end = '')
             next = next.getNext()
         print("")

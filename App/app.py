@@ -233,8 +233,8 @@ def ll1():
 
             #Analysis
             print("\nAnalisis LL(1)")
-
-            ll1 = LL1(grammar, Lexer(numberDFA(), string))
+            lex2 = Lexer(numberDFA(), string) #Lexic for numbers in string
+            ll1 = LL1(grammar, lex2)
             if(ll1.isLL1()):
                 print("Gramatica compatible con LL(1)")
                 msg = 1
@@ -307,30 +307,33 @@ def grammarDFA():
 @app.route("/nfaSyn", methods = ['GET', 'POST'])
 def nfaSyntactic():
     nfaForm = forms.NFASyn(request.form)
-    afns = set([])
-    afdER = None
+    nfas = set([])
+    dfaER = None
     msg = None
     if request.method == 'POST':
         regularExpressions = nfaForm.regularExpressions.data
-        afd = dfaSyntactic()
+        dfa = dfaSyntactic()
         regularExpressions = regularExpressions.split('\r\n')
         print(regularExpressions)
         for re in regularExpressions:
             auxRE = re.split(' ')
-            lex = Lexer(afd, auxRE[0])
+            lex = Lexer(dfa, auxRE[0])
             syn = SyntacticNFA(lex)
-            afnAux = syn.start()
-            if(afnAux == None):
+            nfaAux = syn.start()
+            if(nfaAux == None):
                 print('Error')
-                msg = 2           
-            afnAux.setToken(int(auxRE[1]))
-            afns.add(afnAux)
-        afnER = NFA.specialJoin(afns)
-        afdER = afnER.convertToDFA()
-        dfaDictionary[afdER.getId()] = afdER
-        msg = 1
+                msg = 2
+                break      
+            nfaAux.setToken(int(auxRE[1]))
+            nfas.add(nfaAux)
+
+        if(msg != 2):
+            nfaER = NFA.specialJoin(nfas)
+            dfaER = nfaER.convertToDFA()
+            dfaDictionary[dfaER.getId()] = dfaER
+            msg = 1
     
-    return render_template('analysis/nfa.html', nfaF = nfaForm, afdER = afdER ,msg = msg)
+    return render_template('analysis/nfa.html', nfaF = nfaForm, dfaER = dfaER, msg = msg)
 
 def dfaSyntactic():
     afn1 = NFA.createBasic('a', 'z')

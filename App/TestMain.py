@@ -4,6 +4,7 @@ from DFA import DFA
 from Token import Token
 from Lexer import Lexer
 from LL1 import LL1
+from LR0 import LR0
 from SyntacticNFA import SyntacticNFA
 from SyntacticGrammar import SyntacticGrammar
 epsilon = '\u03B5'
@@ -60,7 +61,7 @@ if __name__ == "__main__":
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar3.txt", "r")
+    archivo = open("grammar5.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -80,11 +81,15 @@ if __name__ == "__main__":
     grammar = syn.start()
     if(grammar):
         ruleNumber = 1
-        for r in grammar:
-            print("{} ".format(ruleNumber), end = '')
-            r.displayRule()
-            ruleNumber += 1
+        #for r in grammar:
+        #    print("{} ".format(ruleNumber), end = '')
+        #    r.displayRule()
+        #    ruleNumber += 1
 
+        lr0 = LR0(grammar)
+        lr0.calculateStates()
+
+        '''
         #Analysis
         print("\nAnalisis LL(1)")
         c = "435.3453 + 3453 * ( 23.3 - 550 )"
@@ -103,7 +108,8 @@ if __name__ == "__main__":
                 print("\n" + c + " no pertenece a la gramatica")
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
-    '''
+
+
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
     afn2 = NFA.createBasic('A', 'Z')

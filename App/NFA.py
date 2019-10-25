@@ -272,7 +272,7 @@ class NFA:
 	#Return: NFA
 	def kleeneClosure(self):
 		#Get positive closure
-	    posClosure = self.positiveClosure(); 
+	    posClosure = self.positiveClosure()
 
 		#Just add epsilon transition from start to accept state
 	    for s in posClosure.getStates():
@@ -384,7 +384,7 @@ class NFA:
 	#Return: Set<State>
 	@dispatch(set, str)
 	def goTo(self, states, symbol):
-		moveStates = self.move(states, symbol);
+		moveStates = self.move(states, symbol)
 		returnStates = set([])
 		for e in moveStates:
 			returnStates = returnStates.union(self.epsilonClosure(e))
@@ -394,7 +394,7 @@ class NFA:
 	#Return: Set<State>
 	@dispatch(set, str, str)
 	def goTo(self, states, symbol, endSymbol):
-		moveStates = self.move(states, symbol, endSymbol);
+		moveStates = self.move(states, symbol, endSymbol)
 		returnStates = set([])
 		for e in moveStates:
 			returnStates = returnStates.union(self.epsilonClosure(e))
@@ -476,4 +476,4 @@ class NFA:
 		del Si
 		del aux
 		self.statesList = []
-		return DFA(table, self.alphabet);
+		return DFA(table, self.alphabet)
