@@ -7,11 +7,9 @@ class Node:
         self.pointBefore = False    #Boolean
         self.pointAfter = False      #Boolean
 
-    #Parameters: Nothing
     #Return: Node
     def getNext(self):
         return self.next
-
     #Parameters: Node
     #Return: Nothing
     def setNext(self, next):
@@ -21,7 +19,6 @@ class Node:
     #Return: String
     def getSymbol(self):
         return self.symbol
-
     #Parameters: String
     #Return: Nothing
     def setSymbol(self, symbol):
@@ -31,7 +28,6 @@ class Node:
     #Return: Boolean
     def getPointBefore(self):
         return self.pointBefore
-
     #Parameters: Boolean
     #Return: Nothing
     def setPointBefore(self, pointBefore):
@@ -41,12 +37,46 @@ class Node:
     #Return: Boolean
     def getPointAfter(self):
         return self.pointAfter
-
     #Parameters: Boolean
     #Return: Nothing
     def setPointAfter(self, pointAfter):
         self.pointAfter = pointAfter
 
+    def size(self):
+        next = self.getNext()
+        cont = 1
+        while(next != None):
+            cont += 1
+            next = next.getNext()
+        return cont
+
+    #Parameters: Node
+    #Return: Boolean
+    def equals(self, other):
+        if(self.symbol != other.getSymbol()):
+            return False
+        else:
+            if(self.size() != other.size()):
+                return False
+            else:
+                next = self.getNext()
+                n = other.getNext()
+
+                while(n != None and next != None):
+                    if(next.getSymbol() != n.getSymbol()):
+                        return False
+                    else:
+                        if(next.getPointBefore() != n.getPointBefore()):
+                            return False
+                        else:
+                            if(next.getPointAfter() != n.getPointAfter()):
+                                return False
+                    next = next.getNext()
+                    n = n.getNext()
+        return True
+
+    #Parameters: Nothing
+    #Return: List<Node>
     def getRule(self):
         rule = [self.symbol, "--->"]
         next = self.getNext()

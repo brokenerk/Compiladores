@@ -11,7 +11,7 @@ class LR0:
 		self.analysisTable = []			#List<List>
 		self.terminals = set([])		#Set<String>
 		self.noTerminals = set([])		#Set<String>
-		self.states = [] 				#List<List<Node>>
+		self.itemSets = [] 				#List<List<Node>>
 		self.visitedRules = set([]) 	#Set<List<Node>>
 
 	#Parameters: Nothing
@@ -51,7 +51,7 @@ class LR0:
 		for rule in state:
 			next = rule.getNext()
 			while(next != None):
-				if(next.getPointBefore()):
+				if(next.getPointBefore() and next.getSymbol() != "epsilon"):
 					symbolItems.add(next.getSymbol())
 				next = next.getNext()
 		l = list(symbolItems)
@@ -60,14 +60,20 @@ class LR0:
 
 	#Parameters: Set<List<Node>>
 	#Return: Boolean
-	def exists(self, s):
-		self.states.sort() 	#Sort sets list first
-		#Iterate the list
-		for i in range(0, len(self.states)):
-			#If the set exists in list, we return True
-			if(self.states[i] == s):
+	def exists(self, s1):
+		#Iterate the item sets
+		for s2 in self.itemSets:
+			cont1 = 0
+			cont2 = 0
+			for r1, r2 in zip(s1, s2):
+				#If a rule matches, increment cont2
+				if(r1.equals(r2) == True):
+					cont2 += 1
+				cont1 += 1
+			#If both conts are the same, it means that item set s1 was already calculated (exists)
+			if(cont1 == cont2):
 				return True
-		#If not, there's a new set
+		#If both conts never matched, it's a new item set
 		return False
 
 	#Parametes: List<Node>
@@ -82,7 +88,7 @@ class LR0:
 					nextRules = self.searchRule(next.getSymbol())
 					for r in nextRules:
 						r.getNext().setPointBefore(True)
-						s = s.union(self.itemClosure(r))
+						s = s.union(self.itemClosure(deepcopy(r)))
 			next = next.getNext()
 		return s
 
@@ -117,14 +123,16 @@ class LR0:
 	#Parameters: Nothing
 	#Return: Nothing
 	#Note: Generate the states for the displacements on the relations table
-	def calculateStates(self):
+	def generateItemSets(self):
 		self.setNoTerminals()
 		self.setTerminals()
 		firstRule = self.rules[0]
 		firstRule.getNext().setPointBefore(True)
 		S0 = self.itemClosure(firstRule)
-		queue = [S0] 		#Queue<Set>
-		self.states.append(S0)
+		#Sort S0 rules
+		S0 = sorted(S0, key = lambda rule0: (rule0.getSymbol(), rule0.getNext().getSymbol(), rule0.getNext().getPointBefore())) 
+		queue = [S0] 	#Queue<Set>
+		self.itemSets.append(S0) 	#List<List<Node>>
 		cont = 1
 
 		print("")
@@ -133,32 +141,29 @@ class LR0:
 			rule.displayItems()
 
 		while queue:
-			Si = deepcopy(queue.pop(0)) 	#Get first enter
+			Si = queue.pop(0) 	#Get first enter
 			symbolItems = self.getSymbolItems(Si)
-			
-
 			#Iterate over the item symbols
 			for symbol in symbolItems:
 				self.visitedRules = set([])
-				aux = self.goTo(Si, symbol)
+				aux = self.goTo(deepcopy(Si), symbol)
 
 				#Set is empty, do nothing
 				if(aux == set()):
 					continue
 
+				#Sort aux rules
+				aux = sorted(aux, key = lambda rule: (rule.getSymbol(), rule.getNext().getSymbol(), rule.getNext().getPointBefore())) 
 				#Verify is set already exists in list
-				nSet = self.exists(aux)
-				#If it exists, do nothing
-				if(nSet == True):
+				if(self.exists(aux) == True):
 					continue
 
 				#Add new set to the end of the queue
 				queue.append(aux)
 				#Add the new set to the list
-				self.states.append(aux)
+				self.itemSets.append(aux)
 
-				print("")
-				print(symbol + " --- S" + str(cont))
+				print("\n" + "S" + str(cont))
 				for rule in aux:
 					rule.displayItems()
 				cont += 1

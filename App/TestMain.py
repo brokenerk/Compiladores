@@ -87,7 +87,7 @@ if __name__ == "__main__":
         #    ruleNumber += 1
 
         lr0 = LR0(grammar)
-        lr0.calculateStates()
+        lr0.generateItemSets()
 
         '''
         #Analysis
