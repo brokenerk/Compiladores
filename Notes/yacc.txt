@@ -1,0 +1,4 @@
+YYSTYPE -> Pila yacc
+yylval
+Solo llamar a yyparse() para analisis sintactico
+Ignorar char *arvg[], progname = argv[0]
