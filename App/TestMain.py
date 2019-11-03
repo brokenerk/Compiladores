@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
         lr0 = LR0(grammar)
         lr0.generateItemSets()
-
+        print("Holaaaaa")
         '''
         #Analysis
         print("\nAnalisis LL(1)")

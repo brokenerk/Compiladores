@@ -13,6 +13,9 @@ class LR0:
 		self.noTerminals = set([])		#Set<String>
 		self.itemSets = [] 				#List<List<Node>>
 		self.visitedRules = set([]) 	#Set<List<Node>>
+		self.index = {}					#Dictionary
+		self.t = []						#List<String>
+		self.nt = []					#List<String>
 
 	#Parameters: Nothing
 	#Return: Nothing
@@ -32,6 +35,35 @@ class LR0:
 				if st not in self.noTerminals:
 					self.terminals.add(st)
 				next = next.getNext()
+
+	#Parameters: Nothing
+	#Return: Initial symbol of the grammar
+	def getInitialSymbol(self):
+		return self.rules[0].getSymbol()
+
+	#Parameters: Nothing
+	#Return: Nothing
+	#Note: Fll LR(0) Table
+	def initializeTable(self):
+		a = deepcopy(self.noTerminals)
+		a.remove(self.getInitialSymbol())
+		self.nt = list(a)
+		self.t = list(self.terminals) 
+
+		self.nt.sort()
+		self.t.sort()
+		self.table.append([0] * (len(self.t) + len(self.nt) + 1))
+
+		j = 1
+		for i in range(0, len(self.t)):
+			self.index[self.t[i]] = j
+			self.table[0][j] = self.t[i]
+			j += 1
+
+		for i in range(0, len(self.nt)):
+			self.index[self.nt[i]] = j
+			self.table[0][j] = self.nt[i]
+			j += 1
 
 	#Parameters: Symbol
 	#Return: List<Node>
@@ -62,6 +94,7 @@ class LR0:
 	#Return: Boolean
 	def exists(self, s1):
 		#Iterate the item sets
+		i = 0
 		for s2 in self.itemSets:
 			cont1 = 0
 			cont2 = 0
@@ -72,9 +105,10 @@ class LR0:
 				cont1 += 1
 			#If both conts are the same, it means that item set s1 was already calculated (exists)
 			if(cont1 == cont2):
-				return True
+				return i
+			i += 1
 		#If both conts never matched, it's a new item set
-		return False
+		return -1
 
 	#Parametes: List<Node>
 	#Return: Set<List<Node>>
@@ -126,9 +160,13 @@ class LR0:
 	def generateItemSets(self):
 		self.setNoTerminals()
 		self.setTerminals()
+		self.initializeTable()
+
 		firstRule = self.rules[0]
+
 		firstRule.getNext().setPointBefore(True)
 		S0 = self.itemClosure(firstRule)
+		
 		#Sort S0 rules
 		S0 = sorted(S0, key = lambda rule0: (rule0.getSymbol(), rule0.getNext().getSymbol(), rule0.getNext().getPointBefore())) 
 		queue = [S0] 	#Queue<Set>
@@ -140,24 +178,46 @@ class LR0:
 		for rule in S0:
 			rule.displayItems()
 
+		#Table LR(0)
+		self.table.append([0] * (len(self.t) + len(self.nt) + 1))
+		self.table[0][0] = 0 
+		i = 0
 		while queue:
 			Si = queue.pop(0) 	#Get first enter
 			symbolItems = self.getSymbolItems(Si)
+			
+			#print(symbolItems)
 			#Iterate over the item symbols
 			for symbol in symbolItems:
+				#print("---> Estoy en: ", symbol)
 				self.visitedRules = set([])
 				aux = self.goTo(deepcopy(Si), symbol)
-
+				
 				#Set is empty, do nothing
 				if(aux == set()):
 					continue
 
 				#Sort aux rules
 				aux = sorted(aux, key = lambda rule: (rule.getSymbol(), rule.getNext().getSymbol(), rule.getNext().getPointBefore())) 
+				
+				
+				#Insert a pair in the list 
+				pair = []
+				pair.insert(0, "d")
+				
 				#Verify is set already exists in list
-				if(self.exists(aux) == True):
+				check = self.exists(aux)
+				
+				if(check >= 0):
+					pair.insert(1, check)
+					self.table[i + 1][self.index[symbol]] = pair
 					continue
 
+				self.table.append([0] * (len(self.t) + len(self.nt) + 1))
+				self.table[cont + 1][0] = cont
+				pair.insert(1, cont)
+				self.table[i + 1][self.index[symbol]] = pair
+				
 				#Add new set to the end of the queue
 				queue.append(aux)
 				#Add the new set to the list
@@ -166,4 +226,10 @@ class LR0:
 				print("\n" + "S" + str(cont))
 				for rule in aux:
 					rule.displayItems()
+				
 				cont += 1
+			i += 1
+
+		print("Table:")
+		for i in self.table:
+			print(i)
