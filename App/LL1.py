@@ -70,37 +70,42 @@ class LL1:
 		srt = []
 		p.append("$")
 		p.append(self.getInitialSymbol())
-		srt.append("$")
-		cAux = c.split(" ")
-		cAux.reverse()
+		
+		for i in range(0, len(c)):
+			srt.append(c[i])
 
-		for i in range(0, len(cAux)):
-			srt.append(cAux[i])
-		aux = []
+		srt.append("$")
 		token = self.stringLex.getToken()
+		begin = self.stringLex.getStatus().getBeginLexPos()
+		end = self.stringLex.getStatus().getEndLexPos()
 
 		while p:
 			if len(srt) == 0:
 				return False
-			aux = srt.copy()
-			aux.reverse()
 			values = []
 			lastP = p[len(p) - 1]
-			lastC = srt[len(srt) - 1]
+			firstC = srt[0]
 
-			if lastC in self.terminals or lastC == "$" or token != Token.END:
+			if firstC in self.terminals or firstC == "$" or token != Token.ERROR:
 				x = self.index[lastP]
-				#Here we put all the necessary Tokens
+				'''
+				Here we put all the necessaries Tokens
+
+				if(token == Token.SYMBOL):
+				if(token == Token.FLECHA):
+					.
+					.
+					.
+				'''
 				if(token == Token.NUM):
-				#Here we need to put manually the index of the terminal
+					#Here we need to put manually the index of the terminal, depending on the token
 					y = self.index["num"] - len(self.noTerminals)
 				else:
-					y = self.index[lastC] - len(self.noTerminals)
+					y = self.index[firstC] - len(self.noTerminals)
 				
 				action = self.table[x][y]
-
 				values.append(self.convertToString(p))
-				values.append(self.convertToString(aux))
+				values.append(self.convertToString(srt))
 
 				if action != 0:
 					values.append(action.replace(" ", ""))
@@ -114,9 +119,15 @@ class LL1:
 					return True
 				elif action == "pop":
 					p.pop()
-					srt.pop()
+					if(token != Token.ERROR):
+						times = end - begin
+						for i in range(0, times + 1):
+							srt.pop(0)
+					else:
+						srt.pop(0)
 					token = self.stringLex.getToken()
-					token = self.stringLex.getToken()
+					begin = self.stringLex.getStatus().getBeginLexPos()
+					end = self.stringLex.getStatus().getEndLexPos()
 				elif action == epsilon:
 					p.pop()
 				elif action != 0:

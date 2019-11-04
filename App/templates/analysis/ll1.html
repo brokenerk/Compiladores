@@ -5,33 +5,33 @@
 			M.toast({
 				html: 'Grammar is compatible with LL(1) analysis',
 				classes: 'green',
-				displayLength: 10000
+				displayLength: 5000
 			})
 
 			{% if msgS == 1 %}
 				M.toast({
 					html: 'String belongs to the grammar',
 					classes: 'green',
-					displayLength: 10000
+					displayLength: 5000
 				})
 			{% elif msgS == 2 %}
 				M.toast({
 					html: "String doesn't belong to the grammar",
 					classes: 'red',
-					displayLength: 10000
+					displayLength: 5000
 				});
 			{% endif %}
 		{% elif msg == 2 %}
 			M.toast({
-				html: 'Grammar is incompatible with LL(1) analysis',
+				html: "There were collisions while the rules relation table was being generated",
 				classes: 'red',
-				displayLength: 10000
+				displayLength: 5000
 			})
 		{% elif msg == 3 %}
 			M.toast({
 				html: 'Input grammar is invalid',
 				classes: 'red',
-				displayLength: 10000
+				displayLength: 5000
 			})
 		{% endif %}
 	</script>
@@ -90,7 +90,7 @@
 	<div id="ll1Table" class="container">
 		<div id="showLL1Table" class="row">
 		   {% if relationsTable %}
-		 	 	<p style="text-align: center; font-size: 25px;"> Rule Relations Table</p>
+		 	 	<p style="text-align: center; font-size: 25px;"> Rules Relation Table</p>
 	   			<div class="row">
 			  		<table class="striped centered responsive-table highlight">
 						<thead class="#0288d1 light-blue darken-2">

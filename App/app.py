@@ -20,6 +20,87 @@ nfaDictionary = {}
 dfaDictionary = {}
 
 # ---------------------------------------------------------------------
+#                        DFA FOR LEXER
+# ---------------------------------------------------------------------
+afn1 = NFA.createBasic('a', 'z')
+afn1.setToken(Token.SYMBOL_LOWER)
+afn2 = NFA.createBasic('A', 'Z')
+afn2.setToken(Token.SYMBOL_UPPER)
+afn3 = NFA.createBasic('0', '9')
+afn3.setToken(Token.NUM)
+afn4 = NFA.createBasic('|')
+afn4.setToken(Token.JOIN)
+afn5 = NFA.createBasic('&')
+afn5.setToken(Token.CONCAT)
+afn6 = NFA.createBasic('+')
+afn6.setToken(Token.POSCLO)
+afn7 = NFA.createBasic('-')
+afn7.setToken(Token.DASH)
+afn8 = NFA.createBasic('.')
+afn8.setToken(Token.POINT)
+afn9 = NFA.createBasic('?')
+afn9.setToken(Token.OPTIONAL)
+afn10 = NFA.createBasic('*')
+afn10.setToken(Token.KLEEN)
+afn11 = NFA.createBasic('(')
+afn11.setToken(Token.PAR_L)
+afn12 = NFA.createBasic(')')
+afn12.setToken(Token.PAR_R)
+afn13 = NFA.createBasic ('[')
+afn13.setToken(Token.SQUBRACK_L)
+afn14 = NFA.createBasic (']')
+afn14.setToken(Token.SQUBRACK_R)
+afnp = NFA.createBasic('"')
+afnq = NFA.createBasic('+')
+afn15 = afnp.concat(afnq)
+afn15.setToken(Token.PLUS)
+afnp3 = NFA.createBasic('"')
+afnq3 = NFA.createBasic('-')
+afn16 = afnp3.concat(afnq3)
+afn16.setToken(Token.MINUS)
+automatota = NFA.specialJoin(set([afn1, afn2, afn3, afn4, afn5, afn6, afn7, afn8, afn9, afn10, afn11, afn12, afn13, afn14, afn15, afn16]))
+syntacticDFA = automatota.convertToDFA()
+
+afn1 = NFA.createBasic('a', 'z')
+afn2 = NFA.createBasic('A', 'Z')
+afn3 = NFA.createBasic('0', '9')
+afn4 = NFA.createBasic('+')
+afn5 = NFA.createBasic('-')
+afn6 = NFA.createBasic('*')
+afn7 = NFA.createBasic('/')
+afn8 = NFA.createBasic('(')
+afn9 = NFA.createBasic(')')
+afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9)
+afn11 = NFA.createBasic('A', 'Z')
+afn12 = NFA.createBasic('a', 'z')
+afn13 = NFA.createBasic ("'")
+afn14 = NFA.createBasic('_')
+afnB = afn11.join(afn12).join(afn13).join(afn14)
+afnC = afnB.kleeneClosure()
+afnD = afnA.concat(afnC)
+afnD.setToken(Token.SYMBOL)
+afn15 = NFA.createBasic('-')
+afn16 = NFA.createBasic('>')
+afnE = afn15.concat(afn16)
+afnE.setToken(Token.ARROW)
+afn17 = NFA.createBasic(';')
+afn17.setToken(Token.SEMICOLON)
+afn18 = NFA.createBasic('|')
+afn18.setToken(Token.OR)
+afn19 = NFA.createBasic(' ')
+afn19.setToken(Token.SPACE)
+automatota2 = NFA.specialJoin(set([afnD, afnE, afn17, afn18, afn19]))
+grammarDFA = automatota2.convertToDFA()
+
+afn20 = NFA.createBasic('0', '9')
+afn21 = NFA.createBasic('.')
+afn22 = NFA.createBasic('0', '9')
+afn21 = afn21.concat(afn22.positiveClosure()).optional()
+afn20 = afn20.positiveClosure().concat(afn21)
+afn20.setToken(Token.NUM)
+numberDFA = afn20.convertToDFA()
+
+# ---------------------------------------------------------------------
 #                               INDEX
 # ---------------------------------------------------------------------
 @app.route("/")
@@ -201,7 +282,6 @@ def convertToDFA():
 @app.route("/LL(1)", methods = ['GET', 'POST'])
 def ll1():
     llForm = forms.LL1(request.form)
-    dfa = grammarDFA()
     relationsTable = None
     analysisTable = None
     grammar = None
@@ -217,7 +297,7 @@ def ll1():
             rules += s
 
         print("\nAnalizando cadena: " + string)
-        lex = Lexer(dfa, rules)
+        lex = Lexer(grammarDFA, rules)
         print("Lexico OK. Analizando sintacticamente...")
         
         syn = SyntacticGrammar(lex)
@@ -233,73 +313,34 @@ def ll1():
 
             #Analysis
             print("\nAnalisis LL(1)")
-            lex2 = Lexer(numberDFA(), string) #Lexic for numbers in string
+            lex2 = Lexer(numberDFA, string) #Lexic for numbers in string
             ll1 = LL1(grammar, lex2)
             if(ll1.isLL1()):
                 print("Gramatica compatible con LL(1)")
                 msg = 1
-                ll1.displayTable(0)
-                res = ll1.analyze(string)
-                ll1.displayTable(1)
-
-                relationsTable = ll1.getTable()
-                analysisTable = ll1.getAnalysisTable()
-
-                if(res):
-                    print("\n" + string + " pertenece a la gramatica")
-                    msgS = 1
-                else:
-                    print("\n" + string + " no pertenece a la gramatica")
-                    msgS = 2
             else:
                 print("\nERROR. La gramatica no es compatible con LL(1)")
+                print("Existieron colisiones")
                 msg = 2
+
+            ll1.displayTable(0)
+            res = ll1.analyze(string)
+            ll1.displayTable(1)
+
+            relationsTable = ll1.getTable()
+            analysisTable = ll1.getAnalysisTable()
+
+            if(res):
+                print("\n" + string + " pertenece a la gramatica")
+                msgS = 1
+            else:
+                print("\n" + string + " no pertenece a la gramatica")
+                msgS = 2
         else:
             print("Gramatica no valida")
             msg = 3
 
     return render_template('analysis/ll1.html',ll1 = llForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg,msgS = msgS)
-
-def numberDFA():
-    afn20 = NFA.createBasic('0', '9')
-    afn21 = NFA.createBasic('.')
-    afn22 = NFA.createBasic('0', '9')
-    afn21 = afn21.concat(afn22.positiveClosure()).optional()
-    afn20 = afn20.positiveClosure().concat(afn21)
-    afn20.setToken(Token.NUM)
-    return afn20.convertToDFA()
-
-def grammarDFA():
-    afn1 = NFA.createBasic('a', 'z')
-    afn2 = NFA.createBasic('A', 'Z')
-    afn3 = NFA.createBasic('0', '9')
-    afn4 = NFA.createBasic('+')
-    afn5 = NFA.createBasic('-')
-    afn6 = NFA.createBasic('*')
-    afn7 = NFA.createBasic('/')
-    afn8 = NFA.createBasic('(')
-    afn9 = NFA.createBasic(')')
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9)
-    afn11 = NFA.createBasic('A', 'Z')
-    afn12 = NFA.createBasic('a', 'z')
-    afn13 = NFA.createBasic ("'")
-    afn14 = NFA.createBasic('_')
-    afnB = afn11.join(afn12).join(afn13).join(afn14)
-    afnC = afnB.kleeneClosure()
-    afnD = afnA.concat(afnC)
-    afnD.setToken(Token.SYMBOL)
-    afn15 = NFA.createBasic('-')
-    afn16 = NFA.createBasic('>')
-    afnE = afn15.concat(afn16)
-    afnE.setToken(Token.ARROW)
-    afn17 = NFA.createBasic(';')
-    afn17.setToken(Token.SEMICOLON)
-    afn18 = NFA.createBasic('|')
-    afn18.setToken(Token.OR)
-    afn19 = NFA.createBasic(' ')
-    afn19.setToken(Token.SPACE)
-    automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18, afn19]))
-    return automatota.convertToDFA()
 
 # ---------------------------------------------------------------------
 #                        NFA Syntactic
@@ -312,12 +353,11 @@ def nfaSyntactic():
     msg = None
     if request.method == 'POST':
         regularExpressions = nfaForm.regularExpressions.data
-        dfa = dfaSyntactic()
         regularExpressions = regularExpressions.split('\r\n')
         print(regularExpressions)
         for re in regularExpressions:
             auxRE = re.split(' ')
-            lex = Lexer(dfa, auxRE[0])
+            lex = Lexer(syntacticDFA, auxRE[0])
             syn = SyntacticNFA(lex)
             nfaAux = syn.start()
             if(nfaAux == None):
@@ -334,46 +374,6 @@ def nfaSyntactic():
             msg = 1
     
     return render_template('analysis/nfa.html', nfaF = nfaForm, dfaER = dfaER, msg = msg)
-
-def dfaSyntactic():
-    afn1 = NFA.createBasic('a', 'z')
-    afn1.setToken(Token.SYMBOL_LOWER)
-    afn2 = NFA.createBasic('A', 'Z')
-    afn2.setToken(Token.SYMBOL_UPPER)
-    afn3 = NFA.createBasic('0', '9')
-    afn3.setToken(Token.NUM)
-    afn4 = NFA.createBasic('|')
-    afn4.setToken(Token.JOIN)
-    afn5 = NFA.createBasic('&')
-    afn5.setToken(Token.CONCAT)
-    afn6 = NFA.createBasic('+')
-    afn6.setToken(Token.POSCLO)
-    afn7 = NFA.createBasic('-')
-    afn7.setToken(Token.DASH)
-    afn8 = NFA.createBasic('.')
-    afn8.setToken(Token.POINT)
-    afn9 = NFA.createBasic('?')
-    afn9.setToken(Token.OPTIONAL)
-    afn10 = NFA.createBasic('*')
-    afn10.setToken(Token.KLEEN)
-    afn11 = NFA.createBasic('(')
-    afn11.setToken(Token.PAR_L)
-    afn12 = NFA.createBasic(')')
-    afn12.setToken(Token.PAR_R)
-    afn13 = NFA.createBasic ('[')
-    afn13.setToken(Token.SQUBRACK_L)
-    afn14 = NFA.createBasic (']')
-    afn14.setToken(Token.SQUBRACK_R)
-    afnp = NFA.createBasic('"')
-    afnq = NFA.createBasic('+')
-    afn15 = afnp.concat(afnq)
-    afn15.setToken(Token.PLUS)
-    afnp3 = NFA.createBasic('"')
-    afnq3 = NFA.createBasic('-')
-    afn16 = afnp3.concat(afnq3)
-    afn16.setToken(Token.MINUS)
-    automatota = NFA.specialJoin(set([afn1, afn2, afn3, afn4, afn5, afn6, afn7, afn8, afn9, afn10, afn11, afn12, afn13, afn14, afn15, afn16]))
-    return automatota.convertToDFA()
 
 # ---------------------------------------------------------------------
 #                        LEXICAL ANALYSIS
