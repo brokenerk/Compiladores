@@ -5,6 +5,7 @@ from Token import Token
 from Lexer import Lexer
 from LL1 import LL1
 from LR0 import LR0
+from LR1 import LR1
 from SyntacticNFA import SyntacticNFA
 from SyntacticGrammar import SyntacticGrammar
 epsilon = '\u03B5'
@@ -61,7 +62,7 @@ if __name__ == "__main__":
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar5.txt", "r")
+    archivo = open("grammar6.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -86,9 +87,9 @@ if __name__ == "__main__":
         #    r.displayRule()
         #    ruleNumber += 1
 
-        lr0 = LR0(grammar)
-        lr0.generateItemSets()
-        print("Holaaaaa")
+        lr1 = LR1(grammar)
+        lr1.generateItemSets()
+
         '''
         #Analysis
         print("\nAnalisis LL(1)")

@@ -2,10 +2,11 @@
 #Each Node object is a Grammar Rule!
 class Node:
     def __init__(self, symbol, next):
-        self.symbol = symbol        #String
-        self.next = next            #Node
-        self.pointBefore = False    #Boolean
-        self.pointAfter = False      #Boolean
+        self.symbol = symbol                #String
+        self.next = next                    #Node
+        self.pointBefore = False            #Boolean
+        self.pointAfter = False             #Boolean
+        self.lr1Symbols = set([])   #Set<String>
 
     #Return: Node
     def getNext(self):
@@ -42,6 +43,26 @@ class Node:
     def setPointAfter(self, pointAfter):
         self.pointAfter = pointAfter
 
+    #Parameters: Nothing
+    #Return: Set<String>
+    def getLR1Symbols(self):
+        return self.lr1Symbols
+    #Parameters: Set<String>
+    #Return: Nothing
+    def setLR1Symbols(self, ts):
+        self.lr1Symbols = self.lr1Symbols.union(ts)
+
+    def isRecursive(self):
+        next = self.getNext()
+        while(next != None):
+            if(next.getSymbol() == self.symbol):
+                return True
+            next = next.getNext()
+        return False
+
+    #Parameters: Nothing
+    #Return: Integer
+    #Note: Number of next nodes connected
     def size(self):
         next = self.getNext()
         cont = 1

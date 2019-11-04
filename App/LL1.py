@@ -280,10 +280,10 @@ class LL1:
 				if symbol == self.rules[j].getSymbol():
 					c = c.union(self.first(self.rules[j].getNext().getSymbol()))
 		self.dpFirst[symbol] = c
-		return  c
+		return c
 
 	#Parameters: No terminal symbol
-	#Return: Set or terminals or $
+	#Return: Set of terminals or $
 	def follow(self, symbol):
 		if symbol in self.dpFollow:
 			return self.dpFollow[symbol]
@@ -303,7 +303,7 @@ class LL1:
 					else:
 						n = next.getNext()
 						while(n != None):
-							aux = self.first(n.getSymbol())
+							aux = self.dpFirst[n.getSymbol()]
 							if "epsilon" in aux:
 								if self.rules[i].getSymbol() not in self.visited:
 									c = c.union(self.follow(self.rules[i].getSymbol()))
