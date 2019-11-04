@@ -1,6 +1,5 @@
 # -----------------------------------------------------------------------------
 # Run: sudo python3 calc.py
-#
 # A simple calculator with variables.
 # -----------------------------------------------------------------------------
 
@@ -9,8 +8,8 @@ tokens = (
         'PLUS','MINUS','TIMES','DIVIDE','EQUALS',
         'LPAREN','RPAREN',
         )
-
 # Tokens
+
 t_PLUS    = r'\+'
 t_MINUS   = r'-'
 t_TIMES   = r'\*'
@@ -21,8 +20,8 @@ t_RPAREN  = r'\)'
 t_NAME    = r'[a-zA-Z_][a-zA-Z0-9_]*'
 
 def t_NUMBER(t):
-    r'\d+'
-    t.value = int(t.value)
+    r'\d+|(\d+\.\d+)'
+    t.value = float(t.value)
     return t
 
 # Ignored characters

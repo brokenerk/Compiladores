@@ -106,7 +106,6 @@ test/lex_token3.py
 test/lex_token4.py
 test/lex_token5.py
 test/lex_token_dup.py
-test/parser.out
 test/testcpp.py
 test/testlex.py
 test/testyacc.py
@@ -151,7 +150,6 @@ test/pkg_test1/parsing/__init__.py
 test/pkg_test1/parsing/calclex.py
 test/pkg_test1/parsing/calcparse.py
 test/pkg_test1/parsing/lextab.py
-test/pkg_test1/parsing/parser.out
 test/pkg_test1/parsing/parsetab.py
 test/pkg_test2/__init__.py
 test/pkg_test2/parsing/__init__.py
@@ -159,11 +157,9 @@ test/pkg_test2/parsing/calclex.py
 test/pkg_test2/parsing/calclextab.py
 test/pkg_test2/parsing/calcparse.py
 test/pkg_test2/parsing/calcparsetab.py
-test/pkg_test2/parsing/parser.out
 test/pkg_test3/__init__.py
 test/pkg_test3/generated/__init__.py
 test/pkg_test3/generated/lextab.py
-test/pkg_test3/generated/parser.out
 test/pkg_test3/generated/parsetab.py
 test/pkg_test3/parsing/__init__.py
 test/pkg_test3/parsing/calclex.py
@@ -177,7 +173,6 @@ test/pkg_test5/parsing/__init__.py
 test/pkg_test5/parsing/calclex.py
 test/pkg_test5/parsing/calcparse.py
 test/pkg_test5/parsing/lextab.py
-test/pkg_test5/parsing/parser.out
 test/pkg_test5/parsing/parsetab.py
 test/pkg_test6/__init__.py
 test/pkg_test6/parsing/__init__.py
@@ -185,6 +180,5 @@ test/pkg_test6/parsing/calclex.py
 test/pkg_test6/parsing/calcparse.py
 test/pkg_test6/parsing/expression.py
 test/pkg_test6/parsing/lextab.py
-test/pkg_test6/parsing/parser.out
 test/pkg_test6/parsing/parsetab.py
 test/pkg_test6/parsing/statement.py

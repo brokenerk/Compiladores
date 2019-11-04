@@ -1,6 +1,6 @@
 /*	Compile: 
 		yacc hoc.y
-		cc y.tab.c -lpython3.7m -o hoc
+		gcc y.tab.c -lpython3.7m -w -o hoc
 */
 %{
 #define YYSTYPE double
@@ -24,7 +24,7 @@ expr: 	NUMBER 			{ $$ = $1; }
 		;
 %%
 
-#include "Python.h"
+#include <Python.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,15 +66,11 @@ yylex() {
 	return resultado;
 }	
 
-yyerror(s) 
-char *s;
-{	
+yyerror(char *s) {	
 	warning (s, (char *)0);
 }
 
-warning (s, t) 
-char *s, *t;
-{	
+warning (char *s, char *t) {	
 	fprintf(stderr, "%s: %s", progname,s);
 	if(t)
 		fprintf(stderr, "%s", t);
