@@ -1,3 +1,7 @@
+/*	Compile: 
+		yacc hoc.y
+		cc y.tab.c -lpython3.7m -o hoc
+*/
 %{
 #define YYSTYPE double
 %}
@@ -20,72 +24,59 @@ expr: 	NUMBER 			{ $$ = $1; }
 		;
 %%
 
-#include<Python.h>
-#include<stdio.h>
-#include<ctype.h>	
+#include "Python.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 char *progname;
-PyObject *objeto,*retorno, *modulo, *clase, *metodo, *argumentos;
-int lineno =1;
+int resultado;
+PyObject *objeto, *retorno, *modulo, *clase, *metodo, *argumentos;
+int lineno = 1;
 
-main(argc,argv) char *argv[];{
-	progname=argv[0];
-	int * p, c, t=0,pos;
-    p = (int*) malloc(sizeof(int));
-    while((c=getchar()) != '\n')
-    {
-        p[t++] = c; 
-        p = (int*) realloc(p, (t+1)*sizeof(int));
-        if(p == NULL)
-        {
-            printf("\nNo hay espacio en memoria.");
-            return 1;
-        }
-    }
-    c=0;
-    pos=0;
-    char cadena[t];
+void main(int argc, char* argv[]) {
+	printf("main\n");
+	progname = argv[0];
 
-    while(c<t) {
-        cadena[c]=putchar(p[c++]);
-    } 
-    
+    char* cadena = (char*)calloc(20,sizeof(char));
+    scanf("%s", cadena);
+
+    //lex = Lexer(cadena)
 	Py_Initialize();
-
-	PyLexer *FileScript;
-	FileScript = PyFile_FromString("Lexer.py","r");
-	PyRun_SimpleFile(PyFile_AsFile(FileScript),"r");
-
-    modulo = PyImport_ImportModule("Lexer");
-	clase = PyObject_GetAttrString(modulo, "Lexer");
-	argumentos = Py_BuildValue("ii",cadena);
-	objeto = PyEval_CallObject(clase, argumentos);
-
+		PyObject *file = PyUnicode_FromString("Lexer");
+	    modulo = PyImport_ImportModule(file);
+		clase = PyObject_GetAttrString(modulo, "Lexer");
+		argumentos = Py_BuildValue("s", cadena);
+		objeto = PyEval_CallObject(clase, argumentos);
 	Py_Finalize();
+	printf("Lexer creado\n");
 	yyparse();
 }
 
-yylex(){
+//lex.yylex()
+yylex() {
+	printf("yylex\n");
 	Py_Initialize();
-		metodo = PyObject_GetAttrString(objeto,"yylex");
-		argumentos = Py_BuildValue("()");
-		retorno = PyEval_CallObject(metodo,argumentos);
-		PyArg_Parse(retorno,"i",&resultado);
-		return resultado;
-	Py_Finalize(); 
+		metodo = PyObject_GetAttrString(objeto, "yylex");
+		argumentos = Py_BuildValue("");
+		retorno = PyEval_CallObject(metodo, argumentos);
+		PyArg_Parse(retorno, "i", &resultado);
+	Py_Finalize();
+	return resultado;
 }	
 
-yyerror(s)
+yyerror(s) 
 char *s;
-{
-	warning (s,(char *)0);
+{	
+	warning (s, (char *)0);
 }
 
-warning (s,t) 
+warning (s, t) 
 char *s, *t;
-{
-	fprintf(stderr,"%s: %s",progname,s);
+{	
+	fprintf(stderr, "%s: %s", progname,s);
 	if(t)
-		fprintf(stderr,"%s",t);
-	fprintf(stderr,"near line %d\n",lineno);
+		fprintf(stderr, "%s", t);
+	fprintf(stderr, "near line %d\n", lineno);
 }

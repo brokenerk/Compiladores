@@ -1,0 +1,12 @@
+PLY:
+	sudo python3 /ply-3.11/setup.py install
+
+YACC - C:
+	sudo apt-get install flex
+	sudo apt-get install bison
+
+Python.h:
+	sudo apt-get install python3-dev
+	locate Python.h
+	C_INCLUDE_PATH=/usr/include/python3.7m
+	export C_INCLUDE_PATH

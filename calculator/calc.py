@@ -1,17 +1,16 @@
 # -----------------------------------------------------------------------------
-# calc.py
+# Run: sudo python3 calc.py
 #
 # A simple calculator with variables.
 # -----------------------------------------------------------------------------
 
 tokens = (
-    'NAME','NUMBER',
-    'PLUS','MINUS','TIMES','DIVIDE','EQUALS',
-    'LPAREN','RPAREN',
-    )
+        'NAME','NUMBER',
+        'PLUS','MINUS','TIMES','DIVIDE','EQUALS',
+        'LPAREN','RPAREN',
+        )
 
 # Tokens
-
 t_PLUS    = r'\+'
 t_MINUS   = r'-'
 t_TIMES   = r'\*'
@@ -43,13 +42,12 @@ lex.lex()
 
 # Precedence rules for the arithmetic operators
 precedence = (
-    ('left','PLUS','MINUS'),
-    ('left','TIMES','DIVIDE'),
-    ('right','UMINUS'),
-    )
+            ('left','PLUS','MINUS'),
+            ('left','TIMES','DIVIDE'),
+            ('right','UMINUS'),
+            )
 
 # dictionary of names (for storing variables)
-names =     
 
 def p_statement_assign(p):
     'statement : NAME EQUALS expression'
