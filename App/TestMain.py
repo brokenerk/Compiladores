@@ -61,11 +61,7 @@ if __name__ == "__main__":
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-<<<<<<< HEAD
-    archivo = open("grammar6.txt", "r")
-=======
     archivo = open("grammar3.txt", "r")
->>>>>>> 2b00dfe31bcb63d1fd9cc92f9e6ac19aa37d9e1e
 
     print("Leeyendo Gramatica...")
     string = ""
