@@ -61,7 +61,11 @@ if __name__ == "__main__":
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
+<<<<<<< HEAD
     archivo = open("grammar6.txt", "r")
+=======
+    archivo = open("grammar3.txt", "r")
+>>>>>>> 2b00dfe31bcb63d1fd9cc92f9e6ac19aa37d9e1e
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -80,35 +84,38 @@ if __name__ == "__main__":
     print("\nGramatica construida: ")
     grammar = syn.start()
     if(grammar):
+        '''
         ruleNumber = 1
-        #for r in grammar:
-        #    print("{} ".format(ruleNumber), end = '')
-        #    r.displayRule()
-        #    ruleNumber += 1
+        for r in grammar:
+            print("{} ".format(ruleNumber), end = '')
+            r.displayRule()
+            ruleNumber += 1
+        '''
 
         lr0 = LR0(grammar)
         if(lr0.isLR0()):
             print("Holaaaaa")
         '''
+
         #Analysis
         print("\nAnalisis LL(1)")
-        c = "435.3453 + 3453 * ( 23.3 - 550 )"
+        c = "435.453+3453*(23.3-550)"
         lex2 = Lexer(afd2, c)
         ll1 = LL1(grammar, lex2)
        
         if(ll1.isLL1()):
             print("Gramatica compatible con LL(1)")
-
-            ll1.displayTable(0)
-            res = ll1.analyze(c)
-            ll1.displayTable(1)
-            if(res):
-                print("\n" + c + " pertenece a la gramatica")
-            else:
-                print("\n" + c + " no pertenece a la gramatica")
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
 
+        ll1.displayTable(0)
+        res = ll1.analyze(c)
+        ll1.displayTable(1)
+        if(res):
+            print("\n" + c + " pertenece a la gramatica")
+        else:
+            print("\n" + c + " no pertenece a la gramatica")
+        
 
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
