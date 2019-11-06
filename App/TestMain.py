@@ -90,7 +90,13 @@ if __name__ == "__main__":
 
         lr0 = LR0(grammar)
         if(lr0.isLR0()):
-            print("Holaaaaa")
+            print("Es LR0")
+            # if(lr0.analyze("Palabra")):
+            #     print("Cadena aceptada")
+            # else:
+            #     print("Cadena no aceptada")
+        else:
+            print("No es LR0")
         '''
 
         #Analysis

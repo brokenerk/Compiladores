@@ -45,9 +45,7 @@ class LR0:
 	#Return: Nothing
 	#Note: Fll LR(0) Table
 	def initializeTable(self):
-		a = deepcopy(self.noTerminals)
-		a.remove(self.getInitialSymbol())
-		self.nt = list(a)
+		self.nt = list(self.noTerminals)
 		self.t = list(self.terminals) 
 
 		self.nt.sort()
@@ -56,15 +54,18 @@ class LR0:
 
 		j = 1
 		for i in range(0, len(self.t)):
+			print("Guardando:", self.t[i])
 			self.index[self.t[i]] = j
 			self.table[0][j] = self.t[i]
 			j += 1
 
 		for i in range(0, len(self.nt)):
+			print("Guardando:", self.nt[i])	
 			self.index[self.nt[i]] = j
 			self.table[0][j] = self.nt[i]
 			j += 1
-
+		for i in self.table:
+			print(i)
 	#Parameters: Symbol
 	#Return: List<Node>
 	def searchRule(self, symbol):
@@ -218,6 +219,7 @@ class LR0:
 				self.table.append([0] * (len(self.t) + len(self.nt) + 1))
 				self.table[cont + 1][0] = cont
 				pair.insert(1, cont)
+				print("Guardando en: ", i + 1, "", symbol)
 				self.table[i + 1][self.index[symbol]] = pair
 				
 				#Add new set to the end of the queue
@@ -229,12 +231,16 @@ class LR0:
 				for rule in aux:
 					rule.displayItems()
 				
-				
 				cont += 1
 			i += 1
 
 		print("Table:")
 		for i in self.table:
 			print(i)
-		
+	
+		return 1
+
+	def analize(self, c):
+		print("Analizando ...")
+
 		return 1
