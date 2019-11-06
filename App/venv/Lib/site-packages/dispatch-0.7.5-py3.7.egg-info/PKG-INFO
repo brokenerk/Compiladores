@@ -1,0 +1,11 @@
+Metadata-Version: 2.1
+Name: dispatch
+Version: 0.7.5
+Summary: A publishing platform for modern newspapers
+Home-page: https://github.com/ubyssey/dispatch
+Author: Peter Siemens
+Author-email: peterjsiemens@gmail.com
+License: GPL
+Description: UNKNOWN
+Platform: UNKNOWN
+Provides-Extra: dev

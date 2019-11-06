@@ -1,0 +1,9 @@
+django==2.2.2
+djangorestframework==3.8.2
+pillow
+requests
+jsonfield
+docopt==0.6.2
+
+[dev]
+coverage

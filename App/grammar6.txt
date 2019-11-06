@@ -1,0 +1,4 @@
+E'->E;
+E->w X|a Y;
+X->b X|z;
+Y->b Y|z;

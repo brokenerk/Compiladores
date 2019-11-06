@@ -61,7 +61,7 @@ if __name__ == "__main__":
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar5.txt", "r")
+    archivo = open("grammar6.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -87,8 +87,8 @@ if __name__ == "__main__":
         #    ruleNumber += 1
 
         lr0 = LR0(grammar)
-        lr0.generateItemSets()
-        print("Holaaaaa")
+        if(lr0.isLR0()):
+            print("Holaaaaa")
         '''
         #Analysis
         print("\nAnalisis LL(1)")

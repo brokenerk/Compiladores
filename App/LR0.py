@@ -157,7 +157,7 @@ class LR0:
 	#Parameters: Nothing
 	#Return: Nothing
 	#Note: Generate the states for the displacements on the relations table
-	def generateItemSets(self):
+	def isLR0(self):
 		self.setNoTerminals()
 		self.setTerminals()
 		self.initializeTable()
@@ -199,8 +199,7 @@ class LR0:
 
 				#Sort aux rules
 				aux = sorted(aux, key = lambda rule: (rule.getSymbol(), rule.getNext().getSymbol(), rule.getNext().getPointBefore())) 
-				
-				
+					
 				#Insert a pair in the list 
 				pair = []
 				pair.insert(0, "d")
@@ -210,7 +209,10 @@ class LR0:
 				
 				if(check >= 0):
 					pair.insert(1, check)
-					self.table[i + 1][self.index[symbol]] = pair
+					if(self.table[i + 1][self.index[symbol]] != 0):
+						return 0
+					else:
+						self.table[i + 1][self.index[symbol]] = pair
 					continue
 
 				self.table.append([0] * (len(self.t) + len(self.nt) + 1))
@@ -227,9 +229,12 @@ class LR0:
 				for rule in aux:
 					rule.displayItems()
 				
+				
 				cont += 1
 			i += 1
 
 		print("Table:")
 		for i in self.table:
 			print(i)
+		
+		return 1
