@@ -2,3 +2,5 @@
 *.pyc
 *.out
 Calculator/parsetab.py
+venv/*
+App/venv/*
