@@ -1,4 +1,18 @@
+Stage 1:
 YYSTYPE -> Pila yacc
 yylval
 Solo llamar a yyparse() para analisis sintactico
 Ignorar char *arvg[], progname = argv[0]
+
+-----------------------
+Stage 2:
+
+------------------------
+Stage 3:
+short type /* VAR, BLTIN, UNDEF, CONST */
+Tabla HASH en vez de SymbolList
+
+------------------------
+Stage 4:
+Pila de ejecución
+assign		Saca dos elementos de la pila
