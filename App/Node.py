@@ -51,14 +51,10 @@ class Node:
     #Return: Nothing
     def setLR1Symbols(self, ts):
         self.lr1Symbols = self.lr1Symbols.union(ts)
-
-    def isRecursive(self):
-        next = self.getNext()
-        while(next != None):
-            if(next.getSymbol() == self.symbol):
-                return True
-            next = next.getNext()
-        return False
+    #Parameters: Nothing
+    #Return: Nothing
+    def clearLR1Symbols(self):
+        self.lr1Symbols = set([])
 
     #Parameters: Nothing
     #Return: Integer

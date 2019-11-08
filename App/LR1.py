@@ -7,13 +7,13 @@ class LR1:
 	#Constructor
 	def __init__(self, rules):
 		self.rules = rules 				#List<Node>
+		self.auxListItem = []			#List<List<Node>>
 		self.table = []  				#List<List>
 		self.analysisTable = []			#List<List>
 		self.terminals = set([])		#Set<String>
 		self.noTerminals = set([])		#Set<String>
 		self.itemSets = [] 				#List<(List<Node>, Set<String>)>
 		self.visitedRules = set([]) 	#Set<List<Node>>
-		self.ruleSymbols = set([]) 		#Set<String>
 
 	#Parameters: Nothing
 	#Return: Nothing
@@ -93,42 +93,49 @@ class LR1:
 		#If both conts never matched, it's a new item set
 		return False
 
-	def calculateSymbols(self, rule):
-		n = rule.getNext().getNext()
+	def calculateSymbols(self, numSet):
+		symbols = set([])
+		newSet = set([])
+		cont = 1
 
-		if(n != None):
-			symbolFirst = n.getSymbol()
-			if(symbolFirst in self.terminals):
-				self.ruleSymbols = self.ruleSymbols.union(self.first(symbolFirst))
-			else:
-				self.ruleSymbols = self.ruleSymbols.union(set(["$"]))
-		else:
-			self.ruleSymbols = self.ruleSymbols.union(set(["$"]))
+		for rule in self.auxListItem:
+			auxSymbols = rule.getLR1Symbols()
+			
+			next = rule.getNext()
+			while(next != None):
+				if(next.getPointBefore()):
+					n = next.getNext()
 
-		#rule.setLR1Symbols(self.ruleSymbols)
-		#return rule
+					if(n != None):
+						if(n.getSymbol() in self.terminals):
+							symbols = symbols.union(self.first(n.getSymbol()))
+					elif(numSet == 0):
+						symbols = symbols.union(set(["$"]))
+
+					rule.setLR1Symbols(symbols)
+				next = next.getNext()
+
+			if(cont == 1):
+				rule.clearLR1Symbols()
+				rule.setLR1Symbols(auxSymbols)
+			newSet.add(rule)
+			cont += 1
+		return newSet
 
 	#Parametes: List<Node>
 	#Return: Set<List<Node>>
 	def itemClosure(self, rule):
 		s = set([rule])
+		self.auxListItem.append(rule)
 		next = rule.getNext()
-		print(str(self.ruleSymbols))
 
 		while(next != None):
 			if(next.getPointBefore()):
-				n = next.getNext()
-				self.calculateSymbols(rule)
 				if(next.getSymbol() in self.noTerminals):
 					nextRules = self.searchRule(next.getSymbol())
-
 					for r in nextRules:
-						#self.ruleSymbols = set([])
-						#self.calculateSymbols(r)
-
 						r.getNext().setPointBefore(True)
 						s = s.union(self.itemClosure(deepcopy(r)))
-
 			next = next.getNext()
 		return s
 
@@ -154,12 +161,12 @@ class LR1:
 	#Parametes: Set<Node>, String
 	#Return: Set<Node>
 	def goTo(self, state, symbol):
+		self.auxListItem = [] 	#Clear list
 		moveStates = self.move(state, symbol)
 		returnStates = set([])
 		for e in moveStates:
-			symbols = self.dpFollow[e.getSymbol()]
-			returnStates = returnStates.union(self.itemClosure(e, symbols))
-		return returnStates
+			returnStates = returnStates.union(self.itemClosure(e))
+		return self.calculateSymbols(-1)
 
 	#Parameters: Nothing
 	#Return: Nothing
@@ -167,18 +174,17 @@ class LR1:
 	def generateItemSets(self):
 		self.setNoTerminals()
 		self.setTerminals()
-
 		firstRule = self.rules[0]
+		firstRule.setLR1Symbols(set(["$"]))
 		firstRule.getNext().setPointBefore(True)
-		
-		#self.ruleSymbols = self.ruleSymbols.union(set(["$"]))
-		#firstRule.setLR1Symbols(self.ruleSymbols)
-		S0 = self.itemClosure(firstRule)
-		#Sort S0 rules
-		S0 = sorted(S0, key = lambda rule0: (rule0.getSymbol(), rule0.getNext().getSymbol(), rule0.getNext().getPointBefore())) 
 
-		#queue = [S0] 	#Queue<Set>
-		#self.itemSets.append(S0) 	#List<List<Node>>
+		S0 = self.itemClosure(firstRule)
+		S0 = self.calculateSymbols(0)
+		#Sort S0 rules
+		S0 = sorted(S0, key = lambda rule0: (rule0.getSymbol(), rule0.getNext().getSymbol(), rule0.getNext().getPointBefore()))  
+
+		queue = [S0] 	#Queue<Set>
+		self.itemSets.append(S0) 	#List<List<Node>>
 		cont = 1
 
 		print("")
@@ -187,7 +193,6 @@ class LR1:
 			rule.displayItems()
 			print(str(rule.getLR1Symbols()))
 
-		'''
 		while queue:
 			Si = queue.pop(0) 	#Get first enter
 			symbolItems = self.getSymbolItems(Si)
@@ -214,5 +219,7 @@ class LR1:
 				print("\n" + "S" + str(cont))
 				for rule in aux:
 					rule.displayItems()
+					print(str(rule.getLR1Symbols()))
 				cont += 1
-		'''
+			if(cont == 6):
+				break
