@@ -1,4 +1,4 @@
-E'->E;
-E->w X|a Y;
-X->b X|z;
-Y->b Y|z;
+S'->S;
+S->f|E = E;
+E->E + T|T;
+T->T * f|f;
