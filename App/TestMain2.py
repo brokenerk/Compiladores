@@ -5,6 +5,7 @@ from Token import Token
 from Lexer import Lexer
 from LL1 import LL1
 from LR0 import LR0
+from LR1 import LR1
 from SyntacticNFA import SyntacticNFA
 from SyntacticGrammar import SyntacticGrammar
 epsilon = '\u03B5'
@@ -18,35 +19,38 @@ if __name__ == "__main__":
     afn5 = NFA.createBasic('-')
     afn6 = NFA.createBasic('*')
     afn7 = NFA.createBasic('/')
-    afn8 = NFA.createBasic('(')
-    afn9 = NFA.createBasic(')')
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9)
+    afn8 = NFA.createBasic('=')
+    afn9 = NFA.createBasic('(')
+    afn10 = NFA.createBasic(')')
+    afn11 = NFA.createBasic(',')
+    afn12 = NFA.createBasic('.')
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10).join(afn11).join(afn12)
 
-    afn11 = NFA.createBasic('A', 'Z')
-    afn12 = NFA.createBasic('a', 'z')
-    afn13 = NFA.createBasic ("'")
-    afn14 = NFA.createBasic('_')
-    afnB = afn11.join(afn12).join(afn13).join(afn14)
+    afn13 = NFA.createBasic('A', 'Z')
+    afn14 = NFA.createBasic('a', 'z')
+    afn15 = NFA.createBasic ("'")
+    afn16 = NFA.createBasic('_')
+    afnB = afn13.join(afn14).join(afn15).join(afn16)
     afnC = afnB.kleeneClosure()
 
     afnD = afnA.concat(afnC)
     afnD.setToken(Token.SYMBOL)
 
-    afn15 = NFA.createBasic('-')
-    afn16 = NFA.createBasic('>')
-    afnE = afn15.concat(afn16)
+    afn17 = NFA.createBasic('-')
+    afn18 = NFA.createBasic('>')
+    afnE = afn17.concat(afn18)
     afnE.setToken(Token.ARROW)
 
-    afn17 = NFA.createBasic(';')
-    afn17.setToken(Token.SEMICOLON)
+    afn19 = NFA.createBasic(';')
+    afn19.setToken(Token.SEMICOLON)
 
-    afn18 = NFA.createBasic('|')
-    afn18.setToken(Token.OR)
+    afn20 = NFA.createBasic('|')
+    afn20.setToken(Token.OR)
 
-    afn19 = NFA.createBasic(' ')
-    afn19.setToken(Token.SPACE)
+    afn21 = NFA.createBasic(' ')
+    afn21.setToken(Token.SPACE)
 
-    automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18, afn19]))
+    automatota = NFA.specialJoin(set([afnD, afnE, afn19, afn20, afn21]))
     afd = automatota.convertToDFA()
     #afd.displayTable()
 
@@ -61,7 +65,7 @@ if __name__ == "__main__":
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar3.txt", "r")
+    archivo = open("grammar7.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -80,44 +84,35 @@ if __name__ == "__main__":
     print("\nGramatica construida: ")
     grammar = syn.start()
     if(grammar):
-        '''
         ruleNumber = 1
-        for r in grammar:
-            print("{} ".format(ruleNumber), end = '')
-            r.displayRule()
-            ruleNumber += 1
-        '''
+        #for r in grammar:
+        #    print("{} ".format(ruleNumber), end = '')
+        #    r.displayRule()
+        #    ruleNumber += 1
 
-        lr0 = LR0(grammar)
-        if(lr0.isLR0()):
-            print("Es LR0")
-            # if(lr0.analyze("Palabra")):
-            #     print("Cadena aceptada")
-            # else:
-            #     print("Cadena no aceptada")
-        else:
-            print("No es LR0")
-        '''
+        lr1 = LR1(grammar)
+        lr1.generateItemSets()
 
+        '''
         #Analysis
         print("\nAnalisis LL(1)")
-        c = "435.453+3453*(23.3-550)"
+        c = "435.3453 + 3453 * ( 23.3 - 550 )"
         lex2 = Lexer(afd2, c)
         ll1 = LL1(grammar, lex2)
        
         if(ll1.isLL1()):
             print("Gramatica compatible con LL(1)")
+
+            ll1.displayTable(0)
+            res = ll1.analyze(c)
+            ll1.displayTable(1)
+            if(res):
+                print("\n" + c + " pertenece a la gramatica")
+            else:
+                print("\n" + c + " no pertenece a la gramatica")
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
 
-        ll1.displayTable(0)
-        res = ll1.analyze(c)
-        ll1.displayTable(1)
-        if(res):
-            print("\n" + c + " pertenece a la gramatica")
-        else:
-            print("\n" + c + " no pertenece a la gramatica")
-        
 
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
