@@ -33,6 +33,12 @@
 				classes: 'red',
 				displayLength: 5000
 			})
+		{% elif msg == 4 %}
+			M.toast({
+				html: "The grammar has a left recursion. Can't do LL(1) analysis.",
+				classes: 'red',
+				displayLength: 5000
+			})
 		{% endif %}
 	</script>
 
