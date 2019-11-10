@@ -19,35 +19,38 @@ if __name__ == "__main__":
     afn5 = NFA.createBasic('-')
     afn6 = NFA.createBasic('*')
     afn7 = NFA.createBasic('/')
-    afn8 = NFA.createBasic('(')
-    afn9 = NFA.createBasic(')')
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9)
+    afn8 = NFA.createBasic('=')
+    afn9 = NFA.createBasic('(')
+    afn10 = NFA.createBasic(')')
+    afn11 = NFA.createBasic(',')
+    afn12 = NFA.createBasic('.')
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10).join(afn11).join(afn12)
 
-    afn11 = NFA.createBasic('A', 'Z')
-    afn12 = NFA.createBasic('a', 'z')
-    afn13 = NFA.createBasic ("'")
-    afn14 = NFA.createBasic('_')
-    afnB = afn11.join(afn12).join(afn13).join(afn14)
+    afn13 = NFA.createBasic('A', 'Z')
+    afn14 = NFA.createBasic('a', 'z')
+    afn15 = NFA.createBasic ("'")
+    afn16 = NFA.createBasic('_')
+    afnB = afn13.join(afn14).join(afn15).join(afn16)
     afnC = afnB.kleeneClosure()
 
     afnD = afnA.concat(afnC)
     afnD.setToken(Token.SYMBOL)
 
-    afn15 = NFA.createBasic('-')
-    afn16 = NFA.createBasic('>')
-    afnE = afn15.concat(afn16)
+    afn17 = NFA.createBasic('-')
+    afn18 = NFA.createBasic('>')
+    afnE = afn17.concat(afn18)
     afnE.setToken(Token.ARROW)
 
-    afn17 = NFA.createBasic(';')
-    afn17.setToken(Token.SEMICOLON)
+    afn19 = NFA.createBasic(';')
+    afn19.setToken(Token.SEMICOLON)
 
-    afn18 = NFA.createBasic('|')
-    afn18.setToken(Token.OR)
+    afn20 = NFA.createBasic('|')
+    afn20.setToken(Token.OR)
 
-    afn19 = NFA.createBasic(' ')
-    afn19.setToken(Token.SPACE)
+    afn21 = NFA.createBasic(' ')
+    afn21.setToken(Token.SPACE)
 
-    automatota = NFA.specialJoin(set([afnD, afnE, afn17, afn18, afn19]))
+    automatota = NFA.specialJoin(set([afnD, afnE, afn19, afn20, afn21]))
     afd = automatota.convertToDFA()
     #afd.displayTable()
 
@@ -62,7 +65,7 @@ if __name__ == "__main__":
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar5.txt", "r")
+    archivo = open("grammar7.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""

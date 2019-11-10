@@ -38,17 +38,15 @@ class LR1:
 	#Return: Set of terminals or Epsilon
 	def first(self, symbol):
 		c = set() 	#Set<>
-		if symbol == epsilon:
+		if(symbol in self.terminals):
 			c.add(symbol)
-		if symbol in self.terminals:
-			c.add(symbol)
-		if symbol == None:
-			c.add("$")
 		else:
 			for j in range(0, len(self.rules)):
 				if symbol == self.rules[j].getSymbol():
-					c = c.union(self.first(self.rules[j].getNext().getSymbol()))
-		return  c
+					symbol2 = self.rules[j].getNext().getSymbol()
+					if(symbol2 in self.terminals):
+						c.add(symbol2)
+		return  c - {"epsilon"}
 
 	#Parameters: Symbol
 	#Return: List<Node>
@@ -84,7 +82,7 @@ class LR1:
 			cont2 = 0
 			for r1, r2 in zip(s1, s2):
 				#If a rule matches, increment cont2
-				if(r1.equals(r2) == True):
+				if(r1.equals(r2) == True and r1.getLR1Symbols() == r2.getLR1Symbols()):
 					cont2 += 1
 				cont1 += 1
 			#If both conts are the same, it means that item set s1 was already calculated (exists)
@@ -93,33 +91,43 @@ class LR1:
 		#If both conts never matched, it's a new item set
 		return False
 
-	def calculateSymbols(self, numSet):
+	def calculateSymbols(self):
 		symbols = set([])
 		newSet = set([])
 		cont = 1
 
 		for rule in self.auxListItem:
 			auxSymbols = rule.getLR1Symbols()
-			
 			next = rule.getNext()
+
 			while(next != None):
 				if(next.getPointBefore()):
 					n = next.getNext()
+					firstAux = set([])
 
 					if(n != None):
-						if(n.getSymbol() in self.terminals):
-							symbols = symbols.union(self.first(n.getSymbol()))
-					elif(numSet == 0):
-						symbols = symbols.union(set(["$"]))
+						firstAux = self.first(n.getSymbol())
 
-					rule.setLR1Symbols(symbols)
+					if(rule.getOriginal()):
+						rule.setLR1Symbols(auxSymbols)
+						if(firstAux == set([])):
+							symbols = auxSymbols
+						else:
+							symbols = firstAux
+							if(rule.isRigthRecursive()):
+								symbols = symbols.union(auxSymbols)
+					else:
+						if(rule.isLeftRecursive()):
+							symbols = symbols.union(firstAux)
+							rule.setLR1Symbols(symbols)
+						else:
+							rule.setLR1Symbols(symbols)
+							if(cont != len(self.auxListItem) - 1):
+								symbols = symbols.union(firstAux)
+						
 				next = next.getNext()
-
-			if(cont == 1):
-				rule.clearLR1Symbols()
-				rule.setLR1Symbols(auxSymbols)
-			newSet.add(rule)
 			cont += 1
+			newSet.add(rule)
 		return newSet
 
 	#Parametes: List<Node>
@@ -144,6 +152,7 @@ class LR1:
 	def move(self, state, symbol):
 		s = set([])
 		for rule in state:
+			rule.setOriginal(False)
 			next = rule.getNext()
 			while(next != None):
 				if(next.getSymbol() == symbol and next.getPointBefore() == True):
@@ -154,6 +163,7 @@ class LR1:
 					else:
 						next.setPointAfter(True)
 
+					rule.setOriginal(True)
 					s.add(rule)
 				next = next.getNext()
 		return s
@@ -166,7 +176,7 @@ class LR1:
 		returnStates = set([])
 		for e in moveStates:
 			returnStates = returnStates.union(self.itemClosure(e))
-		return self.calculateSymbols(-1)
+		return self.calculateSymbols()
 
 	#Parameters: Nothing
 	#Return: Nothing
@@ -176,10 +186,11 @@ class LR1:
 		self.setTerminals()
 		firstRule = self.rules[0]
 		firstRule.setLR1Symbols(set(["$"]))
+		firstRule.setOriginal(True)
 		firstRule.getNext().setPointBefore(True)
 
 		S0 = self.itemClosure(firstRule)
-		S0 = self.calculateSymbols(0)
+		S0 = self.calculateSymbols()
 		#Sort S0 rules
 		S0 = sorted(S0, key = lambda rule0: (rule0.getSymbol(), rule0.getNext().getSymbol(), rule0.getNext().getPointBefore()))  
 
@@ -221,5 +232,3 @@ class LR1:
 					rule.displayItems()
 					print(str(rule.getLR1Symbols()))
 				cont += 1
-			if(cont == 6):
-				break

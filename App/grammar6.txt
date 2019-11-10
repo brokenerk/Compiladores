@@ -1,4 +1,4 @@
 S'->S;
-S->E igual E|f;
+S->f|E = E;
 E->E + T|T;
 T->T * f|f;

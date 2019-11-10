@@ -1,0 +1,4 @@
+S'->S;
+S->( L )|id;
+L->S A;
+A->coma S A|epsilon;

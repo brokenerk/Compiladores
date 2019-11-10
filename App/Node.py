@@ -6,7 +6,8 @@ class Node:
         self.next = next                    #Node
         self.pointBefore = False            #Boolean
         self.pointAfter = False             #Boolean
-        self.lr1Symbols = set([])   #Set<String>
+        self.lr1Symbols = set([])           #Set<String>
+        self.original = False               #Boolean
 
     #Return: Node
     def getNext(self):
@@ -49,12 +50,33 @@ class Node:
         return self.lr1Symbols
     #Parameters: Set<String>
     #Return: Nothing
-    def setLR1Symbols(self, ts):
-        self.lr1Symbols = self.lr1Symbols.union(ts)
+    def setLR1Symbols(self, lr1Symbols):
+        self.lr1Symbols = lr1Symbols
+
     #Parameters: Nothing
+    #Return: Boolean
+    def getOriginal(self):
+        return self.original
+    #Parameters: Boolean
     #Return: Nothing
-    def clearLR1Symbols(self):
-        self.lr1Symbols = set([])
+    def setOriginal(self, original):
+        self.original = original
+
+    #Parameters: Nothing
+    #Return: Boolean
+    def isLeftRecursive(self):
+        next = self.getNext()
+        return next.getSymbol() == self.symbol
+
+    #Parameters: Nothing
+    #Return: Boolean
+    def isRigthRecursive(self):
+        next = self.getNext()
+        while(next != None):
+            if(next.getSymbol() == self.symbol):
+                return True
+            next = next.getNext()
+        return False
 
     #Parameters: Nothing
     #Return: Integer

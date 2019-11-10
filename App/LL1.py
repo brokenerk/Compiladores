@@ -271,7 +271,7 @@ class LL1:
 		if symbol in self.dpFirst:
 			return self.dpFirst[symbol]
 		c = set() 	#Set<>
-		if symbol == epsilon:
+		if symbol == "epsilon":
 			c.add(symbol)
 		if symbol in self.terminals:
 			c.add(symbol)
