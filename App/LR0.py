@@ -54,13 +54,11 @@ class LR0:
 
 		j = 1
 		for i in range(0, len(self.t)):
-			print("Guardando:", self.t[i])
 			self.index[self.t[i]] = j
 			self.table[0][j] = self.t[i]
 			j += 1
 
 		for i in range(0, len(self.nt)):
-			print("Guardando:", self.nt[i])	
 			self.index[self.nt[i]] = j
 			self.table[0][j] = self.nt[i]
 			j += 1
@@ -219,7 +217,7 @@ class LR0:
 				self.table.append([0] * (len(self.t) + len(self.nt) + 1))
 				self.table[cont + 1][0] = cont
 				pair.insert(1, cont)
-				print("Guardando en: ", i + 1, "", symbol)
+				#print("Guardando en: ", i + 1, "", symbol)
 				self.table[i + 1][self.index[symbol]] = pair
 				
 				#Add new set to the end of the queue
@@ -230,7 +228,25 @@ class LR0:
 				print("\n" + "S" + str(cont))
 				for rule in aux:
 					rule.displayItems()
-				
+				#Insert a pair h
+				for rule in aux:
+					print("---------------RULE:", cont)
+					rule.displayItems()
+					next = rule.getNext()
+
+					while(next != None):
+						if(next.getPointAfter()):
+							print("{} -->".format(rule.symbol), end = '')
+							print(" {}°".format(next.getSymbol()), end = '')
+							ruleTable = []
+							ruleTable.insert(0, "r")
+							ruleTable.insert(1, 1)
+							self.table[cont][self.index[next.getSymbol()]] = ruleTable
+							print("AGREGUE A LA TABLA")
+						next = next.getNext()
+					print("")
+					#rule.displayItems()
+
 				cont += 1
 			i += 1
 
