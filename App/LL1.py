@@ -97,9 +97,20 @@ class LL1:
 					.
 					.
 				'''
+				print(str(token))
 				if(token == Token.NUM):
 					#Here we need to put manually the index of the terminal, depending on the token
 					y = self.index["num"] - len(self.noTerminals)
+				elif(token == Token.SYMBOL and firstC not in self.terminals):
+					y = self.index["SIMBOLO"] - len(self.noTerminals)
+				elif(token == Token.ARROW):
+					y = self.index["FLECHA"] - len(self.noTerminals)
+				elif(token == Token.SEMICOLON):
+					y = self.index["PC"] - len(self.noTerminals)
+				elif(token == Token.OR):
+					y = self.index["OR"] - len(self.noTerminals)
+				elif(token == Token.CONCAT):
+					y = self.index["AND"] - len(self.noTerminals)
 				else:
 					y = self.index[firstC] - len(self.noTerminals)
 				
@@ -119,7 +130,7 @@ class LL1:
 					return True
 				elif action == "pop":
 					p.pop()
-					if(token != Token.ERROR):
+					if(token != Token.ERROR and firstC not in self.terminals):
 						times = end - begin
 						for i in range(0, times + 1):
 							srt.pop(0)

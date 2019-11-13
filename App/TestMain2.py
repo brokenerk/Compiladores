@@ -24,15 +24,14 @@ if __name__ == "__main__":
     afn10 = NFA.createBasic(')')
     afn11 = NFA.createBasic(',')
     afn12 = NFA.createBasic('.')
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10).join(afn11).join(afn12)
-
+    afn13 = NFA.createBasic('?')
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10).join(afn11).join(afn12).join(afn13)
     afn13 = NFA.createBasic('A', 'Z')
     afn14 = NFA.createBasic('a', 'z')
     afn15 = NFA.createBasic ("'")
     afn16 = NFA.createBasic('_')
     afnB = afn13.join(afn14).join(afn15).join(afn16)
     afnC = afnB.kleeneClosure()
-
     afnD = afnA.concat(afnC)
     afnD.setToken(Token.SYMBOL)
 
@@ -50,22 +49,43 @@ if __name__ == "__main__":
     afn21 = NFA.createBasic(' ')
     afn21.setToken(Token.SPACE)
 
-    automatota = NFA.specialJoin(set([afnD, afnE, afn19, afn20, afn21]))
+    automatota = NFA.specialJoin(set([afnD, afnE, afn11, afn12, afn19, afn20, afn21]))
     afd = automatota.convertToDFA()
-    #afd.displayTable()
+    afd.displayTable()
 
-    #DFA for the string
-    afn20 = NFA.createBasic('0', '9')
-    afn21 = NFA.createBasic('.')
+    #DFA for strings
+    afn1 = NFA.createBasic('A', 'Z')
+    afn2 = NFA.createBasic('a', 'z')
+    afnB = afn1.join(afn2).kleeneClosure()
+    afnB.setToken(Token.SYMBOL)
+
+    afn3 = NFA.createBasic('-')
+    afn4 = NFA.createBasic('>')
+    afnE = afn3.concat(afn4)
+    afnE.setToken(Token.ARROW)
+
+    afn5 = NFA.createBasic(';')
+    afn5.setToken(Token.SEMICOLON)
+
+    afn6 = NFA.createBasic('|')
+    afn6.setToken(Token.OR)
+
     afn22 = NFA.createBasic('0', '9')
-    afn21 = afn21.concat(afn22.positiveClosure()).optional()
-    afn20 = afn20.positiveClosure().concat(afn21)
-    afn20.setToken(Token.NUM)
-    afd2 = afn20.convertToDFA()
+    afn23 = NFA.createBasic('.')
+    afn24 = NFA.createBasic('0', '9')
+    afn25 = afn23.concat(afn22.positiveClosure()).optional()
+    afnF = afn24.positiveClosure().concat(afn25)
+    afnF.setToken(Token.NUM)
+
+    afn26 = NFA.createBasic('&')
+    afn26.setToken(Token.CONCAT)
+
+    automatota2 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26]))
+    afd2 = automatota2.convertToDFA()
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar7.txt", "r")
+    archivo = open("grammar3.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -78,6 +98,7 @@ if __name__ == "__main__":
     print("\nAnalizando cadena: " + string)
     lex = Lexer(afd, string)
     #lex.display()
+
     print("Lexico OK. Analizando sintacticamente...")
     syn = SyntacticGrammar(lex)
 
@@ -85,19 +106,21 @@ if __name__ == "__main__":
     grammar = syn.start()
     if(grammar):
         ruleNumber = 1
-        #for r in grammar:
-        #    print("{} ".format(ruleNumber), end = '')
-        #    r.displayRule()
-        #    ruleNumber += 1
+        for r in grammar:
+            print("{} ".format(ruleNumber), end = '')
+            r.displayRule()
+            ruleNumber += 1
 
-        lr1 = LR1(grammar)
-        lr1.generateItemSets()
+       # lr1 = LR1(grammar)
+       # lr1.generateItemSets()
 
-        '''
+
         #Analysis
         print("\nAnalisis LL(1)")
-        c = "435.3453 + 3453 * ( 23.3 - 550 )"
+        c = "435.453+3453*(23.3-550)"
         lex2 = Lexer(afd2, c)
+        #lex2.display()
+
         ll1 = LL1(grammar, lex2)
        
         if(ll1.isLL1()):
@@ -112,8 +135,7 @@ if __name__ == "__main__":
                 print("\n" + c + " no pertenece a la gramatica")
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
-
-
+    '''
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
     afn2 = NFA.createBasic('A', 'Z')
