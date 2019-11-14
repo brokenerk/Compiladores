@@ -188,8 +188,8 @@ class LL1:
 		for i in range(len(self.t) + len(self.nt) + 2):
 			self.table.append([0] * (len(self.t) + 2))
 
-		for i in range(0, len(self.t) + len(self.nt)):
-			for j in range(0, len(self.t)):
+		for i in range(0, len(self.t) + len(self.nt) + 2):
+			for j in range(0, len(self.t) + 1):
 				if (i - len(self.nt)) == j:
 					self.table[i][j] = "pop"
 				else:
@@ -198,7 +198,7 @@ class LL1:
 		self.table[0][0] = " "
 		self.table[len(self.t) + len(self.nt) - 1][0] = "$"
 		self.table[0][len(self.t) - 1] = "$"
-		self.table[len(self.t) + len(self.nt)][len(self.t)] = "accept"
+		self.table[len(self.t) + len(self.nt) + 1][len(self.t) + 1] = "accept"
 		# Fill with No terminals
 		j = 1
 		for i in range(0, len(self.nt)):
