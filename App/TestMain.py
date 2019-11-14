@@ -64,7 +64,7 @@ if __name__ == "__main__":
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar5.txt", "r")
+    archivo = open("grammar9.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -103,12 +103,9 @@ if __name__ == "__main__":
         ll1 = LL1(grammar, "aaa")
         if(ll1.isLL1()):
             print("Es LL1")
-            # if(lr0.analyze("Palabra")):
-            #     print("Cadena aceptada")
-            # else:
-            #     print("Cadena no aceptada")
         else:
             print("No es LL1")
+        ll1.displayTable(0)
         '''
 
         #Analysis

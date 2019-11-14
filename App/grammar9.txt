@@ -1,0 +1,5 @@
+S->a A B C;
+A->a|b b D;
+B->a|epsilon;
+C->b|epsilon;
+D->c|epsilon;

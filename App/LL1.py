@@ -17,6 +17,8 @@ class LL1:
 		self.visited = set()		#Set<String>
 		self.index = {}				#Dictionary
 		self.stringLex = stringLex	#Lexer
+		self.t = []						#List<String>
+		self.nt = []					#List<String>
 
 	#Parameters: Nothing
 	#Return: True if is possible create a Table
@@ -51,7 +53,7 @@ class LL1:
 
 			for elem in s:
 				x = self.index[self.rules[i].getSymbol()]
-				y = self.index[elem] - len(self.noTerminals)
+				y = self.index[elem] - len(self.nt)
 				if(self.table[x][y] == 0):
 					if srt == "epsilon":
 						self.table[x][y] = epsilon
@@ -168,50 +170,50 @@ class LL1:
 	#Return: Nothing
 	#Note: Fill the grammar table with 0
 	def initTable(self):
-		t = list(self.terminals - {"epsilon"})
-		nt = list(self.noTerminals - {"epsilon"})
-		t.sort()
-		nt.sort()
+		self.t = list(self.terminals - {"epsilon"})
+		self.nt = list(self.noTerminals - {"epsilon"})
+		self.t.sort()
+		self.nt.sort()
 
 		j = 0
-		for i in range(0, len(nt)):
-			self.index[nt[i]] = j + 1
+		for i in range(0, len(self.nt)):
+			self.index[self.nt[i]] = j + 1
 			j += 1
 
-		for i in range(0, len(t)):
-			self.index[t[i]] = j + 1
+		for i in range(0, len(self.t)):
+			self.index[self.t[i]] = j + 1
 			j += 1
 
 		self.index["$"] = j + 1
-		for i in range(len(self.terminals) + len(self.noTerminals) + 1):
-			self.table.append([0] * (len(self.terminals) + 1))
+		for i in range(len(self.t) + len(self.nt) + 2):
+			self.table.append([0] * (len(self.t) + 2))
 
-		for i in range(0, len(self.terminals) + len(self.noTerminals)):
-			for j in range(0, len(self.terminals)):
-				if (i - len(nt)) == j:
+		for i in range(0, len(self.t) + len(self.nt)):
+			for j in range(0, len(self.t)):
+				if (i - len(self.nt)) == j:
 					self.table[i][j] = "pop"
 				else:
 					self.table[i][j] = 0
 
 		self.table[0][0] = " "
-		self.table[len(self.terminals) + len(self.noTerminals) - 1][0] = "$"
-		self.table[0][len(self.terminals) - 1] = "$"
-		self.table[len(self.terminals) + len(self.noTerminals)][len(self.terminals)] = "accept"
+		self.table[len(self.t) + len(self.nt) - 1][0] = "$"
+		self.table[0][len(self.t) - 1] = "$"
+		self.table[len(self.t) + len(self.nt)][len(self.t)] = "accept"
 		# Fill with No terminals
 		j = 1
-		for i in range(0, len(nt)):
-			self.table[j][0] = nt[i]
+		for i in range(0, len(self.nt)):
+			self.table[j][0] = self.nt[i]
 			j += 1
 
 		# Fill with terminals
-		for i in range(0, len(t)):	
-			self.table[j][0] = t[i]
+		for i in range(0, len(self.t)):	
+			self.table[j][0] = self.t[i]
 			j += 1
 
 		self.table[j][0] = "$"
 		j = 1
-		for i in range(0, len(t)):
-			self.table[0][j] = t[i];
+		for i in range(0, len(self.t)):
+			self.table[0][j] = self.t[i];
 			j += 1
 		self.table[0][j] = "$"
 
@@ -242,6 +244,7 @@ class LL1:
 		for i in self.terminals:
 			self.dpFirst[i] = self.first(i)
 		for i in self.noTerminals:
+			self.initVisited()
 			self.dpFirst[i] = self.first(i)
 	
 	#Parameters: Nothing
@@ -279,11 +282,11 @@ class LL1:
 	#Note: Show table of LL1
 	def displayTable(self, op):
 		if op == 0:
-			print("\nTABLA RELACION DE REGLAS")
+			print("TABLA RELACION DE REGLAS")
 			for i in self.table:
 				print(i)
 		else:
-			print("\nTABLA ANALISIS LL(1)")
+			print("TABLA ANALISIS LL(1)")
 			for i in self.analysisTable:
 				print(i)
 
@@ -293,6 +296,7 @@ class LL1:
 		if symbol in self.dpFirst:
 			return self.dpFirst[symbol]
 		c = set() 	#Set<>
+		self.visited.add(symbol)
 		if symbol == "epsilon":
 			c.add(symbol)
 		if symbol in self.terminals:
@@ -300,8 +304,10 @@ class LL1:
 		else:
 			for j in range(0, len(self.rules)):
 				if symbol == self.rules[j].getSymbol():
-					c = c.union(self.first(self.rules[j].getNext().getSymbol()))
-		self.dpFirst[symbol] = c
+					if self.rules[j].getNext().getSymbol() not in self.visited:
+						c = c.union(self.first(self.rules[j].getNext().getSymbol()))
+		if c != set():
+			self.dpFirst[symbol] = c
 		return c
 
 	#Parameters: No terminal symbol
