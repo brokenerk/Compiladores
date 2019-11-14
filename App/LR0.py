@@ -224,6 +224,7 @@ class LR0:
 				
 				if(check >= 0):
 					pair.insert(1, check)
+					# Check if there is an error
 					if(self.table[i + 1][self.index[symbol]] != 0):
 						return 0
 					else:
@@ -233,7 +234,6 @@ class LR0:
 				self.table.append([0] * (len(self.t) + len(self.nt) + 2))
 				self.table[cont + 1][0] = cont
 				pair.insert(1, cont)
-				#print("Guardando en: ", i + 1, "", symbol)
 				self.table[i + 1][self.index[symbol]] = pair
 				
 				#Add new set to the end of the queue
@@ -244,22 +244,25 @@ class LR0:
 				print("\n" + "S" + str(cont))
 				for rule in aux:
 					rule.displayItems()
-				#Insert a pair h
+
+				#Adding Rules 
 				for rule in aux:
-					#print("---------------RULE:", cont)
-					#rule.displayItems()
 					next = rule.getNext()
 
 					while(next != None):
 						if(next.getPointAfter()):
-							#print("{} -->".format(rule.symbol), end = '')
-							#print(" {}°".format(next.getSymbol()), end = '')
+							#Get Follow[rule.symbol] to add into Table
 							for char in self.dpFollow[rule.symbol]:
-								#print("--- Agregando: --- R[", cont, "", char,"]")
+								#Add a pair: [r, cont]
 								ruleTable = []
 								ruleTable.insert(0, "r")
 								ruleTable.insert(1, cont)
-								self.table[cont + 1][self.index[char]] = ruleTable
+								
+								# Check if there is an error
+								if(self.table[i + 1][self.index[symbol]] != 0):
+									return 0
+								else:
+									self.table[cont + 1][self.index[char]] = ruleTable
 						next = next.getNext()
 					print("")
 					#rule.displayItems()
