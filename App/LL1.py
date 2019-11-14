@@ -17,8 +17,6 @@ class LL1:
 		self.visited = set()		#Set<String>
 		self.index = {}				#Dictionary
 		self.stringLex = stringLex	#Lexer
-		self.t = []						#List<String>
-		self.nt = []					#List<String>
 
 	#Parameters: Nothing
 	#Return: True if is possible create a Table
@@ -26,6 +24,7 @@ class LL1:
 	def isLL1(self):             
 		self.setNoTerminals()
 		self.setTerminals()
+		print(str(self.terminals))
 		self.setDPFirst()
 		print("FIRST")
 		for i in self.dpFirst:
@@ -53,7 +52,7 @@ class LL1:
 
 			for elem in s:
 				x = self.index[self.rules[i].getSymbol()]
-				y = self.index[elem] - len(self.nt)
+				y = self.index[elem] - len(self.noTerminals)
 				if(self.table[x][y] == 0):
 					if srt == "epsilon":
 						self.table[x][y] = epsilon
@@ -88,69 +87,68 @@ class LL1:
 			lastP = p[len(p) - 1]
 			firstC = srt[0]
 
-			if firstC in self.terminals or firstC == "$" or token != Token.ERROR:
-				x = self.index[lastP]
-				'''
-				Here we put all the necessaries Tokens
+			x = self.index[lastP]
+			'''
+			Here we put all the necessaries Tokens
 
-				if(token == Token.SYMBOL):
-				if(token == Token.FLECHA):
-					.
-					.
-					.
-				'''
-				print(str(token))
-				if(token == Token.NUM):
-					#Here we need to put manually the index of the terminal, depending on the token
-					y = self.index["num"] - len(self.noTerminals)
-				elif(token == Token.SYMBOL and firstC not in self.terminals):
-					y = self.index["SIMBOLO"] - len(self.noTerminals)
-				elif(token == Token.ARROW):
-					y = self.index["FLECHA"] - len(self.noTerminals)
-				elif(token == Token.SEMICOLON):
-					y = self.index["PC"] - len(self.noTerminals)
-				elif(token == Token.OR):
-					y = self.index["OR"] - len(self.noTerminals)
-				elif(token == Token.CONCAT):
-					y = self.index["AND"] - len(self.noTerminals)
-				else:
-					y = self.index[firstC] - len(self.noTerminals)
-				
-				action = self.table[x][y]
-				values.append(self.convertToString(p))
-				values.append(self.convertToString(srt))
-
-				if action != 0:
-					values.append(action.replace(" ", ""))
-				else:
-					values.append(action)
-				self.analysisTable.append(values)
-
-				if action == 0:
-					return False
-				elif action == "accept":
-					return True
-				elif action == "pop":
-					p.pop()
-					if(token != Token.ERROR and firstC not in self.terminals):
-						times = end - begin
-						for i in range(0, times + 1):
-							srt.pop(0)
-					else:
-						srt.pop(0)
-					token = self.stringLex.getToken()
-					begin = self.stringLex.getStatus().getBeginLexPos()
-					end = self.stringLex.getStatus().getEndLexPos()
-				elif action == epsilon:
-					p.pop()
-				elif action != 0:
-					p.pop()
-					actionList = action.split(" ")
-					actionList.reverse()
-					for i in range(0, len(actionList)):
-						p.append(actionList[i])
+			if(token == Token.SYMBOL):
+			if(token == Token.FLECHA):
+				.
+				.
+				.
+			'''
+			if(token == Token.ARROW and "FLECHA" in self.terminals):
+				y = self.index["FLECHA"] - len(self.noTerminals)
+			elif(token == Token.SEMICOLON and "PC" in self.terminals):
+				y = self.index["PC"] - len(self.noTerminals)
+			elif(token == Token.OR and "OR" in self.terminals):
+				y = self.index["OR"] - len(self.noTerminals)
+			elif(token == Token.CONCAT and "AND" in self.terminals):
+				y = self.index["AND"] - len(self.noTerminals)
+			elif(token == Token.COMMA and "," in self.terminals):
+				y = self.index[","] - len(self.noTerminals)
+			elif(token == Token.NUM and "num" in self.terminals):
+				y = self.index["num"] - len(self.noTerminals)
+			elif(token == Token.SYMBOL and "SIMBOLO" in self.terminals):
+				y = self.index["SIMBOLO"] - len(self.noTerminals)
+			elif(firstC in self.terminals or firstC == "$"):
+				y = self.index[firstC] - len(self.noTerminals)
 			else:
+				break
+
+			action = self.table[x][y]
+			values.append(self.convertToString(p))
+			values.append(self.convertToString(srt))
+
+			if action != 0:
+				values.append(action.replace(" ", ""))
+			else:
+				values.append(action)
+			self.analysisTable.append(values)
+
+			if action == 0:
 				return False
+			elif action == "accept":
+				return True
+			elif action == "pop":
+				p.pop()
+				if(token != Token.ERROR and firstC not in self.terminals):
+					times = end - begin
+					for i in range(0, times + 1):
+						srt.pop(0)
+				else:
+					srt.pop(0)
+				token = self.stringLex.getToken()
+				begin = self.stringLex.getStatus().getBeginLexPos()
+				end = self.stringLex.getStatus().getEndLexPos()
+			elif action == epsilon:
+				p.pop()
+			elif action != 0:
+				p.pop()
+				actionList = action.split(" ")
+				actionList.reverse()
+				for i in range(0, len(actionList)):
+					p.append(actionList[i])
 		return False
 
 	def initAnalysisTable(self):
@@ -170,50 +168,50 @@ class LL1:
 	#Return: Nothing
 	#Note: Fill the grammar table with 0
 	def initTable(self):
-		self.t = list(self.terminals - {"epsilon"})
-		self.nt = list(self.noTerminals - {"epsilon"})
-		self.t.sort()
-		self.nt.sort()
+		t = list(self.terminals - {"epsilon"})
+		nt = list(self.noTerminals - {"epsilon"})
+		t.sort()
+		nt.sort()
 
 		j = 0
-		for i in range(0, len(self.nt)):
-			self.index[self.nt[i]] = j + 1
+		for i in range(0, len(nt)):
+			self.index[nt[i]] = j + 1
 			j += 1
 
-		for i in range(0, len(self.t)):
-			self.index[self.t[i]] = j + 1
+		for i in range(0, len(t)):
+			self.index[t[i]] = j + 1
 			j += 1
 
 		self.index["$"] = j + 1
-		for i in range(len(self.t) + len(self.nt) + 2):
-			self.table.append([0] * (len(self.t) + 2))
+		for i in range(len(self.terminals) + len(self.noTerminals) + 1):
+			self.table.append([0] * (len(self.terminals) + 1))
 
-		for i in range(0, len(self.t) + len(self.nt) + 2):
-			for j in range(0, len(self.t) + 1):
-				if (i - len(self.nt)) == j:
+		for i in range(0, len(self.terminals) + len(self.noTerminals) + 1):
+			for j in range(0, len(self.terminals) + 1):
+				if (i - len(nt)) == j:
 					self.table[i][j] = "pop"
 				else:
 					self.table[i][j] = 0
 
 		self.table[0][0] = " "
-		self.table[len(self.t) + len(self.nt) - 1][0] = "$"
-		self.table[0][len(self.t) - 1] = "$"
-		self.table[len(self.t) + len(self.nt) + 1][len(self.t) + 1] = "accept"
+		self.table[len(self.terminals) + len(self.noTerminals) - 1][0] = "$"
+		self.table[0][len(self.terminals) - 1] = "$"
+		self.table[len(self.terminals) + len(self.noTerminals)][len(self.terminals)] = "accept"
 		# Fill with No terminals
 		j = 1
-		for i in range(0, len(self.nt)):
-			self.table[j][0] = self.nt[i]
+		for i in range(0, len(nt)):
+			self.table[j][0] = nt[i]
 			j += 1
 
 		# Fill with terminals
-		for i in range(0, len(self.t)):	
-			self.table[j][0] = self.t[i]
+		for i in range(0, len(t)):	
+			self.table[j][0] = t[i]
 			j += 1
 
 		self.table[j][0] = "$"
 		j = 1
-		for i in range(0, len(self.t)):
-			self.table[0][j] = self.t[i];
+		for i in range(0, len(t)):
+			self.table[0][j] = t[i];
 			j += 1
 		self.table[0][j] = "$"
 

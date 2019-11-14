@@ -127,7 +127,10 @@ afnF.setToken(Token.NUM)
 afn26 = NFA.createBasic('&')
 afn26.setToken(Token.CONCAT)
 
-automatota3 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26]))
+afn27 = NFA.createBasic(',')
+afn27.setToken(Token.COMMA)
+
+automatota3 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27]))
 stringDFA = automatota3.convertToDFA()
 
 # ---------------------------------------------------------------------
@@ -358,19 +361,19 @@ def ll1():
                     print("Existieron colisiones")
                     msg = 2
 
-            ll1.displayTable(0)
-            res = ll1.analyze(string)
-            ll1.displayTable(1)
+                ll1.displayTable(0)
+                res = ll1.analyze(string)
+                ll1.displayTable(1)
 
-            relationsTable = ll1.getTable()
-            analysisTable = ll1.getAnalysisTable()
+                relationsTable = ll1.getTable()
+                analysisTable = ll1.getAnalysisTable()
 
-            if(res):
-                print("\n" + string + " pertenece a la gramatica")
-                msgS = 1
-            else:
-                print("\n" + string + " no pertenece a la gramatica")
-                msgS = 2
+                if(res):
+                    print("\n" + string + " pertenece a la gramatica")
+                    msgS = 1
+                else:
+                    print("\n" + string + " no pertenece a la gramatica")
+                    msgS = 2
         else:
             print("Gramatica no valida")
             msg = 3

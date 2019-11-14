@@ -36,4 +36,6 @@ class Token:
 	OR = 310
 	SPACE = 320
 
+	COMMA = 330
+
 	ERROR = 1000
