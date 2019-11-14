@@ -80,7 +80,10 @@ if __name__ == "__main__":
     afn26 = NFA.createBasic('&')
     afn26.setToken(Token.CONCAT)
 
-    automatota2 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26]))
+    afn27 = NFA.createBasic(',')
+    afn27.setToken(Token.COMMA)
+
+    automatota2 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27]))
     afd2 = automatota2.convertToDFA()
     #afd2.displayTable()
 
