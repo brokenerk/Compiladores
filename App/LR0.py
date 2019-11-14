@@ -16,7 +16,10 @@ class LR0:
 		self.index = {}					#Dictionary
 		self.t = []						#List<String>
 		self.nt = []					#List<String>
-
+		self.dpFirst = {}			#Dictionary
+		self.dpFollow = {}			#Dictionary
+		self.visited = set()		#Set<String>
+		
 	#Parameters: Nothing
 	#Return: Nothing
 	#Note: Fill set of no terminals symbols
@@ -50,7 +53,7 @@ class LR0:
 
 		self.nt.sort()
 		self.t.sort()
-		self.table.append([0] * (len(self.t) + len(self.nt) + 1))
+		self.table.append([0] * (len(self.t) + len(self.nt) + 2))
 
 		j = 1
 		for i in range(0, len(self.t)):
@@ -62,6 +65,9 @@ class LR0:
 			self.index[self.nt[i]] = j
 			self.table[0][j] = self.nt[i]
 			j += 1
+
+		self.index["$"] = j
+		self.table[0][j] = "$"
 		for i in self.table:
 			print(i)
 	#Parameters: Symbol
@@ -160,6 +166,16 @@ class LR0:
 		self.setNoTerminals()
 		self.setTerminals()
 		self.initializeTable()
+		self.setDPFirst()
+		print("FIRST")
+		for i in self.dpFirst:
+			print(i + ": " + str(self.dpFirst[i]))
+
+		print("")
+		print("FOLLOW")
+		self.setDPFollow()
+		for i in self.dpFollow:
+			print(i + ": " + str(self.dpFollow[i]))
 
 		firstRule = self.rules[0]
 
@@ -178,7 +194,7 @@ class LR0:
 			rule.displayItems()
 
 		#Table LR(0)
-		self.table.append([0] * (len(self.t) + len(self.nt) + 1))
+		self.table.append([0] * (len(self.t) + len(self.nt) + 2))
 		self.table[0][0] = 0 
 		i = 0
 		while queue:
@@ -214,7 +230,7 @@ class LR0:
 						self.table[i + 1][self.index[symbol]] = pair
 					continue
 
-				self.table.append([0] * (len(self.t) + len(self.nt) + 1))
+				self.table.append([0] * (len(self.t) + len(self.nt) + 2))
 				self.table[cont + 1][0] = cont
 				pair.insert(1, cont)
 				#print("Guardando en: ", i + 1, "", symbol)
@@ -230,19 +246,20 @@ class LR0:
 					rule.displayItems()
 				#Insert a pair h
 				for rule in aux:
-					print("---------------RULE:", cont)
-					rule.displayItems()
+					#print("---------------RULE:", cont)
+					#rule.displayItems()
 					next = rule.getNext()
 
 					while(next != None):
 						if(next.getPointAfter()):
-							print("{} -->".format(rule.symbol), end = '')
-							print(" {}°".format(next.getSymbol()), end = '')
-							ruleTable = []
-							ruleTable.insert(0, "r")
-							ruleTable.insert(1, 1)
-							self.table[cont][self.index[next.getSymbol()]] = ruleTable
-							print("AGREGUE A LA TABLA")
+							#print("{} -->".format(rule.symbol), end = '')
+							#print(" {}°".format(next.getSymbol()), end = '')
+							for char in self.dpFollow[rule.symbol]:
+								#print("--- Agregando: --- R[", cont, "", char,"]")
+								ruleTable = []
+								ruleTable.insert(0, "r")
+								ruleTable.insert(1, cont)
+								self.table[cont + 1][self.index[char]] = ruleTable
 						next = next.getNext()
 					print("")
 					#rule.displayItems()
@@ -260,3 +277,85 @@ class LR0:
 		print("Analizando ...")
 
 		return 1
+
+	#Parameters: Nothing
+	#Return: Nothing
+	#Note: Clear visited
+	def initVisited(self):
+		self.visited = set()
+
+	#Parameters: Nothing
+	#Return: Nothing
+	#Note: Fill DP of first
+	def setDPFirst(self):
+		for i in self.terminals:
+			self.dpFirst[i] = self.first(i)
+		for i in self.noTerminals:
+			self.initVisited()
+			self.dpFirst[i] = self.first(i)
+	
+	#Parameters: Nothing
+	#Return: Nothing
+	#Note: Fill DP of follow
+	def setDPFollow(self):
+		for i in self.noTerminals:
+			self.initVisited()
+			c = self.follow(i)
+			if c != set():
+				self.dpFollow[i] = c
+
+	#Parameters: Terminals or No terminals symbols
+	#Return: Set of terminals or Epsilon
+	def first(self, symbol):
+		if symbol in self.dpFirst:
+			return self.dpFirst[symbol]
+		c = set() 	#Set<>
+		self.visited.add(symbol)
+		if symbol == "epsilon":
+			c.add(symbol)
+		if symbol in self.terminals:
+			c.add(symbol)
+		else:
+			for j in range(0, len(self.rules)):
+				if symbol == self.rules[j].getSymbol():
+					if self.rules[j].getNext().getSymbol() not in self.visited:
+						c = c.union(self.first(self.rules[j].getNext().getSymbol()))
+		if c != set():
+			self.dpFirst[symbol] = c
+		return c
+
+	#Parameters: No terminal symbol
+	#Return: Set of terminals or $
+	def follow(self, symbol):
+		#If follow of Symbol has been calculated before, consult
+		if symbol in self.dpFollow:
+			return self.dpFollow[symbol]
+		c = set()
+		self.visited.add(symbol)
+		
+		#Symbol is the initial symbol of the grammar
+		if symbol == self.getInitialSymbol():
+			c.add("$")
+
+		#Is a No terminal symbol
+		for i in range(0, len(self.rules)):
+			next = self.rules[i].getNext()
+			while(next != None):
+				st = next.getSymbol()
+				if st == symbol:
+					n = next.getNext()
+					if n == None:
+						if self.rules[i].getSymbol() not in self.visited:
+							c = c.union(self.follow(self.rules[i].getSymbol()))
+					else:
+						n = next.getNext()
+						aux = self.dpFirst[n.getSymbol()]
+						if "epsilon" in aux:
+							if self.rules[i].getSymbol() not in self.visited:
+								c = c.union(self.follow(self.rules[i].getSymbol()))
+							aux = aux - {"epsilon"}
+						c = c.union(aux);
+				next = next.getNext()
+		if c != set():
+			self.dpFollow[symbol] = c
+		return c

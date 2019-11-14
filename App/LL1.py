@@ -330,14 +330,14 @@ class LL1:
 							c = c.union(self.follow(self.rules[i].getSymbol()))
 					else:
 						n = next.getNext()
-						while(n != None):
-							aux = self.dpFirst[n.getSymbol()]
-							if "epsilon" in aux:
-								if self.rules[i].getSymbol() not in self.visited:
-									c = c.union(self.follow(self.rules[i].getSymbol()))
-								aux = aux - {"epsilon"}
-							c = c.union(aux);
-							n = n.getNext()
+						#while(n != None):
+						aux = self.dpFirst[n.getSymbol()]
+						if "epsilon" in aux:
+							if self.rules[i].getSymbol() not in self.visited:
+								c = c.union(self.follow(self.rules[i].getSymbol()))
+							aux = aux - {"epsilon"}
+						c = c.union(aux);
+						#	n = n.getNext()
 				next = next.getNext()
 		if c != set():
 			self.dpFollow[symbol] = c
