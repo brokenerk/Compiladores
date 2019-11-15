@@ -14,6 +14,7 @@ class LR1:
 		self.noTerminals = set([])		#Set<String>
 		self.itemSets = [] 				#List<(List<Node>, Set<String>)>
 		self.visitedRules = set([]) 	#Set<List<Node>>
+		self.visited = set([])			#Set<String>
 
 	#Parameters: Nothing
 	#Return: Nothing
@@ -38,15 +39,17 @@ class LR1:
 	#Return: Set of terminals or Epsilon
 	def first(self, symbol):
 		c = set() 	#Set<>
-		if(symbol in self.terminals):
+		self.visited.add(symbol)
+		if symbol == "epsilon":
+			c.add(symbol)
+		if symbol in self.terminals:
 			c.add(symbol)
 		else:
 			for j in range(0, len(self.rules)):
 				if symbol == self.rules[j].getSymbol():
-					symbol2 = self.rules[j].getNext().getSymbol()
-					if(symbol2 in self.terminals):
-						c.add(symbol2)
-		return  c - {"epsilon"}
+					if self.rules[j].getNext().getSymbol() not in self.visited:
+						c = c.union(self.first(self.rules[j].getNext().getSymbol()))
+		return c
 
 	#Parameters: Symbol
 	#Return: List<Node>
@@ -94,6 +97,7 @@ class LR1:
 	def calculateSymbols(self):
 		symbols = set([])
 		newSet = set([])
+		self.visited = set([])	
 		cont = 1
 
 		for rule in self.auxListItem:

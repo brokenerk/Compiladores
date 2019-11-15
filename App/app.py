@@ -103,7 +103,8 @@ grammarDFA = automatota2.convertToDFA()
 
 afn1 = NFA.createBasic('A', 'Z')
 afn2 = NFA.createBasic('a', 'z')
-afnB = afn1.join(afn2).kleeneClosure()
+afn2_1 = NFA.createBasic("'")
+afnB = afn1.join(afn2).join(afn2_1).kleeneClosure()
 afnB.setToken(Token.SYMBOL)
 
 afn3 = NFA.createBasic('-')
@@ -338,42 +339,45 @@ def ll1():
         
         grammar = syn.start()
         if(grammar):
-            ruleNumber = 1
-            for r in grammar:
-                print("{} ".format(ruleNumber), end = '')
-                r.displayRule()
-                ruleNumber += 1
-                if(r.isLeftRecursive()):
-                    print("La gramatica es recursiva por la izquierda")
-                    msg = 4
-                    break
+            print("Gramatica valida")
+            msg = 5
+            
+            if(string != ""):
+                ruleNumber = 1
+                for r in grammar:
+                    print("{} ".format(ruleNumber), end = '')
+                    r.displayRule()
+                    ruleNumber += 1
+                    if(r.isLeftRecursive()):
+                        print("La gramatica es recursiva por la izquierda")
+                        msg = 4
+                        break
+                #Analysis
+                print("\nAnalisis LL(1)")
+                lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
+                ll1 = LL1(grammar, lex2)
+                if(msg != 4):
+                    if(ll1.isLL1()):
+                        print("Gramatica compatible con LL(1)")
+                        msg = 1
+                    else:
+                        print("\nERROR. La gramatica no es compatible con LL(1)")
+                        print("Existieron colisiones")
+                        msg = 2
 
-            #Analysis
-            print("\nAnalisis LL(1)")
-            lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
-            ll1 = LL1(grammar, lex2)
-            if(msg != 4):
-                if(ll1.isLL1()):
-                    print("Gramatica compatible con LL(1)")
-                    msg = 1
-                else:
-                    print("\nERROR. La gramatica no es compatible con LL(1)")
-                    print("Existieron colisiones")
-                    msg = 2
+                    ll1.displayTable(0)
+                    res = ll1.analyze(string)
+                    ll1.displayTable(1)
 
-                ll1.displayTable(0)
-                res = ll1.analyze(string)
-                ll1.displayTable(1)
+                    relationsTable = ll1.getTable()
+                    analysisTable = ll1.getAnalysisTable()
 
-                relationsTable = ll1.getTable()
-                analysisTable = ll1.getAnalysisTable()
-
-                if(res):
-                    print("\n" + string + " pertenece a la gramatica")
-                    msgS = 1
-                else:
-                    print("\n" + string + " no pertenece a la gramatica")
-                    msgS = 2
+                    if(res):
+                        print("\n" + string + " pertenece a la gramatica")
+                        msgS = 1
+                    else:
+                        print("\n" + string + " no pertenece a la gramatica")
+                        msgS = 2
         else:
             print("Gramatica no valida")
             msg = 3
@@ -393,23 +397,26 @@ def nfaSyntactic():
         regularExpressions = nfaForm.regularExpressions.data
         regularExpressions = regularExpressions.split('\r\n')
         print(regularExpressions)
-        for re in regularExpressions:
-            auxRE = re.split(' ')
-            lex = Lexer(syntacticDFA, auxRE[0])
-            syn = SyntacticNFA(lex)
-            nfaAux = syn.start()
-            if(nfaAux == None):
-                print('Error')
-                msg = 2
-                break      
-            nfaAux.setToken(int(auxRE[1]))
-            nfas.add(nfaAux)
+        try:
+            for re in regularExpressions:
+                auxRE = re.split(' ')
+                lex = Lexer(syntacticDFA, auxRE[0])
+                syn = SyntacticNFA(lex)
+                nfaAux = syn.start()
+                if(nfaAux == None):
+                    print('Error')
+                    msg = 2
+                    break      
+                nfaAux.setToken(int(auxRE[1]))
+                nfas.add(nfaAux)
 
-        if(msg != 2):
-            nfaER = NFA.specialJoin(nfas)
-            dfaER = nfaER.convertToDFA()
-            dfaDictionary[dfaER.getId()] = dfaER
-            msg = 1
+            if(msg != 2):
+                nfaER = NFA.specialJoin(nfas)
+                dfaER = nfaER.convertToDFA()
+                dfaDictionary[dfaER.getId()] = dfaER
+                msg = 1
+        except:
+            msg = 2
     
     return render_template('analysis/nfa.html', nfaF = nfaForm, dfaER = dfaER, msg = msg)
 

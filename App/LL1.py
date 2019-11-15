@@ -24,7 +24,6 @@ class LL1:
 	def isLL1(self):             
 		self.setNoTerminals()
 		self.setTerminals()
-		print(str(self.terminals))
 		self.setDPFirst()
 		print("FIRST")
 		for i in self.dpFirst:

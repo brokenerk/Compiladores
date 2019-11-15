@@ -21,21 +21,18 @@
             <form method="POST" enctype="multipart/form-data">
                {% from "_macroInputs.html" import render_field %}
                <p style="text-align: center; font-size: 25px;"> NFA Syntactic Analysis </p>
+
                <div class="row">
-	               	<div class="input-field col s7">
+	               	<div class="offset-s1 input-field col s7">
 	               		{{ render_field(nfaF.regularExpressions) }}
 	               	</div>
-       			</div>
-
-       			<div class="row">
-	               	<div class="col s6">
-	               		<input type="file" name="fileGrammar">
+	               	<div class="col">
+	               		<button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
 	               	</div>
-       			</div>
-
-       			<div class="row center">
-	               <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
-	           </div>
+	               	<div class="col">
+	               		<a class="waves-effect waves-light btn-large"><i class="material-icons right">attach_file</i></a>
+	               	</div>
+	            </div>
             </form>
       	</div>
 	</div>

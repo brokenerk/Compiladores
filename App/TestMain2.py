@@ -88,7 +88,7 @@ if __name__ == "__main__":
     #afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar3.txt", "r")
+    archivo = open("grammar6.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -114,10 +114,9 @@ if __name__ == "__main__":
             r.displayRule()
             ruleNumber += 1
 
-       # lr1 = LR1(grammar)
-       # lr1.generateItemSets()
-
-
+        lr1 = LR1(grammar)
+        lr1.generateItemSets()
+        '''
         #Analysis
         print("\nAnalisis LL(1)")
         c = "435.453+3453*(23.3-550)"
@@ -138,7 +137,6 @@ if __name__ == "__main__":
                 print("\n" + c + " no pertenece a la gramatica")
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
-    '''
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
     afn2 = NFA.createBasic('A', 'Z')
