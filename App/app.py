@@ -9,12 +9,8 @@ from SyntacticGrammar import SyntacticGrammar
 import WTForms as forms
 import os
 epsilon = '\u03B5'
-#UPLOAD_FOLDER = os.path.abspath(' /uploads/')
 
 app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app_root = os.path.dirname(os.path.abspath(__file__))
 # Manage every NFA that has been created
 nfaDictionary = {}
 dfaDictionary = {}
@@ -381,7 +377,8 @@ def ll1():
         else:
             print("Gramatica no valida")
             msg = 3
-
+    NFA.restartId()
+    DFA.restartId()
     return render_template('analysis/ll1.html',ll1 = llForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg,msgS = msgS)
 
 # ---------------------------------------------------------------------
@@ -417,7 +414,8 @@ def nfaSyntactic():
                 msg = 1
         except:
             msg = 2
-    
+    NFA.restartId()
+    DFA.restartId()
     return render_template('analysis/nfa.html', nfaF = nfaForm, dfaER = dfaER, msg = msg)
 
 # ---------------------------------------------------------------------

@@ -22,6 +22,13 @@ class NFA:
 		self.accepts = accepts 				#Set<State>
 
 	#Parameters: Nothing
+	#Return: Nothing
+	def restartId():
+		State.restartId()
+		global Id 
+		Id = 0
+
+	#Parameters: Nothing
 	#Return: Integer
 	def getId(self):
 		return self.id  

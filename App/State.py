@@ -12,6 +12,12 @@ class State:
         self.transitions = set([])  #Set<Transition> 
 
     #Parameters: Nothing
+    #Return: Nothing
+    def restartId():
+        global Id 
+        Id = 0
+
+    #Parameters: Nothing
     #Return: Integer
     def getId(self):
         return self.id  

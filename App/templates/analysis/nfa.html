@@ -33,6 +33,10 @@
 	               		<a class="waves-effect waves-light btn-large"><i class="material-icons right">attach_file</i></a>
 	               	</div>
 	            </div>
+	            <div class="row center">
+	               	<!-- MODAL -->
+	               	<a class="waves-effect waves-light btn-large modal-trigger pulse" href="#modal1">IMPORTANT</a>
+	           </div>
             </form>
       	</div>
 	</div>
@@ -75,4 +79,19 @@
 		   {% endif %}
 		</div>
 	</div>
+	<!-- Modal Structure -->
+	<div id="modal1" class="modal">
+	    <div class="modal-content">
+	      <h4>REGEX AND TOKEN'S FORMAT</h4>
+	      <p>A bunch of text</p>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+	    </div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+	    $('.modal').modal();
+	  });
+	</script>
 {% endblock %}
