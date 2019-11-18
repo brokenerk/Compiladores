@@ -1,46 +1,72 @@
 #!python3
 import ply.yacc as yacc
 from calclex import tokens
-# Build the lexer
-
 
 # Precedence rules for the arithmetic operators
 precedence = (
     ('left','PLUS','MINUS'),
     ('left','TIMES','DIVIDE'),
     ('right','UMINUS'),
+    ('right','POT'),
     )
 
 # dictionary of names (for storing variables)
 names = { }
 
-
-def p_statement_assign(p):
-    'statement : NAME EQUALS expression'
-    names[p[1]] = p[3]
-    print(names[p[1]])
-
-def p_statement_expr(p):
-    'statement : expression'
-    print(p[1])
-
 def p_empty(p):
-    'statement :'
+    'list :'
     p[0] = None
 
-def p_error(p):
-	'statement : error'
+def p_list_expr(p):
+    'list : expr'
+    print(p[1])
+
+def p_list_asgn(p):
+    'list : asgn'
+    p[0] = p[1]
+
+def p_list_error(p):
+	'list : error'
 	try:
 		print("Syntax error at '%s'" % p.value)
 	except AttributeError:
 		print("Syntax error")
 
-def p_expression_binop(p):
+def p_asgn(p):
+    'asgn : VAR EQUALS expr'
+    names[p[0]] = p[3]
+
+def p_expr_float(p):
+    'expr : FLOAT'
+    p[0] = p[1]
+
+def p_expr_integer(p):
+    'expr : INTEGER'
+    p[0] = p[1]
+
+def p_expr_var(p):
+    'expr : VAR'
+    p[0] = p[1]
+
+def p_expr_asgn(p):
+    'expr : asgn'
+    p[0] = p[1]
+
+def p_expr_BLTIN(p):
+    'expr : BLTIN LPAREN expr RPAREN'
+    print(p[1])
+
+def p_expr_group(p):
+    'expr : LPAREN expr RPAREN'
+    p[0] = p[2]
+
+def p_expr(p):
     '''
-    expression : expression PLUS expression
-           	   | expression MINUS expression
-               | expression TIMES expression
-               | expression DIVIDE expression
+    expr : expr PLUS expr
+           	   | expr MINUS expr
+               | expr TIMES expr
+               | expr DIVIDE expr
+               | expr POT expr
     '''
     if p[2] == '+'  : p[0] = p[1] + p[3]
     elif p[2] == '-': p[0] = p[1] - p[3]
@@ -51,30 +77,11 @@ def p_expression_binop(p):
     	except ZeroDivisionError:
 	        print("Division by zero")
 	        p[0] = 0
+    elif p[2] == '^': p[0] = p[1] ** p[3]
 
-def p_expression_uminus(p):
-    'expression : MINUS expression %prec UMINUS'
+def p_expr_uminus(p):
+    'expr : MINUS expr %prec UMINUS'
     p[0] = -p[2]
-
-def p_expression_group(p):
-    'expression : LPAREN expression RPAREN'
-    p[0] = p[2]
-
-def p_expression_float(p):
-    'expression : FLOAT'
-    p[0] = p[1]
-
-def p_expression_integer(p):
-    'expression : INTEGER'
-    p[0] = p[1]
-
-def p_expression_name(p):
-    'expression : NAME'
-    try:
-        p[0] = names[p[1]]
-    except LookupError:
-        print("Undefined name '%s'" % p[1])
-        p[0] = 0
 
 yacc.yacc()
 

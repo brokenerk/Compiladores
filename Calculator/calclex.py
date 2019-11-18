@@ -2,7 +2,10 @@
 import ply.lex as lex
 # Tokens
 tokens = [
-    'NAME',
+    'VAR',
+    'BLTIN',
+    'UNDEF',
+    'CONST',
     'INTEGER',
     'FLOAT',
     'EXPR',
@@ -10,6 +13,7 @@ tokens = [
     'MINUS',
     'TIMES',
     'DIVIDE',
+    'POT',
     'EQUALS',
     'LPAREN',
     'RPAREN',
@@ -21,9 +25,12 @@ t_MINUS   = r'\-'
 t_TIMES   = r'\*'
 t_DIVIDE  = r'\/'
 t_EQUALS  = r'\='
+t_POT     = r'\^'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
-t_NAME    = r'[a-zA-Z_][a-zA-Z0-9_]*'
+t_VAR     = r'[a-zA-Z_][a-zA-Z0-9_]*'
+t_BLTIN   = r'[a-zA-Z_][a-zA-Z0-9_]*'
+t_CONST   = r'[a-zA-Z_][a-zA-Z0-9_]*'
 # Ignored characters
 t_ignore = ' \t'
 
