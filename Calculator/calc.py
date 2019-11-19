@@ -1,6 +1,8 @@
 #!python3
 import ply.yacc as yacc
 from calclex import tokens
+import init as init
+from hoc_h import Symbols
 
 # Precedence rules for the arithmetic operators
 precedence = (
@@ -9,9 +11,6 @@ precedence = (
     ('right','UMINUS'),
     ('right','POT'),
     )
-
-# dictionary of names (for storing variables)
-names = { }
 
 def p_empty(p):
     'list :'
@@ -34,7 +33,8 @@ def p_list_error(p):
 
 def p_asgn(p):
     'asgn : VAR EQUALS expr'
-    names[p[0]] = p[3]
+    Symbols[p[1]].setType("VAR")
+    p[0] = Symbols[p[1]].setVal(p[3])
 
 def p_expr_float(p):
     'expr : FLOAT'
@@ -46,7 +46,10 @@ def p_expr_integer(p):
 
 def p_expr_var(p):
     'expr : VAR'
-    p[0] = p[1]
+    if Symbols[p[1].getName()].getType() == "UNDEF":
+        print("undefined variable {}".format( p[1].getName() ) )
+    else:
+        p[0] = Symbols[ p[1] ].getVal()
 
 def p_expr_asgn(p):
     'expr : asgn'
@@ -54,7 +57,8 @@ def p_expr_asgn(p):
 
 def p_expr_BLTIN(p):
     'expr : BLTIN LPAREN expr RPAREN'
-    print(p[1])
+    Function = Symbols[p[1]].getFunc()
+    p[0] = Function( p[3] )
 
 def p_expr_group(p):
     'expr : LPAREN expr RPAREN'
@@ -85,7 +89,11 @@ def p_expr_uminus(p):
 
 yacc.yacc()
 
+init.init( )
+
 while True:
+    for key in Symbols.keys():
+        print( '{} : {}'.format( Symbols[key].getName(),Symbols[key].getVal() ) )
     try:
         s = input('calc > ')
     except EOFError:
