@@ -14,6 +14,7 @@ class LR0:
 		self.itemSets = [] 				#List<List<Node>>
 		self.visitedRules = set([]) 	#Set<List<Node>>
 		self.index = {}					#Dictionary
+		self.numberRules = {}			#Dictionary
 		self.t = []						#List<String>
 		self.nt = []					#List<String>
 		self.dpFirst = {}			#Dictionary
@@ -43,6 +44,11 @@ class LR0:
 	#Return: Initial symbol of the grammar
 	def getInitialSymbol(self):
 		return self.rules[0].getSymbol()
+
+	#Parameters: Nothing
+	#Return: Counter of the initial symbol
+	def getInitialCounter(self):
+		return self.rules[0].getCounter()
 
 	#Parameters: Nothing
 	#Return: Nothing
@@ -161,21 +167,25 @@ class LR0:
 
 	#Parameters: Nothing
 	#Return: Nothing
+	#Note: Create a dictionary
+	def initializeCounter(self):
+		print("Creating counter...")
+		i = 0
+		for rule in self.rules:
+			rule.setCounter(i)
+			#rule.displayItems()
+			i += 1
+
+	#Parameters: Nothing
+	#Return: Nothing
 	#Note: Generate the states for the displacements on the relations table
 	def isLR0(self):
 		self.setNoTerminals()
 		self.setTerminals()
 		self.initializeTable()
 		self.setDPFirst()
-		print("FIRST")
-		for i in self.dpFirst:
-			print(i + ": " + str(self.dpFirst[i]))
-
-		print("")
-		print("FOLLOW")
 		self.setDPFollow()
-		for i in self.dpFollow:
-			print(i + ": " + str(self.dpFollow[i]))
+		self.initializeCounter()
 
 		firstRule = self.rules[0]
 
@@ -201,7 +211,7 @@ class LR0:
 			Si = queue.pop(0) 	#Get first enter
 			symbolItems = self.getSymbolItems(Si)
 			
-			#print(symbolItems)
+			print(symbolItems)
 			#Iterate over the item symbols
 			for symbol in symbolItems:
 				#print("---> Estoy en: ", symbol)
@@ -242,31 +252,34 @@ class LR0:
 				self.itemSets.append(aux)
 
 				print("\n" + "S" + str(cont))
-				for rule in aux:
-					rule.displayItems()
+				# for rule in aux:
+				# 	rule.displayItems()
 
 				#Adding Rules 
 				for rule in aux:
 					next = rule.getNext()
-
 					while(next != None):
 						if(next.getPointAfter()):
 							#Get Follow[rule.symbol] to add into Table
-							for char in self.dpFollow[rule.symbol]:
+							followDP = self.dpFollow[rule.symbol]
+							for char in followDP:
 								#Add a pair: [r, cont]
 								ruleTable = []
-								ruleTable.insert(0, "r")
-								ruleTable.insert(1, cont)
+								if(self.getInitialCounter() == rule.counter):
+									ruleTable.insert(0, 1)
+									ruleTable.insert(1, "accept")
+								else:
+									ruleTable.insert(0, "r")
+									ruleTable.insert(1, rule.counter)
 								
 								# Check if there is an error
-								if(self.table[i + 1][self.index[symbol]] != 0):
+								if(self.table[cont + 1][self.index[char]] != 0):
 									return 0
 								else:
 									self.table[cont + 1][self.index[char]] = ruleTable
 						next = next.getNext()
 					print("")
-					#rule.displayItems()
-
+				
 				cont += 1
 			i += 1
 

@@ -8,10 +8,22 @@ class Node:
         self.pointAfter = False             #Boolean
         self.lr1Symbols = set([])           #Set<String>
         self.original = False               #Boolean
+        self.counter = 0                    #Counter
 
     #Return: Node
     def getNext(self):
         return self.next
+    
+    #Parameters: Counter
+    #Return: Nothing
+    def setCounter(self, c):
+        self.counter = c
+
+    #Parameters: Nothing
+    #Return: Counter
+    def getCounter(self):
+        return self.counter
+
     #Parameters: Node
     #Return: Nothing
     def setNext(self, next):
@@ -21,6 +33,7 @@ class Node:
     #Return: String
     def getSymbol(self):
         return self.symbol
+    
     #Parameters: String
     #Return: Nothing
     def setSymbol(self, symbol):
@@ -30,6 +43,7 @@ class Node:
     #Return: Boolean
     def getPointBefore(self):
         return self.pointBefore
+    
     #Parameters: Boolean
     #Return: Nothing
     def setPointBefore(self, pointBefore):
@@ -39,6 +53,7 @@ class Node:
     #Return: Boolean
     def getPointAfter(self):
         return self.pointAfter
+    
     #Parameters: Boolean
     #Return: Nothing
     def setPointAfter(self, pointAfter):
@@ -48,6 +63,7 @@ class Node:
     #Return: Set<String>
     def getLR1Symbols(self):
         return self.lr1Symbols
+    
     #Parameters: Set<String>
     #Return: Nothing
     def setLR1Symbols(self, lr1Symbols):
@@ -57,6 +73,7 @@ class Node:
     #Return: Boolean
     def getOriginal(self):
         return self.original
+    
     #Parameters: Boolean
     #Return: Nothing
     def setOriginal(self, original):
