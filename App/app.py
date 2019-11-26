@@ -4,6 +4,8 @@ from DFA import DFA
 from Token import Token
 from Lexer import Lexer
 from LL1 import LL1
+from LR0 import LR0
+from LR1 import LR1
 from SyntacticNFA import SyntacticNFA
 from SyntacticGrammar import SyntacticGrammar
 import WTForms as forms
@@ -379,7 +381,111 @@ def ll1():
             msg = 3
     NFA.restartId()
     DFA.restartId()
-    return render_template('analysis/ll1.html',ll1 = llForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg,msgS = msgS)
+    return render_template('analysis/ll1.html', ll1 = llForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg,msgS = msgS)
+
+# ---------------------------------------------------------------------
+#                       ANALYSIS: LR(0)
+# ---------------------------------------------------------------------
+@app.route("/LR(0)", methods = ['GET', 'POST'])
+def lr0():
+    lr0Form = forms.LR0(request.form)
+    relationsTable = None
+    analysisTable = None
+    grammar = None
+    msg = None
+    msgS = None
+    rules = ""
+    if request.method == 'POST':
+        string = lr0Form.string.data
+        grammarForm = lr0Form.grammar.data
+
+        stringAux = grammarForm.split('\r\n')
+        for s in stringAux:
+            rules += s
+
+        print("\nAnalizando cadena: " + string)
+        lex = Lexer(grammarDFA, rules)
+        print("Lexico OK. Analizando sintacticamente...")
+        
+        syn = SyntacticGrammar(lex)
+        print("\nGramatica construida: ")
+        
+        grammar = syn.start()
+        if(grammar):
+            print("Gramatica valida")
+            msg = 5
+            
+            if(string != ""):
+                for r in grammar:
+                    r.displayRule()
+
+                #Analysis
+                print("\nAnalisis LR(0)")
+                #lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
+                lr0 = LR0(grammar)
+                if(msg != 4):
+                    if(lr0.isLR0()):
+                        print("Gramatica compatible con LR(0)")
+                        msg = 1
+                    else:
+                        print("\nERROR. La gramatica no es compatible con LR(0)")
+                        msg = 2
+        else:
+            print("Gramatica no valida")
+            msg = 3
+    return render_template('analysis/lr0.html', lr0 = lr0Form, grammar = grammar, msg = msg, msgS = msgS)
+
+# ---------------------------------------------------------------------
+#                       ANALYSIS: LR(1)
+# ---------------------------------------------------------------------
+@app.route("/LR(1)", methods = ['GET', 'POST'])
+def lr1():
+    lr1Form = forms.LR1(request.form)
+    relationsTable = None
+    analysisTable = None
+    grammar = None
+    msg = None
+    msgS = None
+    rules = ""
+    if request.method == 'POST':
+        string = lr1Form.string.data
+        grammarForm = lr1Form.grammar.data
+
+        stringAux = grammarForm.split('\r\n')
+        for s in stringAux:
+            rules += s
+
+        print("\nAnalizando cadena: " + string)
+        lex = Lexer(grammarDFA, rules)
+        print("Lexico OK. Analizando sintacticamente...")
+        
+        syn = SyntacticGrammar(lex)
+        print("\nGramatica construida: ")
+        
+        grammar = syn.start()
+        if(grammar):
+            print("Gramatica valida")
+            msg = 5
+            
+            if(string != ""):
+                for r in grammar:
+                    r.displayRule()
+
+                #Analysis
+                print("\nAnalisis LR(1)")
+                #lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
+                lr1 = LR1(grammar)
+                if(msg != 4):
+                    if(lr1.isLR1()):
+                        print("Gramatica compatible con LR(1)")
+                        msg = 1
+                    else:
+                        print("\nERROR. La gramatica no es compatible con LR(1)")
+                        msg = 2
+        else:
+            print("Gramatica no valida")
+            msg = 3
+    return render_template('analysis/lr1.html', lr1 = lr1Form, grammar = grammar, msg = msg, msgS = msgS)
 
 # ---------------------------------------------------------------------
 #                        NFA Syntactic

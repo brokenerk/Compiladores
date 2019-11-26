@@ -1,6 +1,14 @@
-#mynetwork {
+#mynetwork{
 	width: 750px;
 	height: 380px;
+	border: 1px solid lightgray;
+	margin: auto;
+	padding: 10px;
+}
+
+#mynetwork_dfa {
+	width: 940px;
+	height: 500px;
 	border: 1px solid lightgray;
 	margin: auto;
 	padding: 10px;

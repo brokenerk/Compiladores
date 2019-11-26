@@ -14,6 +14,77 @@
 				displayLength: 5000
 			})
 		{% endif %}
+
+		$(document).ready(function(){
+			{% if dfaER %}
+				var nodesList = [];
+		        var edgesList = [];
+		        var state = 0;
+		        {% for row in dfaER.getTable() %}
+		            
+		        	var border = 0;
+		            var countNext = 1;
+		            var rowLength = '{{row|length}}';
+
+		            {% for next in row %}
+		            	{% if next != -1 %}
+		            		if(countNext != rowLength){
+		            			
+		            			var i = 0;
+		            			var symbol = "";
+		            			{% for a in dfaER.getAlphabet() %}
+		            				if(i == countNext - 1){
+		            					symbol = '{{a}}';
+		            				}
+		            				i++;
+		            			{% endfor %}
+
+					            edgesList.push({
+				                    from: state,
+				                    to: '{{next}}',
+				                    label: symbol,
+				                    arrows: {
+				                        to : {
+				                            enabled: true,
+				                            type: 'arrow'
+				                        }
+				                    },
+				               	});
+			               	}
+			               	else {
+			               		border = 6;
+			               	}
+			            {% endif %}
+			            countNext++;
+		            {% endfor %}
+
+		            if(state == 0){
+		            	border = 2;
+		            }
+
+		            nodesList.push({
+		                id: state,
+		                shape: 'circle',
+		                borderWidth: border,
+		                label: 'State\n' + state
+		            });
+
+		            state++;
+		        {% endfor %}
+
+		        var nodes = new vis.DataSet(nodesList);
+		        var edges = new vis.DataSet(edgesList);
+
+		        var container = $('#mynetwork_dfa')[0]; 
+
+		        var data = {
+		            nodes: nodes,
+		            edges: edges
+		        };
+
+		        var network = new vis.Network(container, data, {});
+			{% endif %}
+		});
 	</script>
 
 	<div class="container">
@@ -40,9 +111,14 @@
             </form>
       	</div>
 	</div>
-	
-	<!-- Aqui falta dibujar el DFA con vis.js-->
 
+	<div class="row offset-s3">
+		{% if dfaER %}
+			<p style="text-align: center; font-size: 25px;">DFA Id: {{ dfaER.getId() }} Nodes Form</p>
+	        <div id="mynetwork_dfa"></div>
+        {% endif %}
+    </div>
+	
 	<div id="principal" class="container">
 		<div id="showTable" class="row">
 		   {% if dfaER %}
@@ -79,6 +155,7 @@
 		   {% endif %}
 		</div>
 	</div>
+
 	<!-- Modal Structure -->
 	<div id="modal1" class="modal">
 	    <div class="modal-content">
