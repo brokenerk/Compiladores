@@ -17,9 +17,10 @@ class LR0:
 		self.numberRules = {}			#Dictionary
 		self.t = []						#List<String>
 		self.nt = []					#List<String>
-		self.dpFirst = {}			#Dictionary
-		self.dpFollow = {}			#Dictionary
-		self.visited = set()		#Set<String>
+		self.dpFirst = {}				#Dictionary
+		self.dpFollow = {}				#Dictionary
+		self.visited = set()			#Set<String>
+		self.rulesDictionary = {}		#Dictionary Rules
 		
 	#Parameters: Nothing
 	#Return: Nothing
@@ -172,8 +173,9 @@ class LR0:
 		print("Creating counter...")
 		i = 0
 		for rule in self.rules:
+			print("Adding rule:", i)
 			rule.setCounter(i)
-			#rule.displayItems()
+			self.rulesDictionary[i] = rule
 			i += 1
 
 	#Parameters: Nothing
@@ -211,7 +213,7 @@ class LR0:
 			Si = queue.pop(0) 	#Get first enter
 			symbolItems = self.getSymbolItems(Si)
 			
-			print(symbolItems)
+			#print(symbolItems)
 			#Iterate over the item symbols
 			for symbol in symbolItems:
 				#print("---> Estoy en: ", symbol)
@@ -225,12 +227,10 @@ class LR0:
 				#Sort aux rules
 				aux = sorted(aux, key = lambda rule: (rule.getSymbol(), rule.getNext().getSymbol(), rule.getNext().getPointBefore())) 
 					
-				#Insert a pair in the list 
 				pair = []
-				pair.insert(0, "d")
+				pair.insert(0, "d") 		#Insert a pair in the list 
 				
-				#Verify is set already exists in list
-				check = self.exists(aux)
+				check = self.exists(aux)	#Verify is set already exists in list
 				
 				if(check >= 0):
 					pair.insert(1, check)
@@ -246,10 +246,8 @@ class LR0:
 				pair.insert(1, cont)
 				self.table[i + 1][self.index[symbol]] = pair
 				
-				#Add new set to the end of the queue
-				queue.append(aux)
-				#Add the new set to the list
-				self.itemSets.append(aux)
+				queue.append(aux)			#Add new set to the end of the queue
+				self.itemSets.append(aux) 	#Add the new set to the list
 
 				print("\n" + "S" + str(cont))
 				# for rule in aux:
@@ -260,11 +258,10 @@ class LR0:
 					next = rule.getNext()
 					while(next != None):
 						if(next.getPointAfter()):
-							#Get Follow[rule.symbol] to add into Table
-							followDP = self.dpFollow[rule.symbol]
+							followDP = self.dpFollow[rule.symbol] 	#Get Follow[rule.symbol] to add into Table
+							
 							for char in followDP:
-								#Add a pair: [r, cont]
-								ruleTable = []
+								ruleTable = [] 	#Add a pair: [r, cont]
 								if(self.getInitialCounter() == rule.counter):
 									ruleTable.insert(0, 1)
 									ruleTable.insert(1, "accept")
@@ -278,8 +275,6 @@ class LR0:
 								else:
 									self.table[cont + 1][self.index[char]] = ruleTable
 						next = next.getNext()
-					print("")
-				
 				cont += 1
 			i += 1
 
@@ -289,10 +284,140 @@ class LR0:
 	
 		return 1
 
-	def analize(self, c):
-		print("Analizando ...")
+	#Parameters: Nothing
+	#Return: Nothing
+	#Note: Generate the initial table of the analysis
+	def initAnalysisTable(self):
+		for i in range(1):
+			self.analysisTable.append([0] * 3)
+		self.analysisTable[0][0] = "Stack"
+		self.analysisTable[0][1] = "String"
+		self.analysisTable[0][2] = "Action"
 
-		return 1
+	#Parameters: Rule
+	#Return: Number of right symbols of the Rule
+	def countSymbols(self, r):
+		next = r.getNext()
+		i = 0
+		while(next != None):
+			if(next.getSymbol() == "epsilon"):
+				return 0
+			i += 1
+			next = next.getNext()
+		return i
+
+	#Parameters: List
+	#Return: String
+	def convertToString(self, l):
+		s = ""
+		for i in range(0, len(l)):
+			s = s + str(l[i])
+		return s
+
+	#Parameter: Nothing
+	#Return: Nothing
+	#Note: Show the analysis table
+	def printAnalysisTable(self):
+		for i in self.analysisTable:
+			print(i)
+
+
+	#Parameters: string
+	#Return: True if the string allow to the grammar, false in other case
+	def analyze(self, c):
+		print("Analizando ...")
+		self.initAnalysisTable()
+		p = []
+		srt = []
+		print("Initial counter:", self.getInitialCounter())
+		p.append(self.getInitialCounter())
+		
+		#PUT LEXICO
+		c = ["num", "*", "(", "num", "+", "num", ")"]
+
+		#Convert to list
+		for i in range(0, len(c)):
+			srt.append(c[i])
+		srt.append("$")
+
+		while p:
+			#There are no symbols to analyze	
+			if len(srt) == 0:
+				return False
+			values = []				#Aux to generate front table
+			lastP = p[len(p) - 1] 	#Top of the stack
+			strAnalysis = srt[0]	#Symbol to analyze
+			
+			#Get Coordinates to the first action
+			x = lastP + 1
+			if strAnalysis in self.index:
+				y = self.index[strAnalysis]
+			else:
+				return False
+
+			#Get action from table of LR0
+			action = self.table[x][y]
+
+			#Front table
+			values.append(self.convertToString(p))
+			values.append(self.convertToString(srt))
+			values.append(self.convertToString(action))
+			self.analysisTable.append(values)
+			
+			print("Action", action)
+			#values.append(self.convertToString(p))
+			#values.append(self.convertToString(srt))
+			
+			#Its a displacement
+			if action[0] == "d":
+				p.append(strAnalysis)	#Add symbol to the Stack
+				p.append(action[1])		#Add number of displacement to the Stack
+				srt.pop(0)				#Delete symbol from the string to analyze
+
+			#Is a reduction
+			elif action[0] == "r":				
+				if action[1] in self.rulesDictionary: 								#Verify rule number exist on rulesDictionary					
+					toPop = self.countSymbols(self.rulesDictionary[action[1]]) * 2	#Get rule to calculate number of symbols
+					
+					#Delete from stack the number of symbols calculated
+					while(toPop):
+						if len(p) > 0:
+							p.pop()
+						else:
+							return False
+						toPop -= 1
+
+					#Get Coordinates to the second action
+					if len(p) > 0:
+						x = p[len(p) - 1] + 1 										#Calculated coordinate X
+					else:
+						return False
+
+					if self.rulesDictionary[action[1]].getSymbol() in self.index:
+						y = self.index[self.rulesDictionary[action[1]].getSymbol()] #Calculate cordinate Y
+					else:
+						return False
+
+					#Get second action
+					secondAction = self.table[x][y]
+					if secondAction[0] == "d":
+						#Add to the Stack
+						p.append(self.rulesDictionary[action[1]].getSymbol())
+						p.append(secondAction[1])
+					else:
+						return False
+				#Rule doesnt exist rulesDictionary
+				else:
+					return False
+
+			#Its an accepted
+			elif action[0] == 1:
+				return True
+			
+			#Error
+			else:
+				return False
+		return False
 
 	#Parameters: Nothing
 	#Return: Nothing

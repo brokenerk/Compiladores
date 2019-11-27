@@ -117,10 +117,11 @@ if __name__ == "__main__":
         lr0 = LR0(grammar)
         if(lr0.isLR0()):
             print("Es LR0")
-            # if(lr0.analyze("Palabra")):
-            #     print("Cadena aceptada")
-            # else:
-            #     print("Cadena no aceptada")
+            if(lr0.analyze("n*(n+n)")):
+                print("Cadena aceptada")
+                lr0.printAnalysisTable()
+            else:
+                print("Cadena no aceptada")
         else:
             print("No es LR0")
         # ll1 = LL1(grammar, "aaa")
