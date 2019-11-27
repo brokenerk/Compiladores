@@ -364,10 +364,6 @@ class LR0:
 			values.append(self.convertToString(action))
 			self.analysisTable.append(values)
 			
-			print("Action", action)
-			#values.append(self.convertToString(p))
-			#values.append(self.convertToString(srt))
-			
 			#Its a displacement
 			if action[0] == "d":
 				p.append(strAnalysis)	#Add symbol to the Stack
