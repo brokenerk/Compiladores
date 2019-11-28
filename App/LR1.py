@@ -277,8 +277,11 @@ class LR1:
                 if(check != -1):
                     pair.insert(1, check)
                     # Check if there is an error
-                    if(self.table[i + 1][self.index[symbol]] != 0 and symbol != "$"):
-                        return False
+                    if(self.table[i + 1][self.index[symbol]] != 0):
+                        if(symbol != "$"):
+                            return False
+                        else:
+                            continue
                     else:
                         self.table[i + 1][self.index[symbol]] = pair
                     continue
@@ -310,9 +313,11 @@ class LR1:
                                     ruleTable.insert(1, rule.getCounter())
                                 
                                 # Check if there is an error
-                                if(self.table[cont + 1][self.index[symbol]] != 0 and symbol != "$"):
-
-                                    return False
+                                if(self.table[cont + 1][self.index[symbol]] != 0):
+                                    if(symbol != "$"):
+                                        return False
+                                    else:
+                                        continue
                                 else:
                                     self.table[cont + 1][self.index[symbol]] = ruleTable
                                     
