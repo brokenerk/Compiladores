@@ -1,0 +1,187 @@
+{% extends 'base/dashboard.html'%}
+{% block content %}	
+	<script>
+		{% if msg == 1 %}
+			M.toast({
+				html: 'Grammar is compatible with LALR analysis',
+				classes: 'green',
+				displayLength: 5000
+			})
+
+			{% if msgS == 1 %}
+				M.toast({
+					html: 'String belongs to the grammar',
+					classes: 'green',
+					displayLength: 5000
+				})
+			{% elif msgS == 2 %}
+				M.toast({
+					html: "String doesn't belong to the grammar",
+					classes: 'red',
+					displayLength: 5000
+				});
+			{% endif %}
+		{% elif msg == 2 %}
+			M.toast({
+				html: "Grammar is not compatible with LALR analysis",
+				classes: 'red',
+				displayLength: 5000
+			})
+		{% elif msg == 3 %}
+			M.toast({
+				html: 'Input grammar is invalid',
+				classes: 'red',
+				displayLength: 5000
+			})
+		{% elif msg == 5 %}
+			M.toast({
+				html: "The grammar was generated succesfully.",
+				classes: 'green',
+				displayLength: 5000
+			})
+		{% endif %}
+	</script>
+
+	<div class="container">
+      	<div id="lalr" class="col s12">
+            <form method="POST" enctype="multipart/form-data">
+               {% from "_macroInputs.html" import render_field %}
+               <p style="text-align: center; font-size: 25px;"> LALR Syntactic Analysis </p>
+               <div class="row">
+	               	<div class="offset-s1 input-field col s7">
+	               		{{ render_field(lalr.grammar) }}
+	               	</div>
+	               	<div class="col">
+	               		<button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">sync_alt</i>Generate</button>
+	               	</div>
+	               	<div class="col">
+	               		<a class="waves-effect waves-light btn-large"><i class="material-icons right">attach_file</i></a>
+	               	</div>
+	            </div>
+	           	<div class="row">
+	               	<div class="offset-s1 input-field col s7">
+	               		{{ render_field(lalr.string) }}
+	               	</div>
+	               	<div class="col">
+	               		<button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
+	               	</div>
+	               	<div class="col">
+	               		<a class="waves-effect waves-light btn-large"><i class="material-icons right">attach_file</i></a>
+	               	</div>
+       			</div>
+       			<div class="row center">
+	               	<!-- MODAL -->
+	               	<a class="waves-effect waves-light btn-large modal-trigger pulse" href="#modal1">IMPORTANT</a>
+	           </div>
+            </form>
+		</div>
+	</div>
+
+	<div id="grammarTable" class="container">
+	   	<div id="showGrammarTable" class ="row">
+	       	{% if grammar %}
+	           	<p style="text-align: center; font-size: 25px;"> Grammar Table </p>
+	           	<div class="row">
+		           	<table class="striped centered responsive-table highlight">
+		           		<tbody>
+		               		{% for rule in grammar %}
+		                		<tr>
+		                			<td><b>{{loop.index - 1}}</b></td>
+									{% for r in rule.getRule() %}
+										<td> {{r}} </td>
+									{% endfor %}
+		                    	</tr>
+		                  	{% endfor %}
+		               	</tbody>
+		            </table>
+		        </div>
+	        {% endif %}
+	    </div>
+	</div>
+
+	<div id="lalrTable" class="container">
+		<div id="showLALRTable" class="row">
+		   {% if relationsTable %}
+		 	 	<p style="text-align: center; font-size: 25px;"> Rules Relationship Table</p>
+	   			<div class="row">
+			  		<table class="striped centered responsive-table highlight">
+						<thead class="#0288d1 light-blue darken-2">
+							<tr>		
+								{% for row in relationsTable[0] %}
+							  		<th class="white-text">{{ row }}</th>
+								{% endfor %}
+							</tr>
+						</thead>
+						<tbody>
+							{% for row in relationsTable %}
+								{% if loop.index > 1 %}
+									<tr>
+										{% for r in row %}
+											<td>
+											{% if r != 0 or loop.index == 1 %}
+												
+												<b>{{ r }}</b>
+												
+											{% else %}
+												{{ r }}
+											{% endif %}
+											</td>
+										{% endfor %}	
+									</tr>
+								{% endif %}				   
+							{% endfor %}
+						 </tbody>
+			  		</table>
+		   		</div>
+		   {% endif %}
+		</div>
+	</div>
+
+	<div id="analysisTable" class="container">
+		<div id="showAnalysisTable" class="row">
+		   {% if analysisTable %}
+				<p style="text-align: center; font-size: 25px;">LALR Analysis Table</p>
+
+			   	<div class="row">
+					<table class="striped centered responsive-table highlight">
+						<thead class="#0288d1 light-blue darken-2">
+							<tr>		
+								{% for row in analysisTable[0] %}
+							  		<th class="white-text">{{ row }}</th>
+								{% endfor %}
+							</tr>
+						</thead>
+						<tbody>
+
+							{% for row in analysisTable %}
+								{% if loop.index > 1 %}
+									<tr>
+										{% for r in row %}
+											<td>{{ r }}</td>
+										{% endfor %}	
+									</tr>
+								{% endif %}
+							{% endfor %}	
+					 	</tbody>
+				  </table>
+			   	</div>
+		   {% endif %}
+		</div>
+	</div>
+	
+	<div id="modal1" class="modal">
+	    <div class="modal-content">
+	      <h4>GRAMMARS' FORMAT</h4>
+	      <p>A bunch of text</p>
+	    </div>
+	    <div class="modal-footer">
+	      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+	    </div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function(){
+	    $('.modal').modal();
+	  });
+	</script>
+	-->
+{% endblock %}

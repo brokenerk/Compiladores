@@ -6,6 +6,7 @@ from Lexer import Lexer
 from LL1 import LL1
 from LR0 import LR0
 from LR1 import LR1
+from LALR import LALR
 from SyntacticNFA import SyntacticNFA
 from SyntacticGrammar import SyntacticGrammar
 epsilon = '\u03B5'
@@ -93,7 +94,7 @@ if __name__ == "__main__":
     afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar7.txt", "r")
+    archivo = open("grammar5.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -119,23 +120,23 @@ if __name__ == "__main__":
             r.displayRule()
             ruleNumber += 1
 
-        c = "43315.453*(23.4632153+5501321)"
+        c = "23.4632153+5501321"
         lex2 = Lexer(afd2, c)
 
-        lr1 = LR1(grammar, lex2)
+        lalr = LALR(grammar, lex2)
 
-        if(lr1.isLR1()):
-            print("Es LR1")
-            lr1.displayTable(0)
+        if(lalr.isLALR()):
+            print("Es LALR")
+            lalr.displayTable(0)
 
-            res = lr1.analyze(c)
-            lr1.displayTable(1)
+            res = lalr.analyze(c)
+            lalr.displayTable(1)
             if(res):
                 print("\n" + c + " pertenece a la gramatica")
             else:
                 print("\n" + c + " no pertenece a la gramatica")
         else:
-            print("No es LR1")
+            print("No es LALR")
 
         '''
         #Analysis

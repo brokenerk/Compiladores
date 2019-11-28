@@ -18,6 +18,10 @@ class LR1(Form):
 	grammar = TextAreaField('Grammar: ', [validators.required(), validators.length(min=5)])
 	string = StringField('String: ')
 
+class LALR(Form):
+	grammar = TextAreaField('Grammar: ', [validators.required(), validators.length(min=5)])
+	string = StringField('String: ')
+
 class Lexic(Form):
 	#grammar = TextAreaField('Grammar: ', [validators.required(), validators.length(min=5)])
 	string = StringField('String: ', [validators.required(), validators.length(min=1)])

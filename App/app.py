@@ -6,6 +6,7 @@ from Lexer import Lexer
 from LL1 import LL1
 from LR0 import LR0
 from LR1 import LR1
+from LALR import LALR
 from SyntacticNFA import SyntacticNFA
 from SyntacticGrammar import SyntacticGrammar
 import WTForms as forms
@@ -523,6 +524,75 @@ def lr1():
             print("Gramatica no valida")
             msg = 3
     return render_template('analysis/lr1.html', lr1 = lr1Form, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg, msgS = msgS)
+
+
+# ---------------------------------------------------------------------
+#                       ANALYSIS: LR(1)
+# ---------------------------------------------------------------------
+@app.route("/LALR", methods = ['GET', 'POST'])
+def lalr():
+    lalrForm = forms.LALR(request.form)
+    relationsTable = None
+    analysisTable = None
+    grammar = None
+    msg = None
+    msgS = None
+    rules = ""
+    if request.method == 'POST':
+        string = lalrForm.string.data
+        grammarForm = lalrForm.grammar.data
+
+        stringAux = grammarForm.split('\r\n')
+        for s in stringAux:
+            rules += s
+
+        print("\nAnalizando cadena: " + string)
+        lex = Lexer(grammarDFA, rules)
+        print("Lexico OK. Analizando sintacticamente...")
+        
+        syn = SyntacticGrammar(lex)
+        print("\nGramatica construida: ")
+        
+        grammar = syn.start()
+        if(grammar):
+            print("Gramatica valida")
+            msg = 5
+            
+            if(string != ""):
+                for r in grammar:
+                    r.displayRule()
+
+                #Analysis
+                print("\nAnalisis LR(1)")
+                lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
+                #lex2.display()
+                lalr = LALR(grammar, lex2)
+                del lex2
+                if(msg != 4):
+                    if(lalr.isLALR()):
+                        print("Gramatica compatible con LALR")
+                        msg = 1
+                    else:
+                        print("\nERROR. La gramatica no es compatible con LALR")
+                        msg = 2
+
+                    lalr.displayTable(0)
+                    res = lalr.analyze(string)
+                    lalr.displayTable(1)
+
+                    relationsTable = lalr.getTable()
+                    analysisTable = lalr.getAnalysisTable()
+
+                    if(res):
+                        print("\n" + string + " pertenece a la gramatica")
+                        msgS = 1
+                    else:
+                        print("\n" + string + " no pertenece a la gramatica")
+                        msgS = 2
+        else:
+            print("Gramatica no valida")
+            msg = 3
+    return render_template('analysis/lalr.html', lalr = lalrForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg, msgS = msgS)
 
 # ---------------------------------------------------------------------
 #                        NFA Syntactic

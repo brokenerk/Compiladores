@@ -5,7 +5,7 @@ from Token import Token
 from copy import deepcopy
 epsilon = '\u03B5'
 
-class LR1:
+class LALR:
     #Constructor
     def __init__(self, rules, stringLex):
         self.rules = rules              #List<Node>
@@ -56,7 +56,7 @@ class LR1:
 
     #Parameters: Nothing
     #Return: Nothing
-    #Note: Fill LR(1) Table
+    #Note: Fill LALR Table
     def initializeTable(self):
         nt = list(self.noTerminals)
         t = list(self.terminals)
@@ -77,8 +77,6 @@ class LR1:
             self.table[0][j] = nt[i]
             j += 1
 
-    #Parameters: Symbol
-    #Return: List<Node>
     def searchRule(self, symbol):
         listRules = []
         for rule in self.rules:
@@ -112,11 +110,13 @@ class LR1:
             cont2 = 0
             for r1, r2 in zip(s1, s2):
                 #If a rule matches, increment cont2
-                if(r1.equals(r2) == True and r1.getLR1Symbols() == r2.getLR1Symbols()):
+                if(r1.equals(r2) == True):
                     cont2 += 1
                 cont1 += 1
             #If both conts are the same, it means that item set s1 was already calculated (exists)
             if(cont1 == cont2):
+                for r1, r2 in zip(s1, s2):
+                    r2.setLR1Symbols(r2.getLR1Symbols().union(r1.getLR1Symbols()))
                 return i
             i += 1
         #If both conts never matched, it's a new item set
@@ -223,7 +223,7 @@ class LR1:
     #Parameters: Nothing
     #Return: Nothing
     #Note: Generate the states for the displacements on the relations table
-    def isLR1(self):
+    def isLALR(self):
         self.setNoTerminals()
         self.setTerminals()
         self.initializeTable()
@@ -241,12 +241,6 @@ class LR1:
         queue = [S0]    #Queue<Set>
         self.itemSets.append(S0)    #List<List<Node>>
         cont = 1
-
-        print("")
-        print("S0")
-        for rule in S0:
-            rule.displayItems()
-            print(str(rule.getLR1Symbols()))
 
         #Table LR(1)
         self.table.append([0] * (len(self.terminals) + len(self.noTerminals) + 2)) #Include $ and extended grammar
@@ -290,40 +284,44 @@ class LR1:
                 self.table[cont + 1][0] = cont
                 pair.insert(1, cont)
                 self.table[i + 1][self.index[symbol]] = pair
-                
+
                 queue.append(aux)           #Add new set to the end of the queue
                 self.itemSets.append(aux)   #Add the new set to the list
 
-                print("\n" + "S" + str(cont))
-                for rule in aux:
-                    rule.displayItems()
-                    print(str(rule.getLR1Symbols()))
-                    #Adding Rules 
-                    next = rule.getNext()
-                    while(next != None):
-                        if(next.getPointAfter() or next.getSymbol() == "epsilon"):
-
-                            for symbol in rule.getLR1Symbols():
-                                ruleTable = []  #Add a pair: [r, cont]
-                                if(self.rules[0].getCounter() == rule.getCounter()):
-                                    ruleTable.insert(0, 0)
-                                    ruleTable.insert(1, "accept")
-                                else:
-                                    ruleTable.insert(0, "r")
-                                    ruleTable.insert(1, rule.getCounter())
-                                
-                                # Check if there is an error
-                                if(self.table[cont + 1][self.index[symbol]] != 0):
-                                    if(symbol != "$"):
-                                        return False
-                                    else:
-                                        continue
-                                else:
-                                    self.table[cont + 1][self.index[symbol]] = ruleTable
-                                    
-                        next = next.getNext()
                 cont += 1
             i += 1
+
+        cont = 0
+        for Si in self.itemSets:
+            print("\n" + "S" + str(cont))
+            for rule in Si:
+                rule.displayItems()
+                print(str(rule.getLR1Symbols()))
+                #Adding Rules 
+                next = rule.getNext()
+                while(next != None):
+                    if(next.getPointAfter() or next.getSymbol() == "epsilon"):
+
+                        for symbol in rule.getLR1Symbols():
+                            ruleTable = []  #Add a pair: [r, cont]
+                            if(self.rules[0].getCounter() == rule.getCounter()):
+                                ruleTable.insert(0, 0)
+                                ruleTable.insert(1, "accept")
+                            else:
+                                ruleTable.insert(0, "r")
+                                ruleTable.insert(1, rule.getCounter())
+                            
+                            # Check if there is an error
+                            if(self.table[cont + 1][self.index[symbol]] != 0):
+                                if(symbol != "$"):
+                                    return False
+                                else:
+                                    continue
+                            else:
+                                self.table[cont + 1][self.index[symbol]] = ruleTable
+                                
+                    next = next.getNext()
+            cont += 1
         return True
 
     #Parameters: Nothing
@@ -345,14 +343,14 @@ class LR1:
 
     #Parameters: Nothing
     #Return: Nothing
-    #Note: Show table of LR1
+    #Note: Show table of LALR
     def displayTable(self, op):
         if op == 0:
             print("\nTABLA RELACION DE REGLAS")
             for i in self.table:
                 print(i)
         else:
-            print("\nTABLA ANALISIS LR(1)")
+            print("\nTABLA ANALISIS LALR")
             for i in self.analysisTable:
                 print(i)
 
@@ -382,6 +380,7 @@ class LR1:
             lastP = p[len(p) - 1]   #Top of the stack
             strAnalysis = srt[0]    #Symbol to analyze
             
+            print("STack " + str(p))
             #Get Coordinates to the first action
             x = lastP + 1
 
@@ -418,7 +417,7 @@ class LR1:
             else:
                 break
 
-            #Get action from table of LR1
+            #Get action from table of LALR
             action = self.table[x][y]
 
             if(action == 0):
@@ -472,10 +471,11 @@ class LR1:
 
                     #Get second action
                     secondAction = self.table[x][y]
-                    if secondAction[0] == "d":
-                        #Add to the Stack
-                        p.append(self.rulesDictionary[action[1]].getSymbol())
-                        p.append(secondAction[1])
+                    if(secondAction != 0):
+                        if secondAction[0] == "d":
+                            #Add to the Stack
+                            p.append(self.rulesDictionary[action[1]].getSymbol())
+                            p.append(secondAction[1])
                     else:
                         return False
                 #Rule doesnt exist rulesDictionary
