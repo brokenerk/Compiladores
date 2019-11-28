@@ -405,7 +405,7 @@ class LR1:
                 if("SIMBOLO" in self.index):
                     y = self.index["SIMBOLO"]
                     strAnalysis = "SIMBOLO"
-                elif("id" in self.index):
+                elif("id" in self.index and self.stringLex.getLexem() == "id"):
                     y = self.index["id"]
                     strAnalysis = "id"
                 else:

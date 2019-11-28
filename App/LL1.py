@@ -96,7 +96,9 @@ class LL1:
 				.
 				.
 			'''
-			if(token == Token.ARROW and "FLECHA" in self.terminals):
+			if(firstC in self.terminals or firstC == "$"):
+				y = self.index[firstC] - len(self.noTerminals)
+			elif(token == Token.ARROW and "FLECHA" in self.terminals):
 				y = self.index["FLECHA"] - len(self.noTerminals)
 			elif(token == Token.SEMICOLON and "PC" in self.terminals):
 				y = self.index["PC"] - len(self.noTerminals)
@@ -104,14 +106,17 @@ class LL1:
 				y = self.index["OR"] - len(self.noTerminals)
 			elif(token == Token.CONCAT and "AND" in self.terminals):
 				y = self.index["AND"] - len(self.noTerminals)
-			elif(token == Token.COMMA and "," in self.terminals):
-				y = self.index[","] - len(self.noTerminals)
+			elif(token == Token.COMMA and "coma" in self.terminals):
+				y = self.index["coma"] - len(self.noTerminals)
 			elif(token == Token.NUM and "num" in self.terminals):
 				y = self.index["num"] - len(self.noTerminals)
-			elif(token == Token.SYMBOL and "SIMBOLO" in self.terminals):
-				y = self.index["SIMBOLO"] - len(self.noTerminals)
-			elif(firstC in self.terminals or firstC == "$"):
-				y = self.index[firstC] - len(self.noTerminals)
+			elif(token == Token.SYMBOL):
+				if("SIMBOLO" in self.terminals):
+					y = self.index["SIMBOLO"] - len(self.noTerminals)
+				elif("id" in self.terminals and self.stringLex.getLexem() == "id"):
+					y = self.index["id"] - len(self.noTerminals)
+				else:
+					break
 			else:
 				break
 
