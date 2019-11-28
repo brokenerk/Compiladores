@@ -97,6 +97,7 @@
 		           		<tbody>
 		               		{% for rule in grammar %}
 		                		<tr>
+		                			<td><b>{{loop.index - 1}}</b></td>
 									{% for r in rule.getRule() %}
 										<td> {{r}} </td>
 									{% endfor %}
@@ -108,11 +109,11 @@
 	        {% endif %}
 	    </div>
 	</div>
-	<!--
+
 	<div id="lr0Table" class="container">
 		<div id="showLR0Table" class="row">
 		   {% if relationsTable %}
-		 	 	<p style="text-align: center; font-size: 25px;"> Rules Relation Table</p>
+		 	 	<p style="text-align: center; font-size: 25px;"> Rules Relationship Table</p>
 	   			<div class="row">
 			  		<table class="striped centered responsive-table highlight">
 						<thead class="#0288d1 light-blue darken-2">
@@ -128,8 +129,10 @@
 									<tr>
 										{% for r in row %}
 											<td>
-											{% if r != 0 %}
+											{% if r != 0 or loop.index == 1 %}
+												
 												<b>{{ r }}</b>
+												
 											{% else %}
 												{{ r }}
 											{% endif %}
@@ -191,5 +194,4 @@
 	    $('.modal').modal();
 	  });
 	</script>
-	-->
 {% endblock %}

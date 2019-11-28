@@ -18,7 +18,7 @@ nfaDictionary = {}
 dfaDictionary = {}
 
 # ---------------------------------------------------------------------
-#                        DFA FOR LEXER
+#                        DFA FOR NFA LEXER
 # ---------------------------------------------------------------------
 afn1 = NFA.createBasic('a', 'z')
 afn1.setToken(Token.SYMBOL_LOWER)
@@ -59,6 +59,9 @@ afn16.setToken(Token.MINUS)
 automatota = NFA.specialJoin(set([afn1, afn2, afn3, afn4, afn5, afn6, afn7, afn8, afn9, afn10, afn11, afn12, afn13, afn14, afn15, afn16]))
 syntacticDFA = automatota.convertToDFA()
 
+# ---------------------------------------------------------------------
+#                        DFA FOR GRAMMAR LEXER
+# ---------------------------------------------------------------------
 afn1 = NFA.createBasic('a', 'z')
 afn2 = NFA.createBasic('A', 'Z')
 afn3 = NFA.createBasic('0', '9')
@@ -99,6 +102,9 @@ afn21.setToken(Token.SPACE)
 automatota2 = NFA.specialJoin(set([afnD, afnE, afn11, afn12, afn19, afn20, afn21]))
 grammarDFA = automatota2.convertToDFA()
 
+# ---------------------------------------------------------------------
+#                        DFA FOR STRING LEXER
+# ---------------------------------------------------------------------
 afn1 = NFA.createBasic('A', 'Z')
 afn2 = NFA.createBasic('a', 'z')
 afn2_1 = NFA.createBasic("'")
@@ -381,7 +387,7 @@ def ll1():
             msg = 3
     NFA.restartId()
     DFA.restartId()
-    return render_template('analysis/ll1.html', ll1 = llForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg,msgS = msgS)
+    return render_template('analysis/ll1.html', ll1 = llForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg, msgS = msgS)
 
 # ---------------------------------------------------------------------
 #                       ANALYSIS: LR(0)
@@ -421,8 +427,9 @@ def lr0():
 
                 #Analysis
                 print("\nAnalisis LR(0)")
-                #lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
-                lr0 = LR0(grammar)
+                lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
+                lr0 = LR0(grammar, lex2)
+                del lex2
                 if(msg != 4):
                     if(lr0.isLR0()):
                         print("Gramatica compatible con LR(0)")
@@ -430,10 +437,24 @@ def lr0():
                     else:
                         print("\nERROR. La gramatica no es compatible con LR(0)")
                         msg = 2
+
+                    lr0.displayTable(0)
+                    res = lr0.analyze(string)
+                    lr0.displayTable(1)
+
+                    relationsTable = lr0.getTable()
+                    analysisTable = lr0.getAnalysisTable()
+
+                    if(res):
+                        print("\n" + string + " pertenece a la gramatica")
+                        msgS = 1
+                    else:
+                        print("\n" + string + " no pertenece a la gramatica")
+                        msgS = 2
         else:
             print("Gramatica no valida")
             msg = 3
-    return render_template('analysis/lr0.html', lr0 = lr0Form, grammar = grammar, msg = msg, msgS = msgS)
+    return render_template('analysis/lr0.html', lr0 = lr0Form, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg, msgS = msgS)
 
 # ---------------------------------------------------------------------
 #                       ANALYSIS: LR(1)
@@ -473,8 +494,10 @@ def lr1():
 
                 #Analysis
                 print("\nAnalisis LR(1)")
-                #lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
-                lr1 = LR1(grammar)
+                lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
+                #lex2.display()
+                lr1 = LR1(grammar, lex2)
+                del lex2
                 if(msg != 4):
                     if(lr1.isLR1()):
                         print("Gramatica compatible con LR(1)")
@@ -482,10 +505,24 @@ def lr1():
                     else:
                         print("\nERROR. La gramatica no es compatible con LR(1)")
                         msg = 2
+
+                    lr1.displayTable(0)
+                    res = lr1.analyze(string)
+                    lr1.displayTable(1)
+
+                    relationsTable = lr1.getTable()
+                    analysisTable = lr1.getAnalysisTable()
+
+                    if(res):
+                        print("\n" + string + " pertenece a la gramatica")
+                        msgS = 1
+                    else:
+                        print("\n" + string + " no pertenece a la gramatica")
+                        msgS = 2
         else:
             print("Gramatica no valida")
             msg = 3
-    return render_template('analysis/lr1.html', lr1 = lr1Form, grammar = grammar, msg = msg, msgS = msgS)
+    return render_template('analysis/lr1.html', lr1 = lr1Form, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg, msgS = msgS)
 
 # ---------------------------------------------------------------------
 #                        NFA Syntactic

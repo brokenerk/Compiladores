@@ -92,6 +92,7 @@
 		           		<tbody>
 		               		{% for rule in grammar %}
 		                		<tr>
+		                			<td><b>{{loop.index - 1}}</b></td>
 									{% for r in rule.getRule() %}
 										<td> {{r}} </td>
 									{% endfor %}
@@ -107,7 +108,7 @@
 	<div id="ll1Table" class="container">
 		<div id="showLL1Table" class="row">
 		   {% if relationsTable %}
-		 	 	<p style="text-align: center; font-size: 25px;"> Rules Relation Table</p>
+		 	 	<p style="text-align: center; font-size: 25px;"> Rules Relationship Table</p>
 	   			<div class="row">
 			  		<table class="striped centered responsive-table highlight">
 						<thead class="#0288d1 light-blue darken-2">

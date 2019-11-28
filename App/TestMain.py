@@ -5,6 +5,7 @@ from Token import Token
 from Lexer import Lexer
 from LL1 import LL1
 from LR0 import LR0
+from LR1 import LR1
 from SyntacticNFA import SyntacticNFA
 from SyntacticGrammar import SyntacticGrammar
 epsilon = '\u03B5'
@@ -50,7 +51,7 @@ if __name__ == "__main__":
 
     automatota = NFA.specialJoin(set([afnD, afnE, afn11, afn12, afn19, afn20, afn21]))
     afd = automatota.convertToDFA()
-    afd.displayTable()
+    #afd.displayTable()
 
     #DFA for strings
     afn1 = NFA.createBasic('A', 'Z')
@@ -82,12 +83,17 @@ if __name__ == "__main__":
     afn27 = NFA.createBasic(',')
     afn27.setToken(Token.COMMA)
 
-    automatota2 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27]))
+    afn28 = NFA.createBasic('i')
+    afn29 = NFA.createBasic('d')
+    afnG = afn28.concat(afn29)
+    afnG.setToken(Token.ID)
+
+    automatota2 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27, afnG]))
     afd2 = automatota2.convertToDFA()
-    #afd2.displayTable()
+    afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar5.txt", "r")
+    archivo = open("grammar7.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -100,58 +106,58 @@ if __name__ == "__main__":
     print("\nAnalizando cadena: " + string)
     lex = Lexer(afd, string)
     #lex.display()
+
     print("Lexico OK. Analizando sintacticamente...")
     syn = SyntacticGrammar(lex)
 
     print("\nGramatica construida: ")
     grammar = syn.start()
     if(grammar):
-        '''
         ruleNumber = 1
         for r in grammar:
             print("{} ".format(ruleNumber), end = '')
             r.displayRule()
             ruleNumber += 1
-        '''
 
-        lr0 = LR0(grammar)
-        if(lr0.isLR0()):
-            print("Es LR0")
-            if(lr0.analyze("n*(n+n)")):
-                print("Cadena aceptada")
-                lr0.printAnalysisTable()
+        c = "43315.453*(23.4632153+5501321)"
+        lex2 = Lexer(afd2, c)
+
+        lr1 = LR1(grammar, lex2)
+
+        if(lr1.isLR1()):
+            print("Es LR1")
+            lr1.displayTable(0)
+
+            res = lr1.analyze(c)
+            lr1.displayTable(1)
+            if(res):
+                print("\n" + c + " pertenece a la gramatica")
             else:
-                print("Cadena no aceptada")
+                print("\n" + c + " no pertenece a la gramatica")
         else:
-            print("No es LR0")
-        # ll1 = LL1(grammar, "aaa")
-        # if(ll1.isLL1()):
-        #     print("Es LL1")
-        # else:
-        #     print("No es LL1")
-        # ll1.displayTable(0)
-        '''
+            print("No es LR1")
 
+        '''
         #Analysis
         print("\nAnalisis LL(1)")
         c = "435.453+3453*(23.3-550)"
         lex2 = Lexer(afd2, c)
+        #lex2.display()
+
         ll1 = LL1(grammar, lex2)
        
         if(ll1.isLL1()):
             print("Gramatica compatible con LL(1)")
+
+            ll1.displayTable(0)
+            res = ll1.analyze(c)
+            ll1.displayTable(1)
+            if(res):
+                print("\n" + c + " pertenece a la gramatica")
+            else:
+                print("\n" + c + " no pertenece a la gramatica")
         else:
             print("\nERROR. La gramatica no es compatible con LL(1)")
-
-        ll1.displayTable(0)
-        res = ll1.analyze(c)
-        ll1.displayTable(1)
-        if(res):
-            print("\n" + c + " pertenece a la gramatica")
-        else:
-            print("\n" + c + " no pertenece a la gramatica")
-        
-
     afn1 = NFA.createBasic('a', 'z')
     afn1.setToken(Token.SYMBOL_LOWER)
     afn2 = NFA.createBasic('A', 'Z')

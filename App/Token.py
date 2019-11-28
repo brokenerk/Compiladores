@@ -35,7 +35,7 @@ class Token:
 	SEMICOLON = 300
 	OR = 310
 	SPACE = 320
-
 	COMMA = 330
+	ID = 340
 
 	ERROR = 1000

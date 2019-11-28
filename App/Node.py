@@ -8,19 +8,19 @@ class Node:
         self.pointAfter = False             #Boolean
         self.lr1Symbols = set([])           #Set<String>
         self.original = False               #Boolean
-        self.counter = 0                    #Counter
+        self.counter = 0                    #Integer
 
     #Return: Node
     def getNext(self):
         return self.next
     
-    #Parameters: Counter
+    #Parameters: Integer
     #Return: Nothing
     def setCounter(self, c):
         self.counter = c
 
     #Parameters: Nothing
-    #Return: Counter
+    #Return: Integer
     def getCounter(self):
         return self.counter
 
@@ -100,8 +100,10 @@ class Node:
     #Note: Number of next nodes connected
     def size(self):
         next = self.getNext()
-        cont = 1
+        cont = 0
         while(next != None):
+            if(next.getSymbol() == "epsilon"):
+                return 0
             cont += 1
             next = next.getNext()
         return cont

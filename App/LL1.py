@@ -227,10 +227,13 @@ class LL1:
 
 	#Parameters: Nothing 
 	#Return: List<List>
-	#Note: Is importat to analysis if isLL1
+	#Note: Rule Relations Table
 	def getTable(self):
 		return self.table
 
+	#Parameters: Nothing 
+	#Return: List<List>
+	#Note: Analysis Table
 	def getAnalysisTable(self):
 		return self.analysisTable
 
