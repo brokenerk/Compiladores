@@ -151,7 +151,7 @@ def index():
 # ---------------------------------------------------------------------
 @app.route("/aboutUs")
 def aboutUs():
-    return render_template('aboutUs.html')
+    return render_template('aboutus.html')
 
 # ---------------------------------------------------------------------
 #                       NFA: ADD
