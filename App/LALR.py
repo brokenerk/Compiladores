@@ -380,36 +380,35 @@ class LALR:
             lastP = p[len(p) - 1]   #Top of the stack
             strAnalysis = srt[0]    #Symbol to analyze
             
-            print("STack " + str(p))
             #Get Coordinates to the first action
             x = lastP + 1
 
             #Check tokens through string lexer
-            if strAnalysis in self.index:
+            if strAnalysis in self.terminals or strAnalysis == "$":
                 y = self.index[strAnalysis]
-            elif(token == Token.NUM and "num" in self.index):
+            elif(token == Token.NUM and "num" in self.terminals):
                 y = self.index["num"]
                 strAnalysis = "num"
-            elif(token == Token.ARROW and "FLECHA" in self.index):
+            elif(token == Token.ARROW and "FLECHA" in self.terminals):
                 y = self.index["FLECHA"]
                 strAnalysis = "FLECHA"
-            elif(token == Token.SEMICOLON and "PC" in self.index):
+            elif(token == Token.SEMICOLON and "PC" in self.terminals):
                 y = self.index["PC"]
                 strAnalysis = "PC"
-            elif(token == Token.OR and "OR" in self.index):
+            elif(token == Token.OR and "OR" in self.terminals):
                 y = self.index["OR"]
                 strAnalysis = "OR"
-            elif(token == Token.CONCAT and "AND" in self.index):
+            elif(token == Token.CONCAT and "AND" in self.terminals):
                 y = self.index["AND"]
                 strAnalysis = "AND"
-            elif(token == Token.COMMA and "coma" in self.index):
+            elif(token == Token.COMMA and "coma" in self.terminals):
                 y = self.index["coma"]
                 strAnalysis = "coma"
             elif(token == Token.SYMBOL):
-                if("SIMBOLO" in self.index):
+                if("SIMBOLO" in self.terminals):
                     y = self.index["SIMBOLO"]
                     strAnalysis = "SIMBOLO"
-                elif("id" in self.index and self.stringLex.getLexem() == "id"):
+                elif("id" in self.terminals and self.stringLex.getLexem() == "id"):
                     y = self.index["id"]
                     strAnalysis = "id"
                 else:
