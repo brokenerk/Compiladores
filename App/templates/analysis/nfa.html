@@ -93,7 +93,7 @@
                {% from "_macroInputs.html" import render_field %}
                <p style="text-align: center; font-size: 25px;"> NFA Syntactic Analysis </p>
 
-               <div class="row">
+               <div class="row file-field">
 	               	<div class="offset-s1 input-field col s7">
 	               		{{ render_field(nfaF.regularExpressions) }}
 	               	</div>
@@ -101,7 +101,10 @@
 	               		<button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
 	               	</div>
 	               	<div class="col">
-	               		<a class="waves-effect waves-light btn-large"><i class="material-icons right">attach_file</i></a>
+	               		<button class="waves-effect waves-light btn-large">
+		                    <i class="material-icons right">attach_file</i>
+		                    <input type = "file" id="loadER" accept="text/plain"/>
+	                  	</button>
 	               	</div>
 	            </div>
 	            <div class="row center">
