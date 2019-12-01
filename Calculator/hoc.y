@@ -9,7 +9,7 @@ extern int execerror();
 	Symbol *sym;
 }
 %token 	<val> 	NUMBER
-%token 	<sym> 	VAR BLTIN UNDEF
+%token 	<sym> 	VAR BLTIN UNDEF CONST
 %type 	<val>	expr asgn
 %right 	'='
 %left	'+' '-'
@@ -23,12 +23,14 @@ list :
 	| list expr '\n'	{printf("\t%.8g\n",$2);}
 	| list error '\n'	{yyerrok;}
 	;
-asgn :	VAR '=' expr { $$=$1->u.val=$3; $1->type = VAR;  }
+asgn :	VAR '=' expr { if ($1->type == CONST) execerror("It's a constant","$1->name");
+		$$=$1->u.val=$3; $1->type = VAR;  }
 	;
 expr :	NUMBER
 	| VAR { if ($1->type == UNDEF) 
 		execerror("undefined variable", $1->name );
 		$$ = $1->u.val; }
+	| CONST { $$ = $1->u.val; }
 	| asgn
 	| BLTIN '(' expr ')' { $$ = (*($1->u.ptr))($3); }
 	| expr '+' expr { $$= $1 + $3; }
