@@ -31,12 +31,12 @@ double integer( double x ){
 
 
 double errcheck( double d, char *s ){
-	if ( errno = EDOM){
+	if ( errno == EDOM){
 		errno = 0;
-		execerror(s , "argument out of domain");
+		execerror(s , " argument out of domain");
 	} else if ( errno == ERANGE ){
 		errno = 0;
-		execerror(s,"result out of range");
+		execerror(s," result out of range");
 	}
 	return d;
 }

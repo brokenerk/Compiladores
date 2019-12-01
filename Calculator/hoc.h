@@ -3,7 +3,7 @@ typedef struct Symbol {
 	short type;
 	union {
 		double val;
-		double (*ptr)();
+		double (*ptr)(double);
 	}u;
 	struct Symbol *next;
 }Symbol;

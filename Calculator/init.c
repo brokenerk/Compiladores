@@ -31,7 +31,7 @@ static struct{
 	"abs",	fabs,
 	0,	0
 };
-init(){
+int init(){
 	int i;
 	Symbol *s;
 	for (i=0; constant[i].name; i++)
@@ -40,4 +40,5 @@ init(){
 		s = install(builtins[i].name, BLTIN,0.0);
 		s->u.ptr = builtins[i].func;
 	}
+	return 0;
 }

@@ -1,6 +1,8 @@
 %{
 #include "hoc.h"
+#include<stdio.h>
 extern double Pow();
+extern int execerror();
 %}
 %union{
 	double val;
@@ -52,8 +54,8 @@ int lineno = 1;
 int warning ( char * , char *t);
 int execerror( char *, char *);
 int yyerror( char *);
-int execerror( char *, char *);
 int fpecatch();
+extern int init();
 
 int main (int argc, char * arcgv[]){
 	int fpecatch();
