@@ -40,11 +40,6 @@
 				displayLength: 5000
 			})
 		{% endif %}
-
-		$('#loadGrammar').on('change', function() {
-			console.log("Entrar");
-			console.log(this.files[0].size);
-        }); 
 	</script>
 
 	<div class="container">
@@ -52,7 +47,7 @@
             <form method="POST" enctype="multipart/form-data">
                {% from "_macroInputs.html" import render_field %}
                <p style="text-align: center; font-size: 25px;"> LR(0) Syntactic Analysis </p>
-               <div class="row file-field">
+               	<div class="row file-field">
 	               	<div class="offset-s1 input-field col s7">
 	               		{{ render_field(lr0.grammar) }}
 	               	</div>
@@ -62,8 +57,8 @@
 	               	<div class="col">
 	               		<button class="waves-effect waves-light btn-large">
 		                    <i class="material-icons right">attach_file</i>
-		                    <input type = "file" id="loadGrammar"/>
-	                  	</button>  
+		                    <input type = "file" id="loadGrammar" accept="text/plain"/>
+	                  	</button>
 	               	</div>
 	            </div>
 	           	<div class="row file-field">
@@ -76,7 +71,7 @@
 	               	<div class="col">
 	               		<button class="waves-effect waves-light btn-large">
 		                    <i class="material-icons right">attach_file</i>
-		                    <input type = "file" id="loadString"/>
+		                    <input type = "file" id="loadString" accept="text/plain"/>
 	                  	</button>
 	               	</div>
        			</div>

@@ -14,10 +14,71 @@
 	  $(document).ready(function(){
 
 	  	$('#grammar').addClass('materialize-textarea');
+	  	$('#grammar').addClass('expand');
 	 	$('#regularExpressions').addClass('materialize-textarea');
      	$('select').formSelect();
 	 	$('.dropdown-trigger').dropdown();
 	 	$('select').not('.disabled').formSelect();
+
+
+	 	$('#loadER').on('change', function() {
+			var fileToUpload = event.target.files[0];
+
+			var reader = new FileReader();
+			reader.onload = function(fileLoadedEvent) {
+				var text = fileLoadedEvent.target.result;
+				$('#regularExpressions').val(text);
+			}
+			reader.readAsText(fileToUpload, 'UTF-8');
+
+			$('#regularExpressions').focus();
+			$('#regularExpressions').animate({ height: "12em" }, 500); 
+
+			M.toast({
+				html: event.target.files[0].name + ' uploaded as Regex',
+				classes: 'green',
+				displayLength: 4000
+			})
+        });
+
+	 	$('#loadGrammar').on('change', function() {
+			var fileToUpload = event.target.files[0];
+			console.log(fileToUpload);
+
+			var reader = new FileReader();
+			reader.onload = function(fileLoadedEvent) {
+				var text = fileLoadedEvent.target.result;
+				$('#grammar').val(text);
+			}
+			reader.readAsText(fileToUpload, 'UTF-8');
+
+			$('#grammar').focus();
+			$('#grammar').animate({ height: "14em" }, 500); 
+
+			M.toast({
+				html: event.target.files[0].name + ' uploaded as grammar',
+				classes: 'green',
+				displayLength: 4000
+			})
+        });
+
+        $('#loadString').on('change', function() {
+			var fileToUpload = event.target.files[0];
+
+			var reader = new FileReader();
+			reader.onload = function(fileLoadedEvent) {
+				var text = fileLoadedEvent.target.result;
+				$('#string').val(text);
+			}
+			reader.readAsText(fileToUpload, 'UTF-8');
+
+			$('#string').focus();
+			M.toast({
+				html: event.target.files[0].name + ' uploaded as string',
+				classes: 'green',
+				displayLength: 4000
+			})
+        });
 
 		{% if nfa %}
 	        var nodesList = [];

@@ -346,17 +346,14 @@ def ll1():
         if(grammar):
             print("Gramatica valida")
             msg = 5
-            
-            if(string != ""):
-                ruleNumber = 1
-                for r in grammar:
-                    print("{} ".format(ruleNumber), end = '')
-                    r.displayRule()
-                    ruleNumber += 1
-                    if(r.isLeftRecursive()):
-                        print("La gramatica es recursiva por la izquierda")
-                        msg = 4
-                        break
+
+            for r in grammar:
+                r.displayRule()
+                if(r.isLeftRecursive()):
+                    print("La gramatica es recursiva por la izquierda")
+                    msg = 4
+                    break
+            if(msg != 4):
                 #Analysis
                 print("\nAnalisis LL(1)")
                 lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
@@ -367,22 +364,22 @@ def ll1():
                         msg = 1
                     else:
                         print("\nERROR. La gramatica no es compatible con LL(1)")
-                        print("Existieron colisiones")
                         msg = 2
 
                     ll1.displayTable(0)
-                    res = ll1.analyze(string)
-                    ll1.displayTable(1)
-
                     relationsTable = ll1.getTable()
-                    analysisTable = ll1.getAnalysisTable()
+            
+                    if(string != ""):
+                        res = ll1.analyze(string)
+                        ll1.displayTable(1)
+                        analysisTable = ll1.getAnalysisTable()
 
-                    if(res):
-                        print("\n" + string + " pertenece a la gramatica")
-                        msgS = 1
-                    else:
-                        print("\n" + string + " no pertenece a la gramatica")
-                        msgS = 2
+                        if(res):
+                            print("\n" + string + " pertenece a la gramatica")
+                            msgS = 1
+                        else:
+                            print("\n" + string + " no pertenece a la gramatica")
+                            msgS = 2
         else:
             print("Gramatica no valida")
             msg = 3
@@ -421,37 +418,36 @@ def lr0():
         if(grammar):
             print("Gramatica valida")
             msg = 5
+            for r in grammar:
+                r.displayRule()
+            
+            #Analysis
+            print("\nAnalisis LR(0)")
+            lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
+            #lex2.display()
+            lr0 = LR0(grammar, lex2)
+
+            if(lr0.isLR0()):
+                print("Gramatica compatible con LR(0)")
+                msg = 1
+            else:
+                print("\nERROR. La gramatica no es compatible con LR(0)")
+                msg = 2
+
+            lr0.displayTable(0)
+            relationsTable = lr0.getTable()
             
             if(string != ""):
-                for r in grammar:
-                    r.displayRule()
+                res = lr0.analyze(string)
+                lr0.displayTable(1)
+                analysisTable = lr0.getAnalysisTable()
 
-                #Analysis
-                print("\nAnalisis LR(0)")
-                lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
-                lr0 = LR0(grammar, lex2)
-                del lex2
-                if(msg != 4):
-                    if(lr0.isLR0()):
-                        print("Gramatica compatible con LR(0)")
-                        msg = 1
-                    else:
-                        print("\nERROR. La gramatica no es compatible con LR(0)")
-                        msg = 2
-
-                    lr0.displayTable(0)
-                    res = lr0.analyze(string)
-                    lr0.displayTable(1)
-
-                    relationsTable = lr0.getTable()
-                    analysisTable = lr0.getAnalysisTable()
-
-                    if(res):
-                        print("\n" + string + " pertenece a la gramatica")
-                        msgS = 1
-                    else:
-                        print("\n" + string + " no pertenece a la gramatica")
-                        msgS = 2
+                if(res):
+                    print("\n" + string + " pertenece a la gramatica")
+                    msgS = 1
+                else:
+                    print("\n" + string + " no pertenece a la gramatica")
+                    msgS = 2
         else:
             print("Gramatica no valida")
             msg = 3
@@ -468,6 +464,7 @@ def lr1():
     grammar = None
     msg = None
     msgS = None
+    lex2 = None
     rules = ""
     if request.method == 'POST':
         string = lr1Form.string.data
@@ -488,38 +485,36 @@ def lr1():
         if(grammar):
             print("Gramatica valida")
             msg = 5
+            for r in grammar:
+                r.displayRule()
+
+            #Analysis
+            print("\nAnalisis LR(1)")
+            lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
+            #lex2.display()
+            lr1 = LR1(grammar, lex2)
+
+            if(lr1.isLR1()):
+                print("Gramatica compatible con LR(1)")
+                msg = 1
+            else:
+                print("\nERROR. La gramatica no es compatible con LR(1)")
+                msg = 2
+
+            lr1.displayTable(0)
+            relationsTable = lr1.getTable()
             
             if(string != ""):
-                for r in grammar:
-                    r.displayRule()
+                res = lr1.analyze(string)
+                lr1.displayTable(1)
+                analysisTable = lr1.getAnalysisTable()
 
-                #Analysis
-                print("\nAnalisis LR(1)")
-                lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
-                #lex2.display()
-                lr1 = LR1(grammar, lex2)
-                del lex2
-                if(msg != 4):
-                    if(lr1.isLR1()):
-                        print("Gramatica compatible con LR(1)")
-                        msg = 1
-                    else:
-                        print("\nERROR. La gramatica no es compatible con LR(1)")
-                        msg = 2
-
-                    lr1.displayTable(0)
-                    res = lr1.analyze(string)
-                    lr1.displayTable(1)
-
-                    relationsTable = lr1.getTable()
-                    analysisTable = lr1.getAnalysisTable()
-
-                    if(res):
-                        print("\n" + string + " pertenece a la gramatica")
-                        msgS = 1
-                    else:
-                        print("\n" + string + " no pertenece a la gramatica")
-                        msgS = 2
+                if(res):
+                    print("\n" + string + " pertenece a la gramatica")
+                    msgS = 1
+                else:
+                    print("\n" + string + " no pertenece a la gramatica")
+                    msgS = 2
         else:
             print("Gramatica no valida")
             msg = 3
@@ -557,38 +552,36 @@ def lalr():
         if(grammar):
             print("Gramatica valida")
             msg = 5
+            for r in grammar:
+                r.displayRule()
+            
+            #Analysis
+            print("\nAnalisis LALR")
+            lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
+            #lex2.display()
+            lalr = LALR(grammar, lex2)
+
+            if(lalr.isLALR()):
+                print("Gramatica compatible con LALR")
+                msg = 1
+            else:
+                print("\nERROR. La gramatica no es compatible con LALR")
+                msg = 2
+
+            lalr.displayTable(0)
+            relationsTable = lalr.getTable()
             
             if(string != ""):
-                for r in grammar:
-                    r.displayRule()
+                res = lalr.analyze(string)
+                lalr.displayTable(1)
+                analysisTable = lalr.getAnalysisTable()
 
-                #Analysis
-                print("\nAnalisis LR(1)")
-                lex2 = Lexer(stringDFA, string) #Lexic for numbers in string
-                #lex2.display()
-                lalr = LALR(grammar, lex2)
-                del lex2
-                if(msg != 4):
-                    if(lalr.isLALR()):
-                        print("Gramatica compatible con LALR")
-                        msg = 1
-                    else:
-                        print("\nERROR. La gramatica no es compatible con LALR")
-                        msg = 2
-
-                    lalr.displayTable(0)
-                    res = lalr.analyze(string)
-                    lalr.displayTable(1)
-
-                    relationsTable = lalr.getTable()
-                    analysisTable = lalr.getAnalysisTable()
-
-                    if(res):
-                        print("\n" + string + " pertenece a la gramatica")
-                        msgS = 1
-                    else:
-                        print("\n" + string + " no pertenece a la gramatica")
-                        msgS = 2
+                if(res):
+                    print("\n" + string + " pertenece a la gramatica")
+                    msgS = 1
+                else:
+                    print("\n" + string + " no pertenece a la gramatica")
+                    msgS = 2
         else:
             print("Gramatica no valida")
             msg = 3
