@@ -10,31 +10,29 @@ typedef struct Symbol {
 
 Symbol *install( char*, int, double), *lookup(char*);
 
-void init(void);
-
 typedef union Datum {
 	double val;
 	Symbol *sym;
 } Datum;
 
 typedef int (*Inst)(void);
-
 #define STOP (Inst){0}
 
 extern Inst prog[], *progp,*code();
 Datum pop(void);
-void constpush(void), varpush(void), 
+extern void constpush(void), varpush(void), 
       bltin(void), eval(void), add(void), sub(void), 
 	  mul(void), divd(void), mod(void), negate(void), 
 	  power(void), assign(void), print(void);
 
-void prexpr(void);
-void gt(void),	lt(void), eq(void),ge(void), le(void),
+extern void prexpr(void);
+extern void gt(void),	lt(void), eq(void),ge(void), le(void),
  	  ne(void), and(void),or(void), not(void);
-void ifcode(void),whilecode(void);
+extern void ifcode(void),whilecode(void),forcode(void);
 
-void initcode(void);
-void execute(Inst *);
+extern void initcode(void);
+extern void execute(Inst *);
+void init(void);
 
 int yylex(void);
 int warning ( char * , char *t);

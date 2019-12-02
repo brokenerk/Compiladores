@@ -39,6 +39,7 @@ static struct{
 	"if",		IF,
 	"else",		ELSE,
 	"while",	WHILE,
+	"for",		FOR,
 	"print",	PRINT,
 	0,			0,
 };

@@ -125,24 +125,24 @@ class LR0:
 
     #Parametes: List<Node>
     #Return: Set<List<Node>>
-    def itemClosure(self, rule):
-        s = set([rule])
-        next = rule.getNext()
-
-        while(next != None):
-            if(next.getPointBefore()):
-                if(next.getSymbol() in self.noTerminals):
-                    nextRules = self.searchRule(next.getSymbol())
-                    for r in nextRules:
-                        r.getNext().setPointBefore(True)
-                        s = s.union(self.itemClosure(deepcopy(r)))
-            next = next.getNext()
+    def itemClosure(self, s):
+        for rule in s:
+            next = rule.getNext()
+            while(next != None):
+                if(next.getPointBefore()):
+                    if(next.getSymbol() in self.noTerminals):
+                        nextRules = self.searchRule(next.getSymbol())
+                        for r in nextRules:
+                            r.getNext().setPointBefore(True)
+                            s.append(deepcopy(r))
+                next = next.getNext()
+        #s.sort()
         return s
 
     #Parametes: Set<Node>, String
     #Return: Set<Node>
     def move(self, state, symbol):
-        s = set([])
+        l = []
         for rule in state:
             next = rule.getNext()
             while(next != None):
@@ -154,18 +154,14 @@ class LR0:
                     else:
                         next.setPointAfter(True)
 
-                    s.add(rule)
+                    l.append(rule)
                 next = next.getNext()
-        return s
+        return l
 
     #Parametes: Set<Node>, String
     #Return: Set<Node>
     def goTo(self, state, symbol):
-        moveStates = self.move(state, symbol)
-        returnStates = set([])
-        for e in moveStates:
-            returnStates = returnStates.union(self.itemClosure(e))
-        return returnStates
+        return self.itemClosure(self.move(state, symbol))
 
     #Parameters: Nothing
     #Return: Nothing
@@ -190,10 +186,10 @@ class LR0:
 
         firstRule = self.rules[0]
         firstRule.getNext().setPointBefore(True)
-        S0 = self.itemClosure(firstRule)
+        S0 = self.itemClosure([firstRule])
         
         #Sort S0 rules
-        S0 = sorted(S0, key = lambda rule0: (rule0.getSymbol(), rule0.getNext().getSymbol(), rule0.getNext().getPointBefore())) 
+        #S0 = sorted(S0, key = lambda rule0: (rule0.getSymbol(), rule0.getNext().getSymbol(), rule0.getNext().getPointBefore(), rule0.getNext().getPointAfter())) 
         queue = [S0]    #Queue<Set>
         self.itemSets.append(S0)    #List<List<Node>>
         cont = 1
@@ -221,7 +217,7 @@ class LR0:
                     continue
 
                 #Sort aux rules
-                aux = sorted(aux, key = lambda rule: (rule.getSymbol(), rule.getNext().getSymbol(), rule.getNext().getPointBefore())) 
+                #aux = sorted(aux, key = lambda rule: (rule.getSymbol(), rule.getNext().getSymbol(), rule.getNext().getPointBefore(), rule.getNext().getPointAfter())) 
                     
                 pair = []
                 pair.insert(0, "d") #Insert a pair in the list 
@@ -366,6 +362,9 @@ class LR0:
                 elif("id" in self.terminals and self.stringLex.getLexem() == "id"):
                     y = self.index["id"]
                     strAnalysis = "id"
+                elif("sin" in self.terminals and self.stringLex.getLexem() == "sin"):
+                    y = self.index["sin"]
+                    strAnalysis = "sin"
                 else:
                     break
             else:

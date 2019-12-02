@@ -6,6 +6,7 @@ extern double pow();
 #define NSTACK 256
 static Datum stack[NSTACK];
 static Datum *stackp;
+int returning;
 
 #define NPROG 2000
 Inst prog[NPROG], *progp, *pc;
@@ -13,6 +14,8 @@ Inst prog[NPROG], *progp, *pc;
 void initcode(void){
     stackp = stack;
     progp = prog;
+    returning = 0;    
+
 }
 
 void push(Datum d){
@@ -229,6 +232,24 @@ void whilecode(void){
         d=pop();
     }
     pc = *((Inst**)(savepc+1));
+}
+
+void forcode(void){
+    Datum d;
+	Inst *savepc = pc;
+
+	execute(savepc+4);
+	pop();
+	execute(*((Inst **)(savepc)));
+	d = pop();
+	while (d.val) {
+		execute(*((Inst **)(savepc+2)));
+		execute(*((Inst **)(savepc+1)));
+		pop();
+		execute(*((Inst **)(savepc)));
+		d = pop();
+	}
+		pc = *((Inst **)(savepc+3));
 }
 
 void prexpr(void){

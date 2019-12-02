@@ -8,8 +8,8 @@
 	Symbol *sym;
 	Inst *inst;
 }
-%token 	<sym> 	NUMBER VAR BLTIN UNDEF CONST PRINT  WHILE IF ELSE
-%type	<inst>	stmt asgn expr stmtlist cond while if end
+%token 	<sym> 	NUMBER VAR BLTIN UNDEF CONST PRINT  WHILE IF ELSE FOR
+%type	<inst>	stmt asgn expr stmtlist cond while if end for
 %right 	'='
 %left 	OR
 %left	AND
@@ -33,6 +33,11 @@ stmt:	expr			{ code(pop); }
 	| while cond stmt end {
 			($1)[1] = (Inst)$3;
 			($1)[2] = (Inst)$4; }
+	| for '(' cond ';' cond ';' cond ')' stmt end {
+			($1)[1] = (Inst)$5;
+			($1)[2] = (Inst)$7;
+			($1)[3] = (Inst)$9;
+			($1)[4] = (Inst)$10; } 
 	| if cond stmt end {
 			($1)[1] = (Inst)$3;
 			($1)[3] = (Inst)$4; }
@@ -45,6 +50,8 @@ stmt:	expr			{ code(pop); }
 cond:	'(' expr ')'	{ code( STOP ); $$ = $2; }
 	;
 while: WHILE { $$ = code3( whilecode , STOP , STOP ); }
+	;
+for: FOR {	$$ = code(forcode); code3(STOP,STOP,STOP); code(STOP);}
 	;
 if: IF { $$ = code(ifcode); code3(STOP,STOP,STOP); }
 	;
@@ -60,10 +67,10 @@ expr :	NUMBER			{ $$ = code2( constpush,(Inst)$1 ); }
 	| asgn				
 	| BLTIN '(' expr ')' { $$ = $3 ; code2( bltin , (Inst)$1->u.ptr ); }
 	| expr '+' expr 	 { code(add) ; }
-	| expr '-' expr 	 { code( sub ); }
-	| expr '*' expr 	 { code( mul ); }
-	| expr '/' expr 	 { code( divd ); }
-	| expr '^' expr 	 { code( power ); }
+	| expr '-' expr 	 { code(sub); }
+	| expr '*' expr 	 { code(mul); }
+	| expr '/' expr 	 { code(divd); }
+	| expr '^' expr 	 { code(power); }
 	| '(' expr ')'		 { $$ = $2; }
 	| '-' expr %prec UNARYMINUS { $$=$2; code( negate ); }
 	| expr GT expr { code( gt ); }

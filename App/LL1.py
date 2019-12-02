@@ -110,6 +110,18 @@ class LL1:
 				y = self.index["coma"] - len(self.noTerminals)
 			elif(token == Token.NUM and "num" in self.terminals):
 				y = self.index["num"] - len(self.noTerminals)
+			elif(token == Token.PLUS and "SIMBOLO" in self.terminals):
+				y = self.index["SIMBOLO"] - len(self.noTerminals)
+			elif(token == Token.MINUS and "SIMBOLO" in self.terminals):
+				y = self.index["SIMBOLO"] - len(self.noTerminals)
+			elif(token == Token.PROD and "SIMBOLO" in self.terminals):
+				y = self.index["SIMBOLO"] - len(self.noTerminals)
+			elif(token == Token.DIV and "SIMBOLO" in self.terminals):
+				y = self.index["SIMBOLO"] - len(self.noTerminals)
+			elif(token == Token.PAR_L and "SIMBOLO" in self.terminals):
+				y = self.index["SIMBOLO"] - len(self.noTerminals)
+			elif(token == Token.PAR_R and "SIMBOLO" in self.terminals):
+				y = self.index["SIMBOLO"] - len(self.noTerminals)
 			elif(token == Token.SYMBOL):
 				if("SIMBOLO" in self.terminals):
 					y = self.index["SIMBOLO"] - len(self.noTerminals)

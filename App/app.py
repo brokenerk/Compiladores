@@ -76,7 +76,8 @@ afn10 = NFA.createBasic(')')
 afn11 = NFA.createBasic(',')
 afn12 = NFA.createBasic('.')
 afn13 = NFA.createBasic('?')
-afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10).join(afn11).join(afn12).join(afn13)
+afn13_1 = NFA.createBasic('^')
+afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10).join(afn11).join(afn12).join(afn13).join(afn13_1)
 afn13 = NFA.createBasic('A', 'Z')
 afn14 = NFA.createBasic('a', 'z')
 afn15 = NFA.createBasic ("'")
@@ -135,7 +136,27 @@ afn26.setToken(Token.CONCAT)
 
 afn27 = NFA.createBasic(',')
 afn27.setToken(Token.COMMA)
+'''
+afn27_1 = NFA.createBasic('+')
+afn27_1.setToken(Token.PLUS)
 
+afn27_2 = NFA.createBasic('-')
+afn27_2.setToken(Token.MINUS)
+
+afn27_3 = NFA.createBasic('*')
+afn27_3.setToken(Token.PROD)
+
+afn27_4 = NFA.createBasic('/')
+afn27_4.setToken(Token.DIV)
+
+afn27_5 = NFA.createBasic('(')
+afn27_5.setToken(Token.PAR_L)
+
+afn27_6 = NFA.createBasic(')')
+afn27_6.setToken(Token.PAR_R)
+'''
+
+#automatota3 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27, afn27_1, afn27_2, afn27_3, afn27_4, afn27_5, afn27_6]))
 automatota3 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27]))
 stringDFA = automatota3.convertToDFA()
 
