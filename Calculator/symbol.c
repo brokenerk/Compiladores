@@ -2,7 +2,6 @@
 #include"y.tab.h"
 #include<stdlib.h>
 #include<string.h>
-extern int execerror();
 
 static Symbol  *symlist = 0;
 

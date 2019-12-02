@@ -1,15 +1,19 @@
 YFLAGS = -d
-OBJS = hoc.o lex.o init.o math.o symbol.o
+OBJS = hoc.o code.o init.o math.o symbol.o
 
-hoc3: 	$(OBJS)
-	cc $(OBJS) -lm -lfl -o hoc3
+hoc4: 	$(OBJS)
+	cc $(OBJS) -lm -o hoc4
 
-hoc.o: 	hoc.h
+hoc.o code.o init.o symbol.o: 	hoc.h
 
-lex.o init.o symbol.o:	hoc.h y.tab.h
+code.o init.o symbol.o: x.tab.h
 
-pr:
-	@pr hoc.y hoc.h init.c math.c symbol.c makefile
+x.tab.h: y.tab.h
+		-cmp -s x.tab.h y.tab.h || cp y.tab.h x.tab.h
+		
+pr:	hoc.y hoc.h code.c init.c math.c symbol.c
+	@pr $?
+	@touch pr
 
 clean:
-	rm -f $(OBJS) y.tab.[ch]
+	rm -f $(OBJS) [xt].tab.[ch]

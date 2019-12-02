@@ -31,14 +31,13 @@ static struct{
 	"abs",	fabs,
 	0,	0
 };
-int init(){
+void init(void){
 	int i;
 	Symbol *s;
 	for (i=0; constant[i].name; i++)
-		install(constant[i].name, CONST,constant[i].cval);
+		install(constant[i].name, CONST ,constant[i].cval);
 	for (i=0; builtins[i].name;i++){
 		s = install(builtins[i].name, BLTIN,0.0);
 		s->u.ptr = builtins[i].func;
 	}
-	return 0;
 }
