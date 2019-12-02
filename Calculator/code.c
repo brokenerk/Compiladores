@@ -37,43 +37,39 @@ Inst *code(Inst f){
 
 void execute(Inst *p){
     Datum d;
-    for (pc = p; *pc->opr != STOP;)
-        (*pc++).opr();
+    for (pc = p; *pc != STOP;)
+        (*(*pc++))();
 }
 
-Datum constpush(void){
+void constpush(void){
     Datum d;
-    d.val=(*pc++).val;
+    d.val=((Symbol *)*pc++)->u.val;
     push(d);
-    return (Datum){0};
 }
 
-Datum varpush(void){
+void varpush(void){
     Datum d;
-    d.sym = (*pc++).sym;
+    d.sym = (Symbol *)(*pc++);
     push(d);
-    return (Datum){0};
 }
 
-Datum add(void){
+void add(void){
     Datum d1,d2;
     d2 = pop();
     d1 = pop();
     d1.val += d2.val;
     push(d1);
-    return (Datum){0};
 }
 
-Datum sub(void){
+void sub(void){
     Datum d1,d2;
     d2 = pop();
     d1 = pop();
     d1.val -= d2.val;
     push(d1);
-    return (Datum){0};
 }
 
-Datum divd(void){
+void divd(void){
     Datum d1,d2;
     d2 = pop();
     d1 = pop();
@@ -81,68 +77,162 @@ Datum divd(void){
         execerror("Division by Zero", "");
     d1.val /= d2.val;
     push(d1);
-    return (Datum){0};
 }
 
-Datum mul(void){
+void mul(void){
     Datum d1,d2;
     d2 = pop();
     d1 = pop();
     d1.val *= d2.val;
     push(d1);
-    return (Datum){0};
 }
 
-Datum power(void){
+void power(void){
     Datum d1,d2;
     d2 = pop();
     d1 = pop();
     d1.val = pow(d1.val,d2.val);
     push(d1);
-    return (Datum){0};
 }
 
-Datum negate(void){
+void negate(void){
     Datum d1;
     d1 = pop();
     d1.val *= (-1);
     push(d1);
-    return (Datum){0};
 }
 
-Datum eval(void){
+void eval(void){
     Datum d;
     d = pop();
     if (d.sym->type == UNDEF )
         execerror("undefined variable ", d.sym->name);
     d.val = d.sym->u.val;
     push(d);
-    return (Datum){0};
 }
 
-Datum assign(void){
+void assign(void){
     Datum d1, d2;
     d1 = pop();
     d2 = pop();
     if (d1.sym->type != VAR && d1.sym->type != UNDEF && d1.sym->type != CONST )
-        execerror("assignment to non-variable ", d1.sym->name);
+        execerror("assignment to non-variable or it's a constant", d1.sym->name);
     d1.sym->u.val = d2.val;
     d1.sym->type = VAR;
     push(d2);
-    return (Datum){0};
 }
 
-Datum print(void){
+void print(void){
     Datum d;
     d = pop();
     printf("\t%.8g\n",d.val);
-    return (Datum){0};
 }
 
-Datum bltin(void){
+void bltin(void){
     Datum d;
     d = pop();
-    d.val = (*pc++).ptr( (d.val) );
+    d.val = (*(double(*)())(*pc++))(d.val);
     push(d);
-    return (Datum){0};
+}
+
+void le(void){
+    Datum d1,d2;
+    d2 = pop();
+    d1 = pop();
+    d1.val = (double)(d1.val <= d2.val);
+    push(d1);
+}
+
+void lt(void){
+    Datum d1,d2;
+    d2 = pop();
+    d1 = pop();
+    d1.val = (double)(d1.val < d2.val);
+    push(d1);
+}
+
+void gt(void){
+    Datum d1,d2;
+    d2 = pop();
+    d1 = pop();
+    d1.val = (double)(d1.val > d2.val);
+    push(d1);
+}
+
+void ge(void){
+    Datum d1,d2;
+    d2 = pop();
+    d1 = pop();
+    d1.val = (double)(d1.val >= d2.val);
+    push(d1);
+}
+
+void eq(void){
+    Datum d1,d2;
+    d2 = pop();
+    d1 = pop();
+    d1.val = (double)(d1.val == d2.val);
+    push(d1);
+}
+
+void ne(void){
+    Datum d1,d2;
+    d2 = pop();
+    d1 = pop();
+    d1.val = (double)(d1.val != d2.val);
+    push(d1);
+}
+
+void and(void){
+    Datum d1,d2;
+    d2 = pop();
+    d1 = pop();
+    d1.val = (double)(d1.val != 0.0 && d2.val != 0.0);
+    push(d1);
+}
+
+void or(void){
+    Datum d1,d2;
+    d2 = pop();
+    d1 = pop();
+    d1.val = (double)(d1.val != 0.0 || d2.val != 0.0);
+    push(d1);
+}
+
+void not(void){
+    Datum d1;
+    d1 = pop();
+    d1.val = (double)(d1.val == 0.0);
+    push(d1);
+}
+
+void ifcode(void){
+    Datum d;
+    Inst *savepc = pc;
+    execute (savepc+3);
+    d=pop();
+    if (d.val)
+        execute( *((Inst**)(savepc)) );
+    else if ( *((Inst**)(savepc+1)) )
+        execute( *((Inst**)(savepc+1)) );
+    pc = *((Inst**)(savepc+2));
+}
+
+void whilecode(void){
+    Datum d;
+    Inst *savepc = pc;
+    execute(savepc+2);
+    d = pop();
+    while (d.val){
+        execute( *((Inst**)(savepc)) );
+        execute(savepc+2);
+        d=pop();
+    }
+    pc = *((Inst**)(savepc+1));
+}
+
+void prexpr(void){
+    Datum d;
+    d = pop();
+    printf("%.8g\n",d.val);
 }

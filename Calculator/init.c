@@ -31,6 +31,18 @@ static struct{
 	"abs",	fabs,
 	0,	0
 };
+
+static struct{
+	char *name;
+	int kval;
+} keywords[]={
+	"if",		IF,
+	"else",		ELSE,
+	"while",	WHILE,
+	"print",	PRINT,
+	0,			0,
+};
+
 void init(void){
 	int i;
 	Symbol *s;
@@ -40,4 +52,6 @@ void init(void){
 		s = install(builtins[i].name, BLTIN,0.0);
 		s->u.ptr = builtins[i].func;
 	}
+	for (i=0; keywords[i].name;i++)
+		install(keywords[i].name,keywords[i].kval,0.0);
 }

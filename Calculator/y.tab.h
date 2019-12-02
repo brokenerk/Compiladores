@@ -54,7 +54,20 @@ extern int yydebug;
     BLTIN = 260,
     UNDEF = 261,
     CONST = 262,
-    UNARYMINUS = 263
+    PRINT = 263,
+    WHILE = 264,
+    IF = 265,
+    ELSE = 266,
+    OR = 267,
+    AND = 268,
+    GT = 269,
+    GE = 270,
+    LT = 271,
+    LE = 272,
+    EQ = 273,
+    NE = 274,
+    UNARYMINUS = 275,
+    NOT = 276
   };
 #endif
 /* Tokens.  */
@@ -63,7 +76,20 @@ extern int yydebug;
 #define BLTIN 260
 #define UNDEF 261
 #define CONST 262
-#define UNARYMINUS 263
+#define PRINT 263
+#define WHILE 264
+#define IF 265
+#define ELSE 266
+#define OR 267
+#define AND 268
+#define GT 269
+#define GE 270
+#define LT 271
+#define LE 272
+#define EQ 273
+#define NE 274
+#define UNARYMINUS 275
+#define NOT 276
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -71,11 +97,10 @@ union YYSTYPE
 {
 #line 7 "hoc.y"
 
-	double val;
 	Symbol *sym;
 	Inst *inst;
 
-#line 79 "y.tab.h"
+#line 104 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
