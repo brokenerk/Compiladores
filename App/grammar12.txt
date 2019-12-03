@@ -1,0 +1,5 @@
+E'->E;
+E->E + T|E - T|T;
+T->T * P|T / P|P;
+P->P ^ F|F;
+F->( E )|sin ( E )|num;
