@@ -54,21 +54,23 @@ extern int yydebug;
     BLTIN = 260,
     UNDEF = 261,
     CONST = 262,
-    PRINT = 263,
-    WHILE = 264,
-    IF = 265,
-    ELSE = 266,
-    FOR = 267,
-    OR = 268,
-    AND = 269,
-    GT = 270,
-    GE = 271,
-    LT = 272,
-    LE = 273,
-    EQ = 274,
-    NE = 275,
-    UNARYMINUS = 276,
-    NOT = 277
+    WHILE = 263,
+    IF = 264,
+    ELSE = 265,
+    PRINT = 266,
+    SWITCH = 267,
+    CASE = 268,
+    BREAK = 269,
+    OR = 270,
+    AND = 271,
+    GT = 272,
+    GE = 273,
+    LT = 274,
+    LE = 275,
+    EQ = 276,
+    NE = 277,
+    UNARYMINUS = 278,
+    NOT = 279
   };
 #endif
 /* Tokens.  */
@@ -77,21 +79,23 @@ extern int yydebug;
 #define BLTIN 260
 #define UNDEF 261
 #define CONST 262
-#define PRINT 263
-#define WHILE 264
-#define IF 265
-#define ELSE 266
-#define FOR 267
-#define OR 268
-#define AND 269
-#define GT 270
-#define GE 271
-#define LT 272
-#define LE 273
-#define EQ 274
-#define NE 275
-#define UNARYMINUS 276
-#define NOT 277
+#define WHILE 263
+#define IF 264
+#define ELSE 265
+#define PRINT 266
+#define SWITCH 267
+#define CASE 268
+#define BREAK 269
+#define OR 270
+#define AND 271
+#define GT 272
+#define GE 273
+#define LT 274
+#define LE 275
+#define EQ 276
+#define NE 277
+#define UNARYMINUS 278
+#define NOT 279
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -99,10 +103,10 @@ union YYSTYPE
 {
 #line 7 "hoc.y"
 
-	Symbol *sym;
-	Inst *inst;
+Inst    *inst;
+Symbol  *sym;  
 
-#line 106 "y.tab.h"
+#line 110 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

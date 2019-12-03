@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 typedef struct Symbol {
 	char *name;
 	short type;
@@ -28,15 +31,16 @@ extern void constpush(void), varpush(void),
 extern void prexpr(void);
 extern void gt(void),	lt(void), eq(void),ge(void), le(void),
  	  ne(void), and(void),or(void), not(void);
-extern void ifcode(void),whilecode(void),forcode(void);
+extern void ifcode(void),whilecode(void),forcode(void),
+			switchcode(),casecode();
 
 extern void initcode(void);
 extern void execute(Inst *);
 void init(void);
 
 int yylex(void);
-int warning ( char * , char *t);
-int yyerror( char *);
+void warning ( char * , char *t);
+void yyerror( char *);
 int fpecatch();
 void execerror(char *, char *);
 int follow(int,int,int);

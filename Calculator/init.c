@@ -29,7 +29,7 @@ static struct{
 	"sqrt",	Sqrt,
 	"int",	integer,
 	"abs",	fabs,
-	0,	0
+	0,	0,
 };
 
 static struct{
@@ -39,8 +39,10 @@ static struct{
 	"if",		IF,
 	"else",		ELSE,
 	"while",	WHILE,
-	"for",		FOR,
 	"print",	PRINT,
+	"switch",	SWITCH,
+	"break",	BREAK,
+	"case",		CASE,
 	0,			0,
 };
 
@@ -55,4 +57,10 @@ void init(void){
 	}
 	for (i=0; keywords[i].name;i++)
 		install(keywords[i].name,keywords[i].kval,0.0);
+}
+void prexpr()
+{
+    Datum d;
+    d=pop();
+    printf("%.8g\n",d.val);
 }
