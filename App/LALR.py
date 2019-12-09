@@ -81,9 +81,7 @@ class LALR:
         listRules = []
         for rule in self.rules:
             if(rule.getSymbol() == symbol):
-                if(rule not in self.visitedRules):
-                    self.visitedRules.add(rule)
-                    listRules.append(rule)  
+                listRules.append(rule)  
         return listRules
 
     #Parameters: Symbol, Set<List<Node>>
@@ -122,61 +120,37 @@ class LALR:
         #If both conts never matched, it's a new item set
         return -1
 
-    def calculateSymbols(self, auxL):
-        symbols = set([])
-        newSet = []
-        self.visited = set([])  
-        cont = 1
-
-        for rule in auxL:
-            auxSymbols = rule.getLR1Symbols()
-            next = rule.getNext()
-
-            while(next != None):
-                if(next.getPointBefore()):
-                    n = next.getNext()
-                    firstAux = set([])
-
-                    if(n != None):
-                        firstAux = self.first(n.getSymbol())
-
-                    if(rule.getOriginal()):
-                        rule.setLR1Symbols(auxSymbols)
-                        if(firstAux == set([])):
-                            symbols = auxSymbols
-                        else:
-                            symbols = firstAux
-                            if(rule.isRigthRecursive()):
-                                symbols = symbols.union(auxSymbols)
-                    else:
-                        if(rule.isLeftRecursive()):
-                            symbols = symbols.union(firstAux)
-                            rule.setLR1Symbols(symbols)
-                        else:
-                            rule.setLR1Symbols(symbols)
-                            if(cont != len(auxL) - 1):
-                                symbols = symbols.union(firstAux)
-                        
-                next = next.getNext()
-            cont += 1
-            newSet.append(rule)
-        return newSet
-
     #Parametes: List<Node>
     #Return: Set<List<Node>>
     def itemClosure(self, s):
+        symbols = set([])
         for rule in s:
             #self.auxListItem.append(rule)
             next = rule.getNext()
             while(next != None):
                 if(next.getPointBefore()):
                     if(next.getSymbol() in self.noTerminals):
+                        n = next.getNext()
+
+                        if(n != None):
+                            symbols = self.first(n.getSymbol())
+                        else:
+                            symbols = rule.getLR1Symbols()
+
                         nextRules = self.searchRule(next.getSymbol())
                         for r in nextRules:
-                            r.getNext().setPointBefore(True)
-                            s.append(deepcopy(r))
+                            belongs = False
+                            for r1 in s:
+                                if(r.equals(r1) == True):
+                                    r1.setLR1Symbols(symbols.union(r1.getLR1Symbols()))
+                                    belongs = True
+                                    break
+
+                            if(belongs == False):
+                                r.getNext().setPointBefore(True)
+                                r.setLR1Symbols(symbols.union(r.getLR1Symbols()))
+                                s.append(deepcopy(r))
                 next = next.getNext()
-        #s.sort()
         return s
 
     #Parametes: Set<Node>, String
@@ -184,7 +158,6 @@ class LALR:
     def move(self, state, symbol):
         l = []
         for rule in state:
-            rule.setOriginal(False)
             next = rule.getNext()
             while(next != None):
                 if(next.getSymbol() == symbol and next.getPointBefore() == True):
@@ -195,7 +168,6 @@ class LALR:
                     else:
                         next.setPointAfter(True)
 
-                    rule.setOriginal(True)
                     l.append(rule)
                 next = next.getNext()
         return l
@@ -203,9 +175,7 @@ class LALR:
     #Parametes: Set<Node>, String
     #Return: Set<Node>
     def goTo(self, state, symbol):
-        #self.auxListItem = []   #Clear list
-        returnStates = self.itemClosure(self.move(state, symbol))
-        return self.calculateSymbols(returnStates)
+        return self.itemClosure(self.move(state, symbol))
 
     #Parameters: Nothing
     #Return: Nothing
@@ -227,14 +197,9 @@ class LALR:
         self.initializeCounter()
         firstRule = self.rules[0]
         firstRule.setLR1Symbols(set(["$"]))
-        firstRule.setOriginal(True)
         firstRule.getNext().setPointBefore(True)
 
-        #S0 = self.itemClosure(firstRule)
-        S0 = self.calculateSymbols(self.itemClosure([firstRule]))
-        #Sort S0 rules
-        #S0 = sorted(S0, key = lambda rule0: (rule0.getSymbol(), rule0.getNext().getSymbol(), rule0.getNext().getPointBefore()))  
-
+        S0 = self.itemClosure([firstRule])
         queue = [S0]    #Queue<Set>
         self.itemSets.append(S0)    #List<List<Node>>
         cont = 1
@@ -256,9 +221,6 @@ class LALR:
                 if(aux == set()):
                     continue
 
-                #Sort aux rules
-                #aux = sorted(aux, key = lambda rule: (rule.getSymbol(), rule.getNext().getSymbol(), rule.getNext().getPointBefore())) 
-                
                 pair = []
                 pair.insert(0, "d") #Insert a pair in the list 
                 

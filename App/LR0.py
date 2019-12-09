@@ -136,7 +136,6 @@ class LR0:
                             r.getNext().setPointBefore(True)
                             s.append(deepcopy(r))
                 next = next.getNext()
-        #s.sort()
         return s
 
     #Parametes: Set<Node>, String
@@ -187,9 +186,6 @@ class LR0:
         firstRule = self.rules[0]
         firstRule.getNext().setPointBefore(True)
         S0 = self.itemClosure([firstRule])
-        
-        #Sort S0 rules
-        #S0 = sorted(S0, key = lambda rule0: (rule0.getSymbol(), rule0.getNext().getSymbol(), rule0.getNext().getPointBefore(), rule0.getNext().getPointAfter())) 
         queue = [S0]    #Queue<Set>
         self.itemSets.append(S0)    #List<List<Node>>
         cont = 1
@@ -215,10 +211,7 @@ class LR0:
                 #Set is empty, do nothing
                 if(aux == set()):
                     continue
-
-                #Sort aux rules
-                #aux = sorted(aux, key = lambda rule: (rule.getSymbol(), rule.getNext().getSymbol(), rule.getNext().getPointBefore(), rule.getNext().getPointAfter())) 
-                    
+  
                 pair = []
                 pair.insert(0, "d") #Insert a pair in the list 
                 

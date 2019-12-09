@@ -4,3 +4,9 @@
 Calculator/parsetab.py
 venv/*
 App/venv/*
+*.o
+Calculator/x.tab.h
+Calculator/y.tab.h
+Calculator/y.tab.h
+Calculator/hoc5
+Calculator/y.tab.h

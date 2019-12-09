@@ -94,7 +94,7 @@ if __name__ == "__main__":
     afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("grammar5.txt", "r")
+    archivo = open("./txts/grammar7.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -123,20 +123,8 @@ if __name__ == "__main__":
         c = "23.4632153+5501321"
         lex2 = Lexer(afd2, c)
 
-        lalr = LALR(grammar, lex2)
-
-        if(lalr.isLALR()):
-            print("Es LALR")
-            lalr.displayTable(0)
-
-            res = lalr.analyze(c)
-            lalr.displayTable(1)
-            if(res):
-                print("\n" + c + " pertenece a la gramatica")
-            else:
-                print("\n" + c + " no pertenece a la gramatica")
-        else:
-            print("No es LALR")
+        lr1 = LR1(grammar, lex2)
+        lr1.isLR1()
 
         '''
         #Analysis

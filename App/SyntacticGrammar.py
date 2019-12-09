@@ -2,7 +2,7 @@
 from Node import Node
 from Token import Token
 from Lexer import Lexer
-#Epsilon is a space ' '
+#Epsilon is a 'epsilon'
 class SyntacticGrammar:
     #Constructor
     def __init__(self, lex):

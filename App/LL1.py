@@ -104,6 +104,8 @@ class LL1:
 				y = self.index["PC"] - len(self.noTerminals)
 			elif(token == Token.OR and "OR" in self.terminals):
 				y = self.index["OR"] - len(self.noTerminals)
+			elif(token == Token.SPACE and "ESPACIO" in self.terminals):
+				y = self.index["ESPACIO"] - len(self.noTerminals)
 			elif(token == Token.CONCAT and "AND" in self.terminals):
 				y = self.index["AND"] - len(self.noTerminals)
 			elif(token == Token.COMMA and "coma" in self.terminals):

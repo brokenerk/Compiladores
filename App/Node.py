@@ -7,7 +7,6 @@ class Node:
         self.pointBefore = False            #Boolean
         self.pointAfter = False             #Boolean
         self.lr1Symbols = set([])           #Set<String>
-        self.original = False               #Boolean
         self.counter = 0                    #Integer
 
     #Return: Node
@@ -68,32 +67,6 @@ class Node:
     #Return: Nothing
     def setLR1Symbols(self, lr1Symbols):
         self.lr1Symbols = lr1Symbols
-
-    #Parameters: Nothing
-    #Return: Boolean
-    def getOriginal(self):
-        return self.original
-    
-    #Parameters: Boolean
-    #Return: Nothing
-    def setOriginal(self, original):
-        self.original = original
-
-    #Parameters: Nothing
-    #Return: Boolean
-    def isLeftRecursive(self):
-        next = self.getNext()
-        return next.getSymbol() == self.symbol
-
-    #Parameters: Nothing
-    #Return: Boolean
-    def isRigthRecursive(self):
-        next = self.getNext()
-        while(next != None):
-            if(next.getSymbol() == self.symbol):
-                return True
-            next = next.getNext()
-        return False
 
     #Parameters: Nothing
     #Return: Integer
