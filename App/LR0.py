@@ -507,7 +507,7 @@ class LR0:
                             if self.rules[i].getSymbol() not in self.visited:
                                 c = c.union(self.follow(self.rules[i].getSymbol()))
                             aux = aux - {"epsilon"}
-                        c = c.union(aux);
+                        c = c.union(aux)
                 next = next.getNext()
         if c != set():
             self.dpFollow[symbol] = c

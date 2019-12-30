@@ -3,22 +3,21 @@ from Node import Node
 from Lexer import Lexer
 from Token import Token
 from copy import deepcopy
+from LR1 import LR1
 epsilon = '\u03B5'
 
 class LALR:
     #Constructor
     def __init__(self, rules, stringLex):
         self.rules = rules              #List<Node>
-        #self.auxListItem = []           #List<List<Node>>
-        self.table = []                 #List<List>
-        self.analysisTable = []         #List<List>
         self.terminals = set([])        #Set<String>
         self.noTerminals = set([])      #Set<String>
-        self.itemSets = []              #List<(List<Node>, Set<String>)>
-        self.visitedRules = set([])     #Set<List<Node>>
+        self.table = []                 #List<List>
+        self.tableLR1 = []              #List<List>
+        self.analysisTable = []         #List<List>
+        self.itemSets = []              #List<List<Node>>
         self.index = {}                 #Dictionary
-        self.visited = set()            #Set<String>
-        self.rulesDictionary = {}       #Dictionary Rules
+        self.rulesDictionary = {}       #Dictionary
         self.stringLex = stringLex      #Lexer
 
     #Parameters: Nothing
@@ -54,128 +53,41 @@ class LALR:
     def getAnalysisTable(self):
         return self.analysisTable
 
-    #Parameters: Nothing
+    #Parameters: LR1
     #Return: Nothing
     #Note: Fill LALR Table
-    def initializeTable(self):
-        nt = list(self.noTerminals)
-        t = list(self.terminals)
-        
-        nt.sort()
-        t.sort()
-        t.append("$")
-        self.table.append([0] * (len(t) + len(nt) + 1))
+    def initializeTable(self, lr1):
+        self.tableLR1 = lr1.getTable()
+        self.table.append(self.tableLR1[0])
 
-        j = 1
-        for i in range(0, len(t)):
-            self.index[t[i]] = j
-            self.table[0][j] = t[i]
-            j += 1
-
-        for i in range(0, len(nt)):
-            self.index[nt[i]] = j
-            self.table[0][j] = nt[i]
-            j += 1
-
-    def searchRule(self, symbol):
-        listRules = []
-        for rule in self.rules:
-            if(rule.getSymbol() == symbol):
-                listRules.append(rule)  
-        return listRules
-
-    #Parameters: Symbol, Set<List<Node>>
-    #Return: List<String>
-    def getSymbolItems(self, state):
-        symbolItems = set([])
-        for rule in state:
-            next = rule.getNext()
-            while(next != None):
-                if(next.getPointBefore() and next.getSymbol() != "epsilon"):
-                    symbolItems.add(next.getSymbol())
-                next = next.getNext()
-        l = list(symbolItems)
-        l.sort()
-        return l
+        for i in range(1, len(self.tableLR1)):
+            for j in range(1, len(self.tableLR1[i])):
+                self.index[self.tableLR1[0][j]] = j
+                if(self.tableLR1[i][j] != 0):
+                    r = self.tableLR1[i][j]
+                    if(r[0] != 'd'):
+                        self.tableLR1[i][j] = 0
 
     #Parameters: Set<List<Node>>
     #Return: Boolean
     def exists(self, s1):
         #Iterate the item sets
-        i = 0
         for s2 in self.itemSets:
             cont1 = 0
             cont2 = 0
-            for r1, r2 in zip(s1, s2):
+            for r1, r2 in zip(s1, s2[1]):
                 #If a rule matches, increment cont2
                 if(r1.equals(r2) == True):
                     cont2 += 1
                 cont1 += 1
             #If both conts are the same, it means that item set s1 was already calculated (exists)
             if(cont1 == cont2):
-                for r1, r2 in zip(s1, s2):
+                for r1, r2 in zip(s1, s2[1]):
+                    #Merge LR1 symbols
                     r2.setLR1Symbols(r2.getLR1Symbols().union(r1.getLR1Symbols()))
-                return i
-            i += 1
+                return s2[0]
         #If both conts never matched, it's a new item set
         return -1
-
-    #Parametes: List<Node>
-    #Return: Set<List<Node>>
-    def itemClosure(self, s):
-        symbols = set([])
-        for rule in s:
-            #self.auxListItem.append(rule)
-            next = rule.getNext()
-            while(next != None):
-                if(next.getPointBefore()):
-                    if(next.getSymbol() in self.noTerminals):
-                        n = next.getNext()
-
-                        if(n != None):
-                            symbols = self.first(n.getSymbol())
-                        else:
-                            symbols = rule.getLR1Symbols()
-
-                        nextRules = self.searchRule(next.getSymbol())
-                        for r in nextRules:
-                            belongs = False
-                            for r1 in s:
-                                if(r.equals(r1) == True):
-                                    r1.setLR1Symbols(symbols.union(r1.getLR1Symbols()))
-                                    belongs = True
-                                    break
-
-                            if(belongs == False):
-                                r.getNext().setPointBefore(True)
-                                r.setLR1Symbols(symbols.union(r.getLR1Symbols()))
-                                s.append(deepcopy(r))
-                next = next.getNext()
-        return s
-
-    #Parametes: Set<Node>, String
-    #Return: Set<Node>
-    def move(self, state, symbol):
-        l = []
-        for rule in state:
-            next = rule.getNext()
-            while(next != None):
-                if(next.getSymbol() == symbol and next.getPointBefore() == True):
-                    next.setPointBefore(False)
-                    n = next.getNext()
-                    if(n != None):
-                        n.setPointBefore(True)
-                    else:
-                        next.setPointAfter(True)
-
-                    l.append(rule)
-                next = next.getNext()
-        return l
-
-    #Parametes: Set<Node>, String
-    #Return: Set<Node>
-    def goTo(self, state, symbol):
-        return self.itemClosure(self.move(state, symbol))
 
     #Parameters: Nothing
     #Return: Nothing
@@ -193,74 +105,43 @@ class LALR:
     def isLALR(self):
         self.setNoTerminals()
         self.setTerminals()
-        self.initializeTable()
+        #Do LR(1) first
+        lr1 = LR1(self.rules, None)
+        if(lr1.isLR1() == False):
+            return False
+
+        self.initializeTable(lr1)
         self.initializeCounter()
-        firstRule = self.rules[0]
-        firstRule.setLR1Symbols(set(["$"]))
-        firstRule.getNext().setPointBefore(True)
+        cont = 0
+        cont2 = 0
 
-        S0 = self.itemClosure([firstRule])
-        queue = [S0]    #Queue<Set>
-        self.itemSets.append(S0)    #List<List<Node>>
-        cont = 1
-
-        #Table LR(1)
-        self.table.append([0] * (len(self.terminals) + len(self.noTerminals) + 2)) #Include $ and extended grammar
+        #Table LALR
         self.table[0][0] = " "
-        i = 0
 
-        while queue:
-            Si = queue.pop(0)   #Get first enter
-            symbolItems = self.getSymbolItems(Si)
-            #Iterate over the item symbols
-            for symbol in symbolItems:
-                self.visitedRules = set([])
-                aux = self.goTo(deepcopy(Si), symbol)
-
-                #Set is empty, do nothing
-                if(aux == set()):
-                    continue
-
-                pair = []
-                pair.insert(0, "d") #Insert a pair in the list 
-                
-                #Verify is set already exists in list
-                check = self.exists(aux) #Verify is set already exists in list
-                                
-                if(check != -1):
-                    pair.insert(1, check)
-                    # Check if there is an error
-                    if(self.table[i + 1][self.index[symbol]] != 0):
-                        if(symbol != "$"):
-                            return False
-                        else:
-                            continue
-                    else:
-                        self.table[i + 1][self.index[symbol]] = pair
-                    continue
-
-                self.table.append([0] * (len(self.terminals) + len(self.noTerminals) + 2)) #Include $ and extended grammar
-                self.table[cont + 1][0] = cont
-                pair.insert(1, cont)
-                self.table[i + 1][self.index[symbol]] = pair
-
-                queue.append(aux)           #Add new set to the end of the queue
-                self.itemSets.append(aux)   #Add the new set to the list
-
+        for s in lr1.getItemSets(): 
+            #Verify is set already exists in list
+            check = self.exists(s)
+            if(check != -1):
+                for i in range(1, len(self.table)):
+                    if(self.table[i][0] == check):
+                        self.table[i][0] = [check, cont2]
+            else:
+                self.table.append([0] * len(self.tableLR1[0])) #Include $ and extended grammar
+                self.table[cont + 1][0] = cont2
+                self.itemSets.append((cont2, s))
                 cont += 1
-            i += 1
+            cont2 += 1
 
         cont = 0
-        for Si in self.itemSets:
-            print("\n" + "S" + str(cont))
-            for rule in Si:
-                rule.displayItems()
-                print(str(rule.getLR1Symbols()))
+        for s in self.itemSets:
+            #print("\n" + "S" + str(cont))
+            for rule in s[1]:
+                #rule.displayItems()
+                #print(str(rule.getLR1Symbols()))
                 #Adding Rules 
                 next = rule.getNext()
                 while(next != None):
                     if(next.getPointAfter() or next.getSymbol() == "epsilon"):
-
                         for symbol in rule.getLR1Symbols():
                             ruleTable = []  #Add a pair: [r, cont]
                             if(self.rules[0].getCounter() == rule.getCounter()):
@@ -272,15 +153,26 @@ class LALR:
                             
                             # Check if there is an error
                             if(self.table[cont + 1][self.index[symbol]] != 0):
-                                if(symbol != "$"):
-                                    return False
-                                else:
-                                    continue
+                                return False
                             else:
                                 self.table[cont + 1][self.index[symbol]] = ruleTable
                                 
                     next = next.getNext()
             cont += 1
+
+        #Add displacements for formatted states
+        for i in range(1, len(self.table)):
+            state = self.table[i][0]
+            if type(state) is list:
+                state = state[0]
+                
+            for j in range(1, len(self.tableLR1)):
+                if(self.tableLR1[j][0] == state):
+                    for k in range(1, len(self.tableLR1[j])):
+                        if(self.tableLR1[j][k] != 0):
+                            self.table[i][k] = self.tableLR1[j][k]
+
+        del lr1
         return True
 
     #Parameters: Nothing
@@ -313,6 +205,19 @@ class LALR:
             for i in self.analysisTable:
                 print(i)
 
+    #Parameters: Nothing
+    #Return: Integer
+    #Note: Get the correct index of the searched state
+    def findRowState(self, state):
+        for i in range(1, len(self.table)):
+            s = self.table[i][0]
+            if type(s) is list:
+                if(state == s[0] or state == s[1]):
+                    return i
+            else:
+                if(s == state):
+                    return i
+
     #Parameters: string
     #Return: True if the string allow to the grammar, false in other case
     def analyze(self, c):
@@ -340,7 +245,7 @@ class LALR:
             strAnalysis = srt[0]    #Symbol to analyze
             
             #Get Coordinates to the first action
-            x = lastP + 1
+            x = self.findRowState(lastP)
 
             #Check tokens through string lexer
             if strAnalysis in self.terminals or strAnalysis == "$":
@@ -421,7 +326,7 @@ class LALR:
 
                     #Get Coordinates to the second action
                     if len(p) > 0:
-                        x = p[len(p) - 1] + 1  #Calculated coordinate X
+                        x = self.findRowState(p[len(p) - 1]) #Calculated coordinate X
                     else:
                         return False
 
@@ -451,17 +356,3 @@ class LALR:
             else:
                 return False
         return False
-
-    #Parameters: Terminals or No terminals symbols
-    #Return: Set of terminals or Epsilon
-    def first(self, symbol):
-        c = set()   #Set<>
-        self.visited.add(symbol)
-        if symbol in self.terminals:
-            c.add(symbol)
-        else:
-            for j in range(0, len(self.rules)):
-                if symbol == self.rules[j].getSymbol():
-                    if self.rules[j].getNext().getSymbol() not in self.visited:
-                        c = c.union(self.first(self.rules[j].getNext().getSymbol()))
-        return c

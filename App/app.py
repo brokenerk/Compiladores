@@ -140,7 +140,6 @@ afn27.setToken(Token.COMMA)
 afn28 = NFA.createBasic(' ')
 afn28.setToken(Token.SPACE)
 
-'''
 afn27_1 = NFA.createBasic('+')
 afn27_1.setToken(Token.PLUS)
 
@@ -158,10 +157,9 @@ afn27_5.setToken(Token.PAR_L)
 
 afn27_6 = NFA.createBasic(')')
 afn27_6.setToken(Token.PAR_R)
-'''
 
-#automatota3 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27, afn27_1, afn27_2, afn27_3, afn27_4, afn27_5, afn27_6]))
-automatota3 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27, afn28]))
+automatota3 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27, afn28, afn27_1, afn27_2, afn27_3, afn27_4, afn27_5, afn27_6]))
+#automatota3 = NFA.specialJoin(set([afnB, afnE, afn5, afn6, afnF, afn26, afn27, afn28]))
 stringDFA = automatota3.convertToDFA()
 
 # ---------------------------------------------------------------------

@@ -69,7 +69,7 @@ class LL1:
 		p = []
 		srt = []
 		p.append("$")
-		p.append(self.getInitialSymbol())
+		p.append(self.rules[0].getSymbol())
 		
 		for i in range(0, len(c)):
 			srt.append(c[i])
@@ -229,20 +229,9 @@ class LL1:
 		self.table[j][0] = "$"
 		j = 1
 		for i in range(0, len(t)):
-			self.table[0][j] = t[i];
+			self.table[0][j] = t[i]
 			j += 1
 		self.table[0][j] = "$"
-
-	#Parameters: Nothing
-	#Return: Nothing
-	#Note: Clear visited
-	def initVisited(self):
-		self.visited = set()
-
-	#Parameters: Nothing
-	#Return: Initial symbol of the grammar
-	def getInitialSymbol(self):
-		return self.rules[0].getSymbol()
 
 	#Parameters: Nothing 
 	#Return: List<List>
@@ -263,7 +252,7 @@ class LL1:
 		for i in self.terminals:
 			self.dpFirst[i] = self.first(i)
 		for i in self.noTerminals:
-			self.initVisited()
+			self.visited = set()
 			self.dpFirst[i] = self.first(i)
 	
 	#Parameters: Nothing
@@ -271,7 +260,7 @@ class LL1:
 	#Note: Fill DP of follow
 	def setDPFollow(self):
 		for i in self.noTerminals:
-			self.initVisited()
+			self.visited = set()
 			c = self.follow(i)
 			if c != set():
 				self.dpFollow[i] = c
@@ -336,7 +325,7 @@ class LL1:
 			return self.dpFollow[symbol]
 		c = set()
 		self.visited.add(symbol)
-		if symbol == self.getInitialSymbol():
+		if symbol == self.rules[0].getSymbol():
 			c.add("$")
 		for i in range(0, len(self.rules)):
 			next = self.rules[i].getNext()
@@ -355,7 +344,7 @@ class LL1:
 							if self.rules[i].getSymbol() not in self.visited:
 								c = c.union(self.follow(self.rules[i].getSymbol()))
 							aux = aux - {"epsilon"}
-						c = c.union(aux);
+						c = c.union(aux)
 						#	n = n.getNext()
 				next = next.getNext()
 		if c != set():

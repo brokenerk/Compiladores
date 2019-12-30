@@ -6,7 +6,7 @@ class DFA:
     def __init__(self, table, alphabet):
         global Id
         Id += 1
-        self.id = Id;
+        self.id = Id
         self.table = table
         self.alphabet = alphabet
 

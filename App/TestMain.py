@@ -26,7 +26,8 @@ if __name__ == "__main__":
     afn11 = NFA.createBasic(',')
     afn12 = NFA.createBasic('.')
     afn13 = NFA.createBasic('?')
-    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10).join(afn11).join(afn12).join(afn13)
+    afn13_1 = NFA.createBasic('^')
+    afnA = afn1.join(afn2).join(afn3).join(afn4).join(afn5).join(afn6).join(afn7).join(afn8).join(afn9).join(afn10).join(afn11).join(afn12).join(afn13).join(afn13_1)
     afn13 = NFA.createBasic('A', 'Z')
     afn14 = NFA.createBasic('a', 'z')
     afn15 = NFA.createBasic ("'")
@@ -94,7 +95,7 @@ if __name__ == "__main__":
     afd2.displayTable()
 
     #Las reglas se ingresan todas en 1 sola linea, separadas por punto y coma
-    archivo = open("./txts/grammar7.txt", "r")
+    archivo = open("./txts/grammar12.txt", "r")
 
     print("Leeyendo Gramatica...")
     string = ""
@@ -123,8 +124,8 @@ if __name__ == "__main__":
         c = "23.4632153+5501321"
         lex2 = Lexer(afd2, c)
 
-        lr1 = LR1(grammar, lex2)
-        lr1.isLR1()
+        lalr = LALR(grammar, lex2)
+        lalr.isLALR()
 
         '''
         #Analysis

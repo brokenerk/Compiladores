@@ -81,6 +81,12 @@ class Node:
             next = next.getNext()
         return cont
 
+    #Parameters: Nothing
+    #Return: Boolean
+    def isLeftRecursive(self):
+        next = self.getNext()
+        return next.getSymbol() == self.symbol
+
     #Parameters: Node
     #Return: Boolean
     def equals(self, other):
