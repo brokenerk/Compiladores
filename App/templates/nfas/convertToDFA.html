@@ -75,28 +75,26 @@
 
 	<div class="container">
 		<!-- ConvertToDFA -->
-		 <div id="ConvertToDFA">
-			<div class="col s12">
-			   <div class="row">
-				  <form method="POST">
-				  <p style="text-align: center; font-size: 25px;"> Convert NFA To DFA </p>
-				  <div class="input-field col s8 offset-s1">
-					 <select name="nfa">
-						<option disabled selected>Choose 1st</option>
-						{% if nfaDictionary %}
-						   {% for id, nfa in nfaDictionary.items() %}
-							  {% if id > 0 %}
-								 <option value="{{ id }}"> {{ id }} </option>
-							  {% endif %}
-						   {% endfor %}
-						{% endif %}
-					 </select>
-				  </div>
-				  <div class="input-field col s3">
-					 <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"></i>To DFA</a>
-				  </div>
-			   </form>
-			</div>
+		 <div id="ConvertToDFA" class="col s12">
+		   <div class="row file-field">
+			  <form method="POST">
+			  <p style="text-align: center; font-size: 25px;"> Convert NFA To DFA </p>
+			  <div class="input-field col m8 s7 offset-m1">
+				 <select name="nfa">
+					<option disabled selected>Choose 1st</option>
+					{% if nfaDictionary %}
+					   {% for id, nfa in nfaDictionary.items() %}
+						  {% if id > 0 %}
+							 <option value="{{ id }}"> {{ id }} </option>
+						  {% endif %}
+					   {% endfor %}
+					{% endif %}
+				 </select>
+			  </div>
+			  <div class="input-field col m3 s5">
+				 <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"></i>To DFA</a>
+			  </div>
+		   </form>
 		 </div>
 	  </div>
 	</div>

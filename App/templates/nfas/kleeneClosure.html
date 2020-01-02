@@ -3,11 +3,11 @@
 
 	<div class="container">
 		<!-- *Closure -->
-         <div id="*Closure">
-               <div class="row">
+         <div id="*Closure" class="col s12">
+               <div class="row file-field">
                   <form method="POST">
                   <p style="text-align: center; font-size: 25px;"> Kleene Closure </p>
-                  <div class="input-field col s8 offset-s1">
+                  <div class="input-field col m8 s7 offset-m1">
                      <select name="nfa">
                         <option disabled selected>Choose 1st</option>
                         {% if nfaDictionary %}
@@ -19,15 +19,12 @@
                         {% endif %}
                      </select>
                   </div>
-                  <div class="input-field col s3">
+                  <div class="input-field col m3 s5">
                      <button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons left">stars</i>Closure</a>
                   </div>
                </form>
             </div>
-            <div class="row offset-s3">
-               <div id="mynetwork">
-               </div>
-            </div>
+            <div class="row offset-m3" id="mynetwork">
       </div>
 	</div>
 {% endblock %}

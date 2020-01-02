@@ -1,23 +1,41 @@
-<nav>
-    <div class="nav-wrapper #01579b light-blue darken-4">
-       <a href="/" class="brand-logo" style="padding-left: 50px;">Compiler</a>
-       <ul class="right hide-on-med-and-down">
-          <li><a href="/">Home</a></li>
-          <!-- Dropdown Trigger: ANALYSIS -->
-          <li><a class="dropdown-trigger button" href="#" data-target="dropdown-analysis">Syntactic Analysis<i class="material-icons right">arrow_drop_down</i></a></li>
-          <li><a href="/lexic">Lexical Analysis</a></li>
-          <!-- Dropdown Trigger: CONVERT TO AFD -->
-          <li><a class="dropdown-trigger button" href="#" data-target="dropdown-nfa">NFA Operations<i class="material-icons right">arrow_drop_down</i></a></li>
-          <li><a href="/aboutUs">About us</a></li>
-          <li>
-            <a href="https://github.com/brokenerk/Compiladores" rel="noopener noreferrer" target="_blank">
-                <i class="fa fa-github fa-3x"> </i>  
-            </a>
-          </li>
-       </ul>
-    </div>
- </nav>
- <ul id="dropdown-nfa" class="dropdown-content">
+<div class="navbar-fixed">
+	<nav class="light-blue darken-4">
+	    <div class="nav-wrapper container">
+	       	<a href="/" class="brand-logo">Compiler</a>
+			<a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+	       	<ul class="right hide-on-med-and-down">
+				<!-- Dropdown Trigger: ANALYSIS -->
+				<li><a class="dropdown-trigger button" href="#" data-target="dropdown-analysis">Syntactic Analysis<i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a href="/lexic">Lexical Analysis</a></li>
+				<!-- Dropdown Trigger: CONVERT TO AFD -->
+				<li><a class="dropdown-trigger button" href="#" data-target="dropdown-nfa">NFA Operations<i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a href="/aboutUs">About us</a></li>
+				<li>
+	            <a href="https://github.com/brokenerk/Compiladores" rel="noopener noreferrer" target="_blank">
+	                <i class="fa fa-github fa-2x"> </i>  
+	            </a>
+	          </li>
+	       </ul>
+	    </div>
+	 </nav>
+</div>
+
+<ul class="sidenav" id="mobile-demo">
+	<li><a href="/">Home<i class="material-icons">home</i></a></li>
+	<!-- Dropdown Trigger: ANALYSIS -->
+	<li><a class="dropdown-trigger button" href="#" data-target="dropdown-analysis-2">Syntactic Analysis<i class="material-icons right">arrow_drop_down</i></a></li>
+
+	<li><a href="/lexic">Lexical Analysis<i class="material-icons">text_rotation_none</i></a></li>
+	<!-- Dropdown Trigger: CONVERT TO AFD -->
+	<li><a class="dropdown-trigger button" href="#" data-target="dropdown-nfa-2">NFA Operations<i class="material-icons right">arrow_drop_down</i></a></li>
+	<li><a href="/aboutUs">About us<i class="material-icons">supervised_user_circle</i></a></li>
+
+	<li><a href="https://github.com/brokenerk/Compiladores" target="_blank">
+		GitHub repository<i class="fa fa-github fa-2x"></i>
+	</a></li>
+</ul>
+
+<ul id="dropdown-nfa" class="dropdown-content">
     <li><a href="/add">Add Basic NFA</a></li>   
     <li><a href="/join">Join</a></li>   
     <li><a href="/concat">Concatenate</a></li> 
@@ -27,12 +45,32 @@
     <li><a href="/setToken">Set Token</a></li>
     <li><a href="/specialJoin">Special Join</a></li>  
     <li><a href="/convertToDFA">Convert to DFA</a></li> 
- </ul>
+</ul>
 
- <ul id="dropdown-analysis" class="dropdown-content">
-    <li><a href="/nfaSyn">NFA Analysis</a></li>
-    <li><a href="/LL(1)">LL(1) Analysis</a></li>
-    <li><a href="/LR(0)">LR(0) Analysis</a></li>
-    <li><a href="/LR(1)">LR(1) Analysis</a></li>
-    <li><a href="/LALR">LALR Analysis</a></li>
- </ul>
+<ul id="dropdown-analysis" class="dropdown-content">
+    <li><a href="/nfaSyn">NFA Parser</a></li>
+    <li><a href="/LL(1)">LL(1) Parser</a></li>
+    <li><a href="/LR(0)">LR(0) Parser</a></li>
+    <li><a href="/LR(1)">LR(1) Parser</a></li>
+	<li><a href="/LALR">LALR Parser</a></li>
+</ul>
+
+<ul id="dropdown-nfa-2" class="dropdown-content">
+    <li><a href="/add">Add Basic NFA</a></li>   
+    <li><a href="/join">Join</a></li>   
+    <li><a href="/concat">Concatenate</a></li> 
+    <li><a href="/positiveClosure">Positive Closure</a></li> 
+    <li><a href="/kleeneClosure">Kleene Closure</a></li>
+    <li><a href="/optional">? Optional</a></li>
+    <li><a href="/setToken">Set Token</a></li>
+    <li><a href="/specialJoin">Special Join</a></li>  
+    <li><a href="/convertToDFA">Convert to DFA</a></li> 
+</ul>
+
+<ul id="dropdown-analysis-2" class="dropdown-content">
+    <li><a href="/nfaSyn">NFA Parser</a></li>
+    <li><a href="/LL(1)">LL(1) Parser</a></li>
+    <li><a href="/LR(0)">LR(0) Parser</a></li>
+    <li><a href="/LR(1)">LR(1) Parser</a></li>
+	<li><a href="/LALR">LALR Parser</a></li>
+</ul>

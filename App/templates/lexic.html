@@ -6,10 +6,10 @@
 				{% from "_macroInputs.html" import render_field %}
 				<p style="text-align: center; font-size: 25px;"> Lexic Analysis </p>
 				<div class="row file-field">
-					<div class=" offset-s1 input-field col s5">
+					<div class=" offset-m1 input-field col m4 s7">
 						{{ render_field(lex.string) }}
 					</div>
-					<div class="input-field col s2">
+					<div class="input-field col m2">
 						<select name="dfa">
 							<option disabled selected>Choose 1st</option>
 								{% if dfaDictionary %}
@@ -23,7 +23,7 @@
 					</div>
 
 					<div class="col">
-	               		<button type="submit" class="waves-effect waves-light #0288d1 light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
+	               		<button type="submit" class="waves-effect waves-light light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
 	               	</div>
 	               	<div class="col">
 	               		<button class="waves-effect waves-light btn-large">
@@ -40,14 +40,14 @@
 	{% if lexemes %}
 	<div id="principal" class="container">
 		<div id="showTable" class="row">
-			<p style="text-align: center; font-size: 25px;"> Lexemes </p>
+			<p style="text-align: center; font-size: 25px;"> Lexems </p>
 			<script type="text/javascript">
 				document.getElementById('ConvertToDFA').style.display = "none";
 			</script>
 		</div>
 		<div class="row">
 			<table class="striped centered responsive-table">
-				<thead class="#0288d1 light-blue darken-2">
+				<thead class="light-blue darken-2">
 					<tr>		
 						<th class="white-text">Token</th>
 						<th class="white-text">Lexem</th>
