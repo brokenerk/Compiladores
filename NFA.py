@@ -23,7 +23,7 @@ class NFA:
 
 	#Parameters: Nothing
 	#Return: Nothing
-	def restartId():
+	def resetId():
 		State.restartId()
 		global Id 
 		Id = 0

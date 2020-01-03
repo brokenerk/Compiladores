@@ -12,7 +12,7 @@ class DFA:
 
     #Parameters: Nothing
     #Return: Nothing
-    def restartId():
+    def resetId():
         global Id 
         Id = 0
 

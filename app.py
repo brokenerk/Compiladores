@@ -406,8 +406,8 @@ def ll1():
         else:
             print("Gramatica no valida")
             msg = 3
-    NFA.restartId()
-    DFA.restartId()
+    NFA.resetId()
+    DFA.resetId()
     return render_template('analysis/ll1.html', ll1 = llForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg, msgS = msgS)
 
 # ---------------------------------------------------------------------
@@ -474,6 +474,8 @@ def lr0():
         else:
             print("Gramatica no valida")
             msg = 3
+    NFA.resetId()
+    DFA.resetId()
     return render_template('analysis/lr0.html', lr0 = lr0Form, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg, msgS = msgS)
 
 # ---------------------------------------------------------------------
@@ -541,6 +543,8 @@ def lr1():
         else:
             print("Gramatica no valida")
             msg = 3
+    NFA.resetId()
+    DFA.resetId()
     return render_template('analysis/lr1.html', lr1 = lr1Form, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg, msgS = msgS)
 
 
@@ -608,6 +612,8 @@ def lalr():
         else:
             print("Gramatica no valida")
             msg = 3
+    NFA.resetId()
+    DFA.resetId()
     return render_template('analysis/lalr.html', lalr = lalrForm, grammar = grammar, relationsTable = relationsTable, analysisTable = analysisTable, msg = msg, msgS = msgS)
 
 # ---------------------------------------------------------------------
@@ -643,8 +649,8 @@ def nfaSyntactic():
                 msg = 1
         except:
             msg = 2
-    NFA.restartId()
-    DFA.restartId()
+    NFA.resetId()
+    DFA.resetId()
     return render_template('analysis/nfa.html', nfaF = nfaForm, dfaER = dfaER, msg = msg)
 
 # ---------------------------------------------------------------------
