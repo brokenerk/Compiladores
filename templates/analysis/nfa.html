@@ -160,18 +160,39 @@
 	</div>
 
 	<!-- Modal Structure -->
-	<div id="modal1" class="modal">
+	<div id="modal1" class="modal modal-fixed-footer">
 	    <div class="modal-content">
-	      <h4>REGEX AND TOKEN'S FORMAT</h4>
-	      <p>A bunch of text</p>
+	      	<h5>Regex and Token's Format</h5>
+	      	<p>1.- You have to enter a regular expression as shown in the next picture:</p>
+	      	<center>
+				<img class="responsive-img" src="./../static/imgs/regexExample1.PNG">
+			</center>
+	      	<p>As you can see, first you have to write the <b>regular expression without spaces</b>, then you have to enter a <b>space</b> and finally it's very important to enter an <b>integer number representing a token</b> for the regular expression.</p>
+	      	<p>2.- The supported operations and their respective special and reserved characters are:</p>
+	      	<ul>
+	      		<li><b>Concatenation/AND:</b> &
+	      		<li><b>Join/OR:</b> |
+	      		<li><b>Positive Closure:</b> +
+	      		<li><b>Kleen Closure:</b> *
+	      		<li><b>Optional:</b> ?
+	      		<li><b>Dash:</b> -
+	      		<li><b>Brackets:</b> []
+	      		<li><b>Parenthesis:</b> ()
+	      	</ul>
+
+	      	<p>3.- If you want to set a range for symbols, such as numbers or the alphabet letter for example, you have to put the first and last symbol of this range inside brackets, for example: <b>[A-Z]</b> for capital letters.</p>
+
+	      	<p>4.- If you want to use some of the reserved characters shown above, you have to put the character <b>"</b> before each one. In the picture above there's and example for characters <b>+</b> and <b>-</b>; for the moment, these are the only reserved characters that can be used.</p>
+
+	      	<p>5.- If you want to put and merge more than one regular expression, you have to enter each one in a different line of the input, as shown in this picture:</p>
+	      	<center>
+				<img class="responsive-img" src="./../static/imgs/regexExample2.PNG">
+			</center>
+
+			<p>6.- You cand upload your own text file with all the regular expressions you wish by clicking on the button with the paperclip icon; it has to have all the format rules explained before.</p>
 	    </div>
 	    <div class="modal-footer">
-	      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+	      <a href="#!" class="modal-close waves-effect waves-light btn">Got it</a>
 	    </div>
 	</div>
-	<script type="text/javascript">
-		$(document).ready(function(){
-	    $('.modal').modal();
-	  });
-	</script>
 {% endblock %}

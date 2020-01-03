@@ -3,7 +3,7 @@
 	<script>
 		{% if msg == 1 %}
 			M.toast({
-				html: 'Grammar is compatible with LR(0) parsing.',
+				html: 'Grammar is compatible with LALR parsing.',
 				classes: 'green',
 				displayLength: 5000
 			})
@@ -23,7 +23,7 @@
 			{% endif %}
 		{% elif msg == 2 %}
 			M.toast({
-				html: "Grammar is not compatible with LR(0) parsing.",
+				html: "Grammar is not compatible with LALR parsing.",
 				classes: 'red',
 				displayLength: 5000
 			})
@@ -43,13 +43,13 @@
 	</script>
 
 	<div class="container">
-      	<div id="lr0" class="col s12">
+      	<div id="lalr" class="col s12">
             <form method="POST" enctype="multipart/form-data">
                {% from "_macroInputs.html" import render_field %}
-               <p style="text-align: center; font-size: 25px;"> LR(0) Parsing </p>
-               	<div class="row file-field">
+               <p style="text-align: center; font-size: 25px;"> LALR Parsing </p>
+               <div class="row file-field">
 	               	<div class="offset-m1 input-field col m6 s12">
-	               		{{ render_field(lr0.grammar) }}
+	               		{{ render_field(lalr.grammar) }}
 	               	</div>
 	               	<div class="col">
 	               		<button type="submit" class="waves-effect waves-light light-blue darken-2 btn-large"><i class="material-icons right">sync_alt</i>Generate</button>
@@ -63,7 +63,7 @@
 	            </div>
 	           	<div class="row file-field">
 	               	<div class="offset-m1 input-field col m6 s12">
-	               		{{ render_field(lr0.string) }}
+	               		{{ render_field(lalr.string) }}
 	               	</div>
 	               	<div class="col">
 	               		<button type="submit" class="waves-effect waves-light light-blue darken-2 btn-large"><i class="material-icons right">text_rotation_none</i>Analyze</button>
@@ -77,7 +77,7 @@
        			</div>
        			<div class="row center">
 	               	<!-- MODAL -->
-	               	<a class="waves-effect waves-light btn-large modal-trigger pulse" href="#modal1">IMPORTANT</a>
+	               	<a class="waves-effect waves-light btn-large modal-trigger pulse" href="#modalGrammar">IMPORTANT</a>
 	           </div>
             </form>
 		</div>
@@ -105,13 +105,13 @@
 	    </div>
 	</div>
 
-	<div id="lr0Table" class="container">
-		<div id="showLR0Table" class="row">
+	<div id="lalrTable" class="container">
+		<div id="showLALRTable" class="row">
 		   {% if relationsTable %}
 		 	 	<p style="text-align: center; font-size: 25px;"> Rules Relationship Table</p>
 	   			<div class="row">
 			  		<table class="striped centered responsive-table highlight">
-						<thead class="light-blue darken-2">
+						<thead class="#0288d1 light-blue darken-2">
 							<tr>		
 								{% for row in relationsTable[0] %}
 							  		<th class="white-text">{{ row }}</th>
@@ -146,7 +146,7 @@
 	<div id="analysisTable" class="container">
 		<div id="showAnalysisTable" class="row">
 		   {% if analysisTable %}
-				<p style="text-align: center; font-size: 25px;">LR(0) Analysis Table</p>
+				<p style="text-align: center; font-size: 25px;">LALR Analysis Table</p>
 
 			   	<div class="row">
 					<table class="striped centered responsive-table highlight">
@@ -174,19 +174,4 @@
 		   {% endif %}
 		</div>
 	</div>
-	
-	<div id="modal1" class="modal">
-	    <div class="modal-content">
-	      <h4>GRAMMARS' FORMAT</h4>
-	      <p>A bunch of text</p>
-	    </div>
-	    <div class="modal-footer">
-	      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
-	    </div>
-	</div>
-	<script type="text/javascript">
-		$(document).ready(function(){
-	    $('.modal').modal();
-	  });
-	</script>
 {% endblock %}

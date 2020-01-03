@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="{{ url_for('static', filename='js/vis.min.js') }}"></script>
 	<script>
 	  $(document).ready(function(){
+	  	$('.modal').modal();
 	  	$('.sidenav').sidenav();
 	  	$('#grammar').addClass('materialize-textarea');
 	  	$('#grammar').addClass('expand');
@@ -147,5 +148,34 @@
 	{% endblock %} 
   	{% block content %}
   	{% endblock %}
+
+  	<!-- Modal Structure -->
+	<div id="modalGrammar" class="modal">
+	    <div class="modal-content">
+	      	<h4>Grammar's Format</h4>
+	      	<p>1.- You have to enter a grammar as shown in the next pictures:</p>
+	      	<center>
+				<img class="responsive-img" src="./../static/imgs/grammarExample.PNG">
+				<img class="responsive-img" src="./../static/imgs/grammarExample2.PNG">
+			</center>
+			<p>2.- As you can see, first you have to write <b>the symbol of the left side of the rule</b>, followed by an <b>arrow -></b>, and then <b>symbols of the righ side</b>, each one of them separated by a <b>space</b> (if you want to enter a entire word, for example, just enter it without spaces).</p>
+
+			<p>3.- When a rule is over, you have to write a <b>semicolon ;</b> to indicate the end of this rule, then go to the next line and continue with the rest of the rules.</p>
+
+			<p>4.- If you want to use an OR instruction, you have to write a <b>|</b> character without spaces between the symbols' list of the right side of each rule.</p>
+
+			<p>5.- If you want to use epsilon, null or empty, you have to write the entire word <b>epsilon</b>.</p>
+
+			<p>6.- You can use both lowercase and uppercase letters, numbers and symbols (except for the reserved ones explained before) such as: + - * / = ^ ( ) , . ? ' _ </p>
+
+			<p>7.- The strings doesn't have format, you can write anything and the parser will tell you if that belongs to the grammar.</p>
+
+			<p>8.- You can upload your own grammar and string text files you wish by clicking on the buttons with the paperclip icon in each input; they have to have all the format rules explained before.</p>
+
+	    </div>
+	    <div class="modal-footer">
+      		<a href="#!" class="modal-close waves-effect waves-light btn">Got it</a>
+	    </div>
+	</div>
 </body>   
 </html>
