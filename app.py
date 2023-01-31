@@ -672,4 +672,4 @@ def lexic():
     return render_template('lexic.html',lex = lexicForm, dfaDictionary=dfaDictionary,lexic=lexem,lexemes=lexemes)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", debug=True, port=5010)
